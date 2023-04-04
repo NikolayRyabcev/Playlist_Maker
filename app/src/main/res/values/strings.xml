@@ -3,5 +3,10 @@
     <string name="poisk">Поиск</string>
     <string name="Mediateka">Медиатека</string>
     <string name="Nastroiki">Настройки</string>
+    <string name="BlackTheme">Темная тема</string>
+    <string name="Share">Поделиться приложением</string>
+    <string name="Support">Написать в поддержку</string>
+    <string name="Agreement">Пользовательское соглашение</string>
+
 
 </resources>

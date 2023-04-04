@@ -4,69 +4,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3772E7"
+    android:background="@color/back1"
     android:orientation="vertical"
-    android:paddingBottom="28dp"
->
+    android:paddingBottom="28dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
+        android:paddingStart="@dimen/left1"
         android:paddingTop="14dp"
         android:text="@string/app_name"
-        android:textColor="#ffffff"
-        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text1"
         tools:ignore="RtlSymmetry" />
 
     <Button
         android:layout_width="match_parent"
-        android:layout_marginTop="40dp"
         android:layout_height="0dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="@dimen/left1"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="@dimen/right1"
         android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:text="@string/poisk"
+        android:textColor="@color/text1"
+        app:cornerRadius="16dp"
         app:icon="@drawable/search"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
-        app:iconTint="#1A1B22"
-        app:cornerRadius="16dp"
-        android:backgroundTint="#ffffff"
-        android:text="@string/poisk"
-        android:textColor="#1A1B22" />
+        app:iconTint="@color/text1"
+        android:textSize="@dimen/text1"
+        android:id="@+id/button1"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="@dimen/left1"
+        android:layout_marginRight="@dimen/right1"
         android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:text="@string/Mediateka"
+        android:textColor="@color/text1"
+        app:cornerRadius="16dp"
         app:icon="@drawable/musiclist"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
-        app:iconTint="#1A1B22"
-        app:cornerRadius="16dp"
-        android:backgroundTint="#ffffff"
-        android:paddingStart="17dp"
-        android:paddingEnd="15dp"
-        android:text="@string/Mediateka"
-        android:textColor="#1A1B22" />
+        app:iconTint="@color/text1"
+        android:textSize="@dimen/text1"
+        android:id="@+id/button2"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="@dimen/left1"
+        android:layout_marginRight="@dimen/right1"
         android:layout_weight="1"
+        android:backgroundTint="@color/white"
+        android:text="@string/Nastroiki"
+        android:textColor="@color/text1"
+        app:cornerRadius="16dp"
         app:icon="@drawable/settings"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
-        app:iconTint="#1A1B22"
-        app:cornerRadius="16dp"
-        android:backgroundTint="#ffffff"
-        android:paddingStart="17dp"
-        android:paddingEnd="15dp"
-        android:text="@string/Nastroiki"
-        android:textColor="#1A1B22" />
+        app:iconTint="@color/text1"
+        android:textSize="@dimen/text1"
+        android:id="@+id/button3"/>
 
 </LinearLayout>
