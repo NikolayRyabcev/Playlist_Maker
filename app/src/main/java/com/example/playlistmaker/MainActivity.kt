@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -15,20 +16,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val butt1 = findViewById<Button>(R.id.button1)
+        val butt2 = findViewById<Button>(R.id.button2)
         val butt3 = findViewById<Button>(R.id.button3)
 
-        val imageClickListener: View.OnClickListener = object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                Toast.makeText(this@MainActivity, "Нажали на кнопку!", Toast.LENGTH_SHORT).show()
-            }
+        butt1.setOnClickListener {
+            val butt1Intent = Intent(this, Search::class.java)
+            startActivity(butt1Intent)
         }
-        val butt2 = findViewById<Button>(R.id.button2)
-
         butt2.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Нажали на кнопку!", Toast.LENGTH_SHORT).show()
+            val butt2Intent = Intent(this, MediaLibrary::class.java)
+            startActivity(butt2Intent)
         }
-        butt1.setOnClickListener(imageClickListener)
-        butt2.setOnClickListener(imageClickListener)
-        butt3.setOnClickListener(imageClickListener)
+        butt3.setOnClickListener {
+            val butt3Intent = Intent(this, SettingsActivity::class.java)
+            startActivity(butt3Intent)
+        }
+
     }
 }

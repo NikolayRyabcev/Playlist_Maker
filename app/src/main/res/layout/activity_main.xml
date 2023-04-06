@@ -16,7 +16,7 @@
         android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="@dimen/text1"
-        tools:ignore="RtlSymmetry" />
+/>
 
     <Button
         android:layout_width="match_parent"
@@ -34,7 +34,8 @@
         app:iconPadding="10dp"
         app:iconTint="@color/text1"
         android:textSize="@dimen/text1"
-        android:id="@+id/button1"/>
+        android:id="@+id/button1"
+        android:textAllCaps="false"/>
 
     <Button
         android:layout_width="match_parent"
@@ -51,7 +52,8 @@
         app:iconPadding="10dp"
         app:iconTint="@color/text1"
         android:textSize="@dimen/text1"
-        android:id="@+id/button2"/>
+        android:id="@+id/button2"
+        android:textAllCaps="false"/>
 
     <Button
         android:layout_width="match_parent"
@@ -68,6 +70,7 @@
         app:iconPadding="10dp"
         app:iconTint="@color/text1"
         android:textSize="@dimen/text1"
-        android:id="@+id/button3"/>
+        android:id="@+id/button3"
+        android:textAllCaps="false"/>
 
 </LinearLayout>
