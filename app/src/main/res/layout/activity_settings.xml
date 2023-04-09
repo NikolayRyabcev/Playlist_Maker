@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/back2"
     android:orientation="vertical"
-    android:paddingStart="16dp">
+    android:paddingStart="@dimen/settingsLeftMargin16dp">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsTopString14dp">
 
         <ImageView
             android:id="@+id/buttonArrow"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_marginTop="20dp"
+            android:layout_gravity="center_vertical"
             android:paddingStart="4dp"
             android:src="@drawable/arrow" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/Nastroiki"
+            android:layout_marginStart="@dimen/settingsTopStringStart28dp"
+            android:text="@string/SettingsString"
             android:textColor="@color/text1"
             android:textSize="@dimen/text1" />
     </FrameLayout>
@@ -38,7 +36,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="@dimen/top2"
+            android:layout_marginBottom="@dimen/top2"
             android:text="@string/BlackTheme"
             android:textColor="@color/text1"
             android:textSize="@dimen/text2" />
@@ -47,21 +46,19 @@
             android:id="@+id/simpleSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="21dp"
-            android:layout_marginRight="18dp" />
+            android:layout_gravity="right|center_vertical" />
 
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/top2">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/top2"
+            android:layout_marginBottom="@dimen/top2"
             android:text="@string/Share"
             android:textColor="@color/text1"
             android:textSize="@dimen/text2" />
@@ -69,22 +66,21 @@
         <ImageView
             android:layout_width="16dp"
             android:layout_height="18dp"
-            android:layout_gravity="right"
-            android:layout_marginTop="@dimen/top2"
-            android:layout_marginRight="18dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginEnd="16dp"
             android:src="@drawable/share" />
 
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/top2">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/top2"
+            android:layout_marginBottom="@dimen/top2"
             android:text="@string/Support"
             android:textColor="@color/text1"
             android:textSize="@dimen/text2" />
@@ -92,22 +88,21 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="18dp"
-            android:layout_gravity="right"
-            android:layout_marginTop="@dimen/top2"
-            android:layout_marginRight="14dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginEnd="14dp"
             android:src="@drawable/girl" />
 
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/top2">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/top2"
+            android:layout_marginBottom="@dimen/top2"
             android:text="@string/Agreement"
             android:textColor="@color/text1"
             android:textSize="@dimen/text2" />
@@ -115,9 +110,8 @@
         <ImageView
             android:layout_width="8dp"
             android:layout_height="14dp"
-            android:layout_gravity="right"
-            android:layout_marginTop="@dimen/top2"
-            android:layout_marginRight="20dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/go" />
 
     </FrameLayout>

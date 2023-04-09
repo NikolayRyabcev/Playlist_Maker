@@ -5,4 +5,10 @@
     <dimen name = "text1">22sp</dimen>
     <dimen name = "text2">16sp</dimen>
     <dimen name = "top2">21dp</dimen>
+    <dimen name = "cornerRounding">16dp</dimen>
+    <dimen name = "iconPadding">10dp</dimen>
+    <dimen name = "midButton">0dp</dimen>
+    <dimen name = "settingsLeftMargin16dp">16dp</dimen>
+    <dimen name = "settingsTopString14dp">14dp</dimen>
+    <dimen name = "settingsTopStringStart28dp">28dp</dimen>
 </resources>

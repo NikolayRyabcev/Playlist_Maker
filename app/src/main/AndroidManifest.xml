@@ -30,11 +30,7 @@
             android:exported="false" />
         <activity
             android:name=".Search"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".MediaLibrary"
             android:exported="false">
