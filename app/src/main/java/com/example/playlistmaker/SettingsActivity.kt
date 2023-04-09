@@ -12,7 +12,6 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val arrowButton = findViewById<ImageView>(R.id.buttonArrow)
         arrowButton.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
     }
