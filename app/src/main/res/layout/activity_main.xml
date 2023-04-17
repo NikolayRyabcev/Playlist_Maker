@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/back1"
     android:orientation="vertical"
-    android:paddingBottom="28dp">
+    android:paddingBottom="28dp"
+    android:fontFamily="@font/ys_display_medium">
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,57 +19,21 @@
 
     <Button
         android:id="@+id/SearchButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/midButton"
-        android:layout_marginStart="@dimen/left1"
+        style="@style/mainScreenButton"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="@dimen/right1"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
         android:text="@string/searchString"
-        android:textAllCaps="false"
-        android:textColor="@color/text1"
-        android:textSize="@dimen/text1"
-        app:cornerRadius="@dimen/cornerRounding"
-        app:icon="@drawable/search"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/iconPadding"
-        app:iconTint="@color/text1" />
+        app:icon="@drawable/search" />
 
     <Button
         android:id="@+id/MediaLibButtom"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/midButton"
-        android:layout_marginStart="@dimen/left1"
-        android:layout_marginEnd="@dimen/right1"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
+        style="@style/mainScreenButton"
         android:text="@string/MediaLibraryString"
-        android:textAllCaps="false"
-        android:textColor="@color/text1"
-        android:textSize="@dimen/text1"
-        app:cornerRadius="@dimen/cornerRounding"
-        app:icon="@drawable/musiclist"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/iconPadding"
-        app:iconTint="@color/text1" />
+        app:icon="@drawable/musiclist" />
 
     <Button
         android:id="@+id/SettingsButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/midButton"
-        android:layout_marginStart="@dimen/left1"
-        android:layout_marginEnd="@dimen/right1"
-        android:layout_weight="1"
-        android:backgroundTint="@color/white"
+        style="@style/mainScreenButton"
         android:text="@string/SettingsString"
-        android:textAllCaps="false"
-        android:textColor="@color/text1"
-        android:textSize="@dimen/text1"
-        app:cornerRadius="@dimen/cornerRounding"
-        app:icon="@drawable/settings"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/iconPadding"
-        app:iconTint="@color/text1" />
+        app:icon="@drawable/settings" />
 
 </LinearLayout>
