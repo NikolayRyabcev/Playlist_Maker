@@ -8,7 +8,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/text1</item>
+        <item name="android:textColor">?attr/colorSecondaryVariant</item>
         <item name="android:textSize">@dimen/text1</item>
         <item name="cornerRadius">@dimen/cornerRounding</item>
         <item name="iconGravity">textStart</item>
@@ -22,7 +22,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/top2</item>
         <item name="android:layout_marginBottom">@dimen/top2</item>
-        <item name="android:textColor">@color/text1</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:textSize">@dimen/text2</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>

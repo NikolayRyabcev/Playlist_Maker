@@ -8,6 +8,10 @@
     <string name="Share">Поделиться приложением</string>
     <string name="Support">Написать в поддержку</string>
     <string name="Agreement">Пользовательское соглашение</string>
+    <string name="PractAdr">https://practicum.yandex.ru/profile/android-developer/</string>
+    <string name="ShareText">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="myemail">nikolas14@mail.ru</string>
+    <string name="AgreementURL">https://yandex.ru/legal/practicum_offer/</string>
 
 
 </resources>

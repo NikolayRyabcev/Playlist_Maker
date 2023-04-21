@@ -1,8 +1,12 @@
 package com.example.playlistmaker
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class SettingsActivity : AppCompatActivity() {
@@ -12,6 +16,26 @@ class SettingsActivity : AppCompatActivity() {
         val arrowButton = findViewById<ImageView>(R.id.buttonArrow)
         arrowButton.setOnClickListener {
             finish()
+        }
+        val textView=findViewById<FrameLayout>(R.id.ShareAppText)
+        textView.setOnClickListener{
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_TEXT, "@strings/PractAdr")
+            startActivity(intent)
+        }
+        val textView2=findViewById<FrameLayout>(R.id.WriteSupportText)
+        textView2.setOnClickListener{
+            val intent2 = Intent(Intent.ACTION_SENDTO)
+            intent2.data=Uri.parse("mailto:")
+            intent2.putExtra(Intent.EXTRA_EMAIL, arrayOf("@strings/myemail"))
+            intent2.putExtra(Intent.EXTRA_TEXT, "@strings/ShareText")
+            startActivity(intent2)
+        }
+        val textView3=findViewById<FrameLayout>(R.id.AgreementText)
+        textView3.setOnClickListener{
+            val intent3 = Intent(Intent.ACTION_VIEW, Uri.parse("@strings/AgreementURL"))
+            startActivity(intent3)
         }
     }
 }
