@@ -12,6 +12,8 @@
     <string name="ShareText">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="myemail">nikolas14@mail.ru</string>
     <string name="AgreementURL">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="searchHint">Поиск</string>
+
 
 
 </resources>
