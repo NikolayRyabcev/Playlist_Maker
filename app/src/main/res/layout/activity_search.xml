@@ -30,7 +30,7 @@
             android:textSize="@dimen/text1" />
     </FrameLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/edittext_rounded_corner"
             android:drawableStart="@drawable/searchinsearch"
@@ -57,8 +58,10 @@
             android:id="@+id/clearIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:src="@drawable/clearbutton"
-            android:visibility="gone" />
-    </LinearLayout>
+            android:visibility="gone"
+            android:paddingEnd="30dp"
+            android:layout_gravity="right|center_vertical"
+ />
+    </FrameLayout>
 </LinearLayout>
