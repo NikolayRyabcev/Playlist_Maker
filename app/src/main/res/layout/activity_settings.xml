@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    android:paddingStart="@dimen/settingsLeftMargin16dp">
+    android:paddingStart="@dimen/settingsLeftMargin16dp"
+    >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -17,7 +20,8 @@
             android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:paddingStart="4dp"
-            android:src="@drawable/arrow" />
+            android:src="@drawable/arrow"
+            app:tint="?attr/color"/>
 
         <TextView
             style="@style/SettingsText"
@@ -43,7 +47,8 @@
             android:id="@+id/simpleSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical" />
+            android:layout_gravity="right|center_vertical"
+            tools:ignore="TouchTargetSizeCheck" />
 
     </FrameLayout>
 
@@ -61,7 +66,9 @@
             android:layout_height="18dp"
             android:layout_gravity="right|center_vertical"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/share" />
+            android:src="@drawable/share"
+            app:tint="?attr/color"
+ />
 
     </FrameLayout>
 
@@ -79,7 +86,8 @@
             android:layout_height="18dp"
             android:layout_gravity="right|center_vertical"
             android:layout_marginEnd="14dp"
-            android:src="@drawable/girl" />
+            android:src="@drawable/girl"
+            app:tint="?attr/color"/>
 
     </FrameLayout>
 
@@ -98,7 +106,8 @@
             android:layout_height="14dp"
             android:layout_gravity="right|center_vertical"
             android:layout_marginEnd="20dp"
-            android:src="@drawable/go" />
+            android:src="@drawable/go"
+            app:tint="?attr/color"/>
 
     </FrameLayout>
 
