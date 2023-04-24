@@ -56,6 +56,10 @@ class Search : AppCompatActivity() {
         outState.putString(KEY_TEXT, inputEditText.text.toString())
     }
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val inputEditText = savedInstanceState.getString(KEY_TEXT, "")
+    }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
 
