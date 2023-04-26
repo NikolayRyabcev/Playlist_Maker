@@ -13,5 +13,8 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="color">@color/white</item>
+        <item name="customColorValue">@color/text1</item>
+        <item name="colorAccent">@color/back1</item>
+        <item name="colorContainer">@color/back1</item>
     </style>
 </resources>

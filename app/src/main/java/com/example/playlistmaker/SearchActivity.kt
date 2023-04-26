@@ -10,7 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 
-class Search : AppCompatActivity() {
+class SearchActivity : AppCompatActivity() {
 
     val KEY_TEXT = ""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class Search : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val inputEditText = savedInstanceState.getString(KEY_TEXT, "")
+        savedInstanceState.getString(KEY_TEXT, "")
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {

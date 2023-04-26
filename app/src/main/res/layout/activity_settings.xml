@@ -21,7 +21,7 @@
             android:layout_gravity="center_vertical"
             android:paddingStart="4dp"
             android:src="@drawable/arrow"
-            app:tint="?attr/color"/>
+            app:tint="?attr/colorOnSecondary"/>
 
         <TextView
             style="@style/SettingsText"
@@ -48,7 +48,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
-            tools:ignore="TouchTargetSizeCheck" />
+            tools:ignore="TouchTargetSizeCheck"
+            android:thumbTint="?attr/colorContainer"
+            android:trackTint="?attr/colorAccent"/>
 
     </FrameLayout>
 

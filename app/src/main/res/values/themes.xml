@@ -13,6 +13,8 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="color">@color/settingsIconGray</item>
+        <item name="customColorValue">@color/settingsIconGray</item>
+        <item name="colorAccent">#E6E8EB</item>
+        <item name="colorContainer">#AEAFB4</item>
     </style>
-
 </resources>
