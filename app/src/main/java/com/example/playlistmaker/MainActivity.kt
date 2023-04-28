@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         val mediaLibButton = findViewById<Button>(R.id.MediaLibButtom)
         val settButton = findViewById<Button>(R.id.SettingsButton)
 
-        srchButton.setOnClickListener { startActivity(Intent(this, Search::class.java)) }
+        srchButton.setOnClickListener { startActivity(Intent(this, SearchActivity::class.java)) }
         mediaLibButton.setOnClickListener { startActivity(Intent(this, MediaLibrary::class.java)) }
         settButton.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
     }
