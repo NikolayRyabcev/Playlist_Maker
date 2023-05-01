@@ -5,12 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    android:paddingStart="@dimen/settingsLeftMargin16dp">
+>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/settingsTopString14dp">
+        android:layout_marginTop="@dimen/settingsTopString14dp"
+        android:paddingStart="@dimen/settingsLeftMargin16dp">
 
         <ImageView
             android:id="@+id/buttonArrow"
@@ -35,7 +36,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/settingsLeftMargin16dp">
 
         <EditText
             android:id="@+id/searchUserText"
@@ -69,4 +71,10 @@
             android:src="@drawable/clearbutton"
             android:visibility="gone" />
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/trackRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 </LinearLayout>

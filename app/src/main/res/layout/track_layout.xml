@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="61dp">
+
+    <ImageView
+        android:id="@+id/trackImage"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/musicalbum" />
+
+    <TextView
+        android:id="@+id/trackName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="14dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="Track Name" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/groupName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="66dp"
+            android:layout_marginTop="34dp"
+            android:fontFamily="@font/ys_display_regular"
+            android:textColor="@color/settingsIconGray"
+            tools:text="Group" />
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="3dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="39dp"
+            android:src="@drawable/searchdot"
+            app:tint="@color/settingsIconGray" />
+
+        <TextView
+            android:id="@+id/trackTime"
+            android:layout_width="51dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="34dp"
+            android:fontFamily="@font/ys_display_regular"
+            android:textColor="@color/settingsIconGray"
+            tools:text="Time" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="8dp"
+        android:layout_height="14dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/go"
+        app:tint="@color/settingsIconGray" />
+</FrameLayout>
