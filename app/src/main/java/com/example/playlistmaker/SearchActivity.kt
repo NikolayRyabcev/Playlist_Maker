@@ -86,6 +86,8 @@ class SearchActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.trackRecycler)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        val trackAdapter = TrackAdapter(trackList)
+        recyclerView.adapter = trackAdapter
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

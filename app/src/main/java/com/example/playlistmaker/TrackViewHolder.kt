@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val trackImage : ImageView = itemView.findViewById(R.id.trackImage)
@@ -17,7 +18,11 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val adaptedTrackTime = item.trackTime
         val adaptedTrackPicture = item.artworkUrl100
 
-        //trackImage.
+        Glide.with(itemView)
+            .load(item.artworkUrl100)
+            .into(trackImage)
+
+
         trackName.text=adaptedTrackName
         groupName.text=adaptedArtistName
         trackTime.text=adaptedTrackTime
