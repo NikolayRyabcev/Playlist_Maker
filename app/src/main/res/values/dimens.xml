@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name = "left1">16dp</dimen>
-    <dimen name = "right1">15dp</dimen>
-    <dimen name = "text1">22sp</dimen>
-    <dimen name = "text2">16sp</dimen>
-    <dimen name = "top2">21dp</dimen>
-    <dimen name = "cornerRounding">16dp</dimen>
-    <dimen name = "iconPadding">10dp</dimen>
-    <dimen name = "midButton">0dp</dimen>
-    <dimen name = "settingsLeftMargin16dp">16dp</dimen>
-    <dimen name = "settingsTopString14dp">14dp</dimen>
-    <dimen name = "settingsTopStringStart28dp">28dp</dimen>
+    <!--  main & settings -->
+    <dimen name="left1">16dp</dimen>
+    <dimen name="right1">15dp</dimen>
+    <dimen name="text1">22sp</dimen>
+    <dimen name="text2">16sp</dimen>
+    <dimen name="top2">21dp</dimen>
+    <dimen name="cornerRounding">16dp</dimen>
+    <dimen name="iconPadding">10dp</dimen>
+    <dimen name="midButton">0dp</dimen>
+    <dimen name="settingsLeftMargin16dp">16dp</dimen>
+    <dimen name="settingsTopString14dp">14dp</dimen>
+    <dimen name="settingsTopStringStart28dp">28dp</dimen>
+    <dimen name="mainTopButton40">40dp</dimen>
+    <dimen name="iconSize">16dp</dimen>
+    <!--  search  -->
+<dimen name="arrowSize">16dp</dimen>
+    <dimen name="arrowPadding">4dp</dimen>
+    <dimen name="searchTextPadding">48dp</dimen>
+    <dimen name="searchTextMargins">0dp</dimen>
+    <dimen name="searchEditTextMargins">24dp</dimen>
+    <dimen name="searchEditTextMarginEnd">16dp</dimen>
+    <dimen name="searchEditTextMagnifierSize">9dp</dimen>
+    <dimen name="editTextMinHeight">48dp</dimen>
+    <dimen name="EditTextPadding">13dp</dimen>
+    <dimen name="editTextmaxLength">35</dimen>
+    <dimen name="crossPAdding">30dp</dimen>
+    <dimen name="layoutHeight">61dp</dimen>
+    <dimen name="layoutPict">45dp</dimen>
+    <dimen name="layoutPictTop">8dp</dimen>
+    <dimen name="layoutmarginStart">13dp</dimen>
+    <dimen name="trackTextSize">16sp</dimen>
+    <dimen name="dotSize">3dp</dimen>
 </resources>

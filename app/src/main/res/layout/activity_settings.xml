@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/buttonArrow"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="@dimen/iconSize"
+            android:layout_height="@dimen/iconSize"
             android:layout_gravity="center_vertical"
             android:paddingStart="4dp"
             android:src="@drawable/arrow"
