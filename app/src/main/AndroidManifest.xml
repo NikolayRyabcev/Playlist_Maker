@@ -38,7 +38,9 @@
             android:theme="@style/Theme.PlaylistMaker" />
         <activity
             android:name=".MediaLibrary"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/Theme.PlaylistMaker">
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

@@ -11,7 +11,8 @@
         android:layout_height="@dimen/layoutPict"
         android:layout_marginStart="@dimen/layoutmarginStart"
         android:layout_marginTop="@dimen/layoutPictTop"
-        android:src="@drawable/musicalbum" />
+        android:src="@drawable/musicalbum"
+        android:background="@drawable/cover_rounded_corners"/>
 
     <TextView
         android:id="@+id/trackName"
@@ -21,7 +22,7 @@
         android:layout_marginTop="14dp"
         android:ellipsize="end"
         android:fontFamily="@font/ys_display_regular"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnSecondary"
         android:textSize="@dimen/trackTextSize"
         tools:text="Track Name" />
 
@@ -37,7 +38,7 @@
             android:layout_marginTop="34dp"
             android:ellipsize="end"
             android:fontFamily="@font/ys_display_regular"
-            android:textColor="@color/settingsIconGray"
+            android:textColor="?attr/color"
             tools:text="Group" />
 
         <ImageView
@@ -46,7 +47,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="39dp"
             android:src="@drawable/searchdot"
-            app:tint="@color/settingsIconGray" />
+            app:tint="?attr/color" />
 
         <TextView
             android:id="@+id/trackTime"
@@ -55,7 +56,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="34dp"
             android:fontFamily="@font/ys_display_regular"
-            android:textColor="@color/settingsIconGray"
+            android:textColor="?attr/color"
             tools:text="Time" />
     </LinearLayout>
 
@@ -66,5 +67,5 @@
         android:layout_marginTop="23dp"
         android:layout_marginEnd="20dp"
         android:src="@drawable/go"
-        app:tint="@color/settingsIconGray" />
+        app:tint="?attr/color" />
 </FrameLayout>
