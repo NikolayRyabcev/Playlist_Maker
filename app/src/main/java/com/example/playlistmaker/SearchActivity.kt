@@ -46,7 +46,7 @@ class SearchActivity : AppCompatActivity() {
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
-        val arrowButton = findViewById<ImageView>(R.id.buttonArrow)
+        val arrowButton = findViewById<ImageView>(R.id.searchButtonArrow)
         arrowButton.setOnClickListener {
             finish()
         }

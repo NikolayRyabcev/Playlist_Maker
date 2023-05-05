@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/colorSecondary"
-    android:orientation="vertical"
->
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -14,13 +13,13 @@
         android:paddingStart="@dimen/settingsLeftMargin16dp">
 
         <ImageView
-            android:id="@+id/buttonArrow"
+            android:id="@+id/searchButtonArrow"
             android:layout_width="@dimen/arrowSize"
             android:layout_height="@dimen/arrowSize"
             android:layout_gravity="center_vertical"
             android:paddingStart="@dimen/arrowPadding"
             android:src="@drawable/arrow"
-            app:tint="?attr/colorOnSecondary"/>
+            app:tint="?attr/colorOnSecondary" />
 
         <TextView
             style="@style/SettingsText"
@@ -48,19 +47,18 @@
             android:layout_marginBottom="@dimen/searchEditTextMargins"
             android:background="@drawable/edittext_rounded_corner"
             android:drawableStart="@drawable/searchinsearch"
-            app:drawableTint="?attr/customColorValue"
             android:drawablePadding="@dimen/searchEditTextMagnifierSize"
             android:fontFamily="@font/ys_display_regular"
-            android:textSize="@dimen/text2"
-            android:textColorHint="?attr/customColorValue"
-            android:textColor="?attr/colorSecondaryVariant"
             android:hint="@string/searchHint"
             android:inputType="text"
-            android:maxLength="@dimen/editTextmaxLength"
+            android:maxLength="35"
             android:maxLines="1"
             android:minHeight="@dimen/editTextMinHeight"
             android:paddingStart="@dimen/EditTextPadding"
-/>
+            android:textColor="?attr/colorSecondaryVariant"
+            android:textColorHint="?attr/customColorValue"
+            android:textSize="@dimen/text2"
+            app:drawableTint="?attr/customColorValue" />
 
         <ImageView
             android:id="@+id/clearIcon"
@@ -76,7 +74,6 @@
         android:id="@+id/trackRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:layout_marginBottom="56dp"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>
