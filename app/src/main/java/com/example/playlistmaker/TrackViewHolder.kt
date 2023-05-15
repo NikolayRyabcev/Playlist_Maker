@@ -24,8 +24,6 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .placeholder(R.drawable.musicalbum)
             .into(trackImage)
 
-
-
         trackName.text = adaptedTrackName
         groupName.text = adaptedArtistName
         trackTime.text = adaptedTrackTime
