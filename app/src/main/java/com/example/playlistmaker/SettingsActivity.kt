@@ -6,14 +6,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        val arrowButton = findViewById<ImageView>(R.id.buttonArrow)
+        val arrowButton = findViewById<ImageView>(R.id.searchButtonArrow)
         arrowButton.setOnClickListener {
             finish()
         }
@@ -35,7 +34,8 @@ class SettingsActivity : AppCompatActivity() {
         }
         val textAgreementView3 = findViewById<FrameLayout>(R.id.AgreementText)
         textAgreementView3.setOnClickListener {
-            val intentAgreement3 = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.AgreementURL)))
+            val intentAgreement3 =
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.AgreementURL)))
             startActivity(intentAgreement3)
         }
     }
