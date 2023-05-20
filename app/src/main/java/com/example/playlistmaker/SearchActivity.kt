@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -26,12 +27,22 @@ class SearchActivity : AppCompatActivity() {
         .build()
 
     private val iTunesService = retrofit.create(iTunesSearchAPI::class.java)
+    private lateinit var placeholderMessage: TextView
+    var trackList = ArrayList<Track>()
+    lateinit var trackAdapter: TrackAdapter
 
     val KEY_TEXT = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
+        val nothingfoundPict: ImageView = findViewById(R.id.nothingfoundPict)
+        val loadingproblem: ImageView = findViewById(R.id.loadingproblem)
+        val nothingfoundText: TextView = findViewById(R.id.nothingfoundText)
+        val loadingproblemText: TextView = findViewById(R.id.loadingproblemText)
+        nothingfoundPict.visibility = View.GONE
+        nothingfoundText.visibility = View.GONE
+        loadingproblem.visibility = View.GONE
+        loadingproblemText.visibility = View.GONE
         val inputEditText = findViewById<EditText>(R.id.searchUserText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
@@ -40,7 +51,11 @@ class SearchActivity : AppCompatActivity() {
             val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             keyboard.hideSoftInputFromWindow(inputEditText.windowToken, 0) // скрыть клавиатуру
             inputEditText.clearFocus()
-
+            trackList.clear()
+            nothingfoundPict.visibility = View.GONE
+            nothingfoundText.visibility = View.GONE
+            loadingproblem.visibility = View.GONE
+            loadingproblemText.visibility = View.GONE
         }
 
 
@@ -64,7 +79,6 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        val trackList = ArrayList<Track>()
         val recyclerView = findViewById<RecyclerView>(R.id.trackRecycler)
         recyclerView.layoutManager = LinearLayoutManager(this)
         val trackAdapter = TrackAdapter(trackList)
@@ -83,18 +97,25 @@ class SearchActivity : AppCompatActivity() {
                             ) {
                                 if (response.code() == 200) {
                                     trackList.clear()
-                                    if (response.body()?.tracksResponse?.isNotEmpty() == true) {
-                                        trackList.addAll(response.body()!!.tracksResponse)
+                                    if (response.body()?.results?.isNotEmpty() == true) {
+                                        trackList.addAll(response.body()?.results!!)
                                         trackAdapter.notifyDataSetChanged()
                                     }
                                     if (trackAdapter.tracks.isEmpty()) {
-
+                                        nothingfoundPict.visibility = View.VISIBLE
+                                        nothingfoundText.visibility = View.VISIBLE
+                                        trackAdapter.notifyDataSetChanged()
                                     }
+                                } else {
+                                    loadingproblem.visibility = View.VISIBLE
+                                    loadingproblemText.visibility = View.VISIBLE
+                                    trackAdapter.notifyDataSetChanged()
                                 }
                             }
 
                             override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                                TODO("Not yet implemented")
+                                loadingproblem.visibility = View.VISIBLE
+                                loadingproblemText.visibility = View.VISIBLE
                             }
 
 
