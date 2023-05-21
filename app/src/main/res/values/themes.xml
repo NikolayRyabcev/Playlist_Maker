@@ -16,5 +16,6 @@
         <item name="customColorValue">@color/settingsIconGray</item>
         <item name="colorAccent">#E6E8EB</item>
         <item name="colorContainer">#AEAFB4</item>
+        <item name="colorError">@color/text1</item>
     </style>
 </resources>

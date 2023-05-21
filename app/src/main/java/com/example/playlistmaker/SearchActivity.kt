@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.View.GONE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -27,7 +29,6 @@ class SearchActivity : AppCompatActivity() {
         .build()
 
     private val iTunesService = retrofit.create(iTunesSearchAPI::class.java)
-    private lateinit var placeholderMessage: TextView
     var trackList = ArrayList<Track>()
     lateinit var trackAdapter: TrackAdapter
 
@@ -78,7 +79,8 @@ class SearchActivity : AppCompatActivity() {
         arrowButton.setOnClickListener {
             finish()
         }
-
+        val refreshButton = findViewById<Button>(R.id.refreshButton)
+        refreshButton.visibility = GONE
         val recyclerView = findViewById<RecyclerView>(R.id.trackRecycler)
         recyclerView.layoutManager = LinearLayoutManager(this)
         val trackAdapter = TrackAdapter(trackList)
@@ -109,6 +111,7 @@ class SearchActivity : AppCompatActivity() {
                                 } else {
                                     loadingproblem.visibility = View.VISIBLE
                                     loadingproblemText.visibility = View.VISIBLE
+                                    refreshButton.visibility = View.VISIBLE
                                     trackAdapter.notifyDataSetChanged()
                                 }
                             }
