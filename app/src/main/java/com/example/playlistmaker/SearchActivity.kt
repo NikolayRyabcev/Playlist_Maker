@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -30,7 +31,11 @@ class SearchActivity : AppCompatActivity() {
 
     private val iTunesService = retrofit.create(iTunesSearchAPI::class.java)
     var trackList = ArrayList<Track>()
-    lateinit var trackAdapter: TrackAdapter
+    lateinit var nothingfoundPict: ImageView
+    lateinit var nothingfoundText: TextView
+    lateinit var loadingproblem: ImageView
+    lateinit var loadingproblemText: TextView
+
 
     val KEY_TEXT = ""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,6 +117,7 @@ class SearchActivity : AppCompatActivity() {
                                     loadingproblem.visibility = View.VISIBLE
                                     loadingproblemText.visibility = View.VISIBLE
                                     refreshButton.visibility = View.VISIBLE
+                                    refreshButton.setOnClickListener { search(inputEditText) }
                                     trackAdapter.notifyDataSetChanged()
                                 }
                             }
@@ -149,5 +155,52 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    fun search(inputEditText: EditText) {
+        trackList.clear()
+        val refreshButton = findViewById<Button>(R.id.refreshButton)
+        refreshButton.visibility = GONE
+        val trackAdapter = TrackAdapter(trackList)
+        val nothingfoundPict: ImageView = findViewById(R.id.nothingfoundPict)
+        val loadingproblem: ImageView = findViewById(R.id.loadingproblem)
+        val nothingfoundText: TextView = findViewById(R.id.nothingfoundText)
+        val loadingproblemText: TextView = findViewById(R.id.loadingproblemText)
+        nothingfoundPict.visibility = View.GONE
+        nothingfoundText.visibility = View.GONE
+        loadingproblem.visibility = View.GONE
+        loadingproblemText.visibility = View.GONE
+        iTunesService.search(inputEditText.text.toString())
+            .enqueue(object : Callback<TrackResponse> {
+
+                override fun onResponse(
+                    call: Call<TrackResponse>,
+                    response: Response<TrackResponse>
+                ) {
+                    if (response.code() == 200) {
+                        trackList.clear()
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            trackList.addAll(response.body()?.results!!)
+                            trackAdapter.notifyDataSetChanged()
+                        }
+                        if (trackAdapter.tracks.isEmpty()) {
+                            nothingfoundPict.visibility = View.VISIBLE
+                            nothingfoundText.visibility = View.VISIBLE
+                            trackAdapter.notifyDataSetChanged()
+                        }
+                    } else {
+                        loadingproblem.visibility = View.VISIBLE
+                        loadingproblemText.visibility = View.VISIBLE
+                        refreshButton.visibility = View.VISIBLE
+                        trackAdapter.notifyDataSetChanged()
+                    }
+                }
+
+                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    loadingproblem.visibility = View.VISIBLE
+                    loadingproblemText.visibility = View.VISIBLE
+                    refreshButton.visibility = View.VISIBLE
+                }
+            })
     }
 }
