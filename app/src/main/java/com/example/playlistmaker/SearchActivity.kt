@@ -119,13 +119,10 @@ class SearchActivity : AppCompatActivity() {
                             override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
                                 loadingproblem.visibility = View.VISIBLE
                                 loadingproblemText.visibility = View.VISIBLE
+                                refreshButton.visibility = View.VISIBLE
                             }
-
-
                         })
                 }
-
-
                 true
             }
             false
