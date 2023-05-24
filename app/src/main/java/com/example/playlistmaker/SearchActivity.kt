@@ -104,6 +104,12 @@ class SearchActivity : AppCompatActivity() {
                             ) {
                                 if (response.code() == 200) {
                                     trackList.clear()
+                                    recyclerView.visibility = View.VISIBLE
+                                    refreshButton.visibility = View.GONE
+                                    nothingfoundPict.visibility = View.GONE
+                                    nothingfoundText.visibility = View.GONE
+                                    loadingproblem.visibility = View.GONE
+                                    loadingproblemText.visibility = View.GONE
                                     if (response.body()?.results?.isNotEmpty() == true) {
                                         trackList.addAll(response.body()?.results!!)
                                         trackAdapter.notifyDataSetChanged()
@@ -117,6 +123,7 @@ class SearchActivity : AppCompatActivity() {
                                     loadingproblem.visibility = View.VISIBLE
                                     loadingproblemText.visibility = View.VISIBLE
                                     refreshButton.visibility = View.VISIBLE
+                                    recyclerView.visibility = View.GONE
                                     refreshButton.setOnClickListener { search(inputEditText) }
                                     trackAdapter.notifyDataSetChanged()
                                 }
@@ -126,6 +133,8 @@ class SearchActivity : AppCompatActivity() {
                                 loadingproblem.visibility = View.VISIBLE
                                 loadingproblemText.visibility = View.VISIBLE
                                 refreshButton.visibility = View.VISIBLE
+                                recyclerView.visibility = View.GONE
+                                refreshButton.setOnClickListener { search(inputEditText) }
                             }
                         })
                 }
@@ -166,6 +175,7 @@ class SearchActivity : AppCompatActivity() {
         val loadingproblem: ImageView = findViewById(R.id.loadingproblem)
         val nothingfoundText: TextView = findViewById(R.id.nothingfoundText)
         val loadingproblemText: TextView = findViewById(R.id.loadingproblemText)
+        val recyclerView = findViewById<RecyclerView>(R.id.trackRecycler)
         nothingfoundPict.visibility = View.GONE
         nothingfoundText.visibility = View.GONE
         loadingproblem.visibility = View.GONE
@@ -179,6 +189,12 @@ class SearchActivity : AppCompatActivity() {
                 ) {
                     if (response.code() == 200) {
                         trackList.clear()
+                        recyclerView.visibility = View.VISIBLE
+                        nothingfoundPict.visibility = View.GONE
+                        nothingfoundText.visibility = View.GONE
+                        loadingproblem.visibility = View.GONE
+                        loadingproblemText.visibility = View.GONE
+                        refreshButton.visibility = View.GONE
                         if (response.body()?.results?.isNotEmpty() == true) {
                             trackList.addAll(response.body()?.results!!)
                             trackAdapter.notifyDataSetChanged()
@@ -191,7 +207,9 @@ class SearchActivity : AppCompatActivity() {
                     } else {
                         loadingproblem.visibility = View.VISIBLE
                         loadingproblemText.visibility = View.VISIBLE
+                        refreshButton.setOnClickListener { search(inputEditText) }
                         refreshButton.visibility = View.VISIBLE
+                        recyclerView.visibility = View.GONE
                         trackAdapter.notifyDataSetChanged()
                     }
                 }
@@ -200,6 +218,8 @@ class SearchActivity : AppCompatActivity() {
                     loadingproblem.visibility = View.VISIBLE
                     loadingproblemText.visibility = View.VISIBLE
                     refreshButton.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                    refreshButton.setOnClickListener { search(inputEditText) }
                 }
             })
     }
