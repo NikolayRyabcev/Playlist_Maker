@@ -166,7 +166,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun search(inputEditText: EditText) {
+    private fun search(inputEditText: EditText) {
         trackList.clear()
         val refreshButton = findViewById<Button>(R.id.refreshButton)
         refreshButton.visibility = GONE

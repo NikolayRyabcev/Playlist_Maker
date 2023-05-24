@@ -13,7 +13,9 @@
     <string name="myemail">nikolas14@mail.ru</string>
     <string name="AgreementURL">https://yandex.ru/legal/practicum_offer/</string>
     <string name="searchHint">Поиск</string>
-
+    <string name="NothingFound">Ничего не нашлось</string>
+    <string name="LoadingProblemText">Проблемы со связью \n \n Загрузка не удалась. Проверьте \n подключение к интернету</string>
+    <string name="RefreshText">Обновить</string>
 
 
 </resources>
