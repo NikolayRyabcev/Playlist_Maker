@@ -36,7 +36,6 @@ class SearchActivity : AppCompatActivity() {
     lateinit var loadingproblem: ImageView
     lateinit var loadingproblemText: TextView
 
-
     val KEY_TEXT = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +62,6 @@ class SearchActivity : AppCompatActivity() {
             loadingproblem.visibility = View.GONE
             loadingproblemText.visibility = View.GONE
         }
-
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -95,48 +93,7 @@ class SearchActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
 
                 if (inputEditText.text.isNotEmpty()) {
-                    iTunesService.search(inputEditText.text.toString())
-                        .enqueue(object : Callback<TrackResponse> {
-
-                            override fun onResponse(
-                                call: Call<TrackResponse>,
-                                response: Response<TrackResponse>
-                            ) {
-                                if (response.code() == 200) {
-                                    trackList.clear()
-                                    recyclerView.visibility = View.VISIBLE
-                                    refreshButton.visibility = View.GONE
-                                    nothingfoundPict.visibility = View.GONE
-                                    nothingfoundText.visibility = View.GONE
-                                    loadingproblem.visibility = View.GONE
-                                    loadingproblemText.visibility = View.GONE
-                                    if (response.body()?.results?.isNotEmpty() == true) {
-                                        trackList.addAll(response.body()?.results!!)
-                                        trackAdapter.notifyDataSetChanged()
-                                    }
-                                    if (trackAdapter.tracks.isEmpty()) {
-                                        nothingfoundPict.visibility = View.VISIBLE
-                                        nothingfoundText.visibility = View.VISIBLE
-                                        trackAdapter.notifyDataSetChanged()
-                                    }
-                                } else {
-                                    loadingproblem.visibility = View.VISIBLE
-                                    loadingproblemText.visibility = View.VISIBLE
-                                    refreshButton.visibility = View.VISIBLE
-                                    recyclerView.visibility = View.GONE
-                                    refreshButton.setOnClickListener { search(inputEditText) }
-                                    trackAdapter.notifyDataSetChanged()
-                                }
-                            }
-
-                            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                                loadingproblem.visibility = View.VISIBLE
-                                loadingproblemText.visibility = View.VISIBLE
-                                refreshButton.visibility = View.VISIBLE
-                                recyclerView.visibility = View.GONE
-                                refreshButton.setOnClickListener { search(inputEditText) }
-                            }
-                        })
+                    search(inputEditText)
                 }
                 true
             }
@@ -223,4 +180,5 @@ class SearchActivity : AppCompatActivity() {
                 }
             })
     }
+
 }
