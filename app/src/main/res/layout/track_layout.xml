@@ -18,9 +18,11 @@
         android:id="@+id/trackName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="35dp"
         android:layout_marginStart="66dp"
         android:layout_marginTop="14dp"
         android:ellipsize="end"
+        android:maxLines="1"
         android:fontFamily="@font/ys_display_regular"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="@dimen/trackTextSize"
@@ -28,7 +30,9 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="35dp"
+        >
 
         <TextView
             android:id="@+id/groupName"
@@ -36,7 +40,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="66dp"
             android:layout_marginTop="34dp"
+            android:layout_weight="1"
             android:ellipsize="end"
+            android:maxLines="1"
             android:fontFamily="@font/ys_display_regular"
             android:textColor="?attr/color"
             tools:text="Group" />
@@ -47,7 +53,8 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="39dp"
             android:src="@drawable/searchdot"
-            app:tint="?attr/color" />
+            app:tint="?attr/color"
+            android:layout_weight="0"/>
 
         <TextView
             android:id="@+id/trackTime"
