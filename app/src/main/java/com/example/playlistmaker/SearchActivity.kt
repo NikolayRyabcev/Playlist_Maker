@@ -22,6 +22,17 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
+    var trackList = ArrayList<Track>()
+    val refreshButton: Button = findViewById(R.id.refreshButton)
+    val nothingfoundPict: ImageView = findViewById(R.id.nothingfoundPict)
+    val loadingproblem: ImageView = findViewById(R.id.loadingproblem)
+    val nothingfoundText: TextView = findViewById(R.id.nothingfoundText)
+    val loadingproblemText: TextView = findViewById(R.id.loadingproblemText)
+    var trackAdapter = TrackAdapter(trackList)
+    var recyclerView: RecyclerView = findViewById(R.id.trackRecycler)
+    private val inputEditText: EditText = findViewById(R.id.searchUserText)
+    val clearButton: ImageView = findViewById(R.id.clearIcon)
+
     private val iTunesBaseURL = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseURL)
@@ -29,23 +40,13 @@ class SearchActivity : AppCompatActivity() {
         .build()
 
     private val iTunesService = retrofit.create(iTunesSearchAPI::class.java)
-    var trackList = ArrayList<Track>()
-
 
     private val KEY_TEXT = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        val nothingfoundPict: ImageView = findViewById(R.id.nothingfoundPict)
-        val loadingproblem: ImageView = findViewById(R.id.loadingproblem)
-        val nothingfoundText: TextView = findViewById(R.id.nothingfoundText)
-        val loadingproblemText: TextView = findViewById(R.id.loadingproblemText)
-        nothingfoundPict.visibility = GONE
-        nothingfoundText.visibility = GONE
-        loadingproblem.visibility = GONE
-        loadingproblemText.visibility = GONE
-        val inputEditText = findViewById<EditText>(R.id.searchUserText)
-        val clearButton = findViewById<ImageView>(R.id.clearIcon)
+
+        ifSearchOkVisibility()
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
@@ -53,10 +54,7 @@ class SearchActivity : AppCompatActivity() {
             keyboard.hideSoftInputFromWindow(inputEditText.windowToken, 0) // скрыть клавиатуру
             inputEditText.clearFocus()
             trackList.clear()
-            nothingfoundPict.visibility = GONE
-            nothingfoundText.visibility = GONE
-            loadingproblem.visibility = GONE
-            loadingproblemText.visibility = GONE
+            ifSearchOkVisibility()
         }
 
 
@@ -79,11 +77,9 @@ class SearchActivity : AppCompatActivity() {
         arrowButton.setOnClickListener {
             finish()
         }
-        val refreshButton = findViewById<Button>(R.id.refreshButton)
-        refreshButton.visibility = GONE
-        val recyclerView = findViewById<RecyclerView>(R.id.trackRecycler)
+
+
         recyclerView.layoutManager = LinearLayoutManager(this)
-        val trackAdapter = TrackAdapter(trackList)
         recyclerView.adapter = trackAdapter
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -119,18 +115,6 @@ class SearchActivity : AppCompatActivity() {
 
     private fun search(inputEditText: EditText) {
         trackList.clear()
-        val refreshButton = findViewById<Button>(R.id.refreshButton)
-        refreshButton.visibility = GONE
-        val trackAdapter = TrackAdapter(trackList)
-        val nothingfoundPict: ImageView = findViewById(R.id.nothingfoundPict)
-        val loadingproblem: ImageView = findViewById(R.id.loadingproblem)
-        val nothingfoundText: TextView = findViewById(R.id.nothingfoundText)
-        val loadingproblemText: TextView = findViewById(R.id.loadingproblemText)
-        val recyclerView = findViewById<RecyclerView>(R.id.trackRecycler)
-        nothingfoundPict.visibility = GONE
-        nothingfoundText.visibility = GONE
-        loadingproblem.visibility = GONE
-        loadingproblemText.visibility = GONE
         recyclerView.visibility = View.VISIBLE
         iTunesService.search(inputEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
@@ -140,12 +124,7 @@ class SearchActivity : AppCompatActivity() {
                 ) {
                     if (response.code() == 200) {
                         trackList.clear()
-                        recyclerView.visibility = View.VISIBLE
-                        nothingfoundPict.visibility = GONE
-                        nothingfoundText.visibility = GONE
-                        loadingproblem.visibility = GONE
-                        loadingproblemText.visibility = GONE
-                        refreshButton.visibility = GONE
+                        ifSearchOkVisibility()
                         if (response.body()?.results?.isNotEmpty() == true) {
                             trackList.addAll(response.body()?.results!!)
                             trackAdapter.notifyDataSetChanged()
@@ -173,5 +152,14 @@ class SearchActivity : AppCompatActivity() {
                     refreshButton.setOnClickListener { search(inputEditText) }
                 }
             })
+    }
+
+    private fun ifSearchOkVisibility() {
+        recyclerView.visibility = View.VISIBLE
+        nothingfoundPict.visibility = GONE
+        nothingfoundText.visibility = GONE
+        loadingproblem.visibility = GONE
+        loadingproblemText.visibility = GONE
+        refreshButton.visibility = GONE
     }
 }
