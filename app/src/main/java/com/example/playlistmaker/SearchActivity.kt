@@ -51,9 +51,10 @@ class SearchActivity : AppCompatActivity() {
         inputEditText = findViewById(R.id.searchUserText)
         clearButton = findViewById(R.id.clearIcon)
         refreshButton = findViewById(R.id.refreshButton)
-        nothingfoundPict = findViewById(R.id.loadingproblem)
+        nothingfoundPict = findViewById(R.id.nothingfoundPict)
         nothingfoundText = findViewById(R.id.nothingfoundText)
         loadingproblemText = findViewById(R.id.loadingproblemText)
+        loadingproblem=findViewById(R.id.loadingproblem)
 
         ifSearchOkVisibility()
 
@@ -142,11 +143,15 @@ class SearchActivity : AppCompatActivity() {
                         if (trackAdapter.tracks.isEmpty()) {
                             nothingfoundPict.visibility = View.VISIBLE
                             nothingfoundText.visibility = View.VISIBLE
+                            loadingproblem.visibility = GONE
+                            loadingproblemText.visibility = GONE
                             trackAdapter.notifyDataSetChanged()
                         }
                     } else {
                         loadingproblem.visibility = View.VISIBLE
                         loadingproblemText.visibility = View.VISIBLE
+                        nothingfoundPict.visibility = GONE
+                        nothingfoundText.visibility = GONE
                         refreshButton.setOnClickListener { search(inputEditText) }
                         refreshButton.visibility = View.VISIBLE
                         recyclerView.visibility = GONE
