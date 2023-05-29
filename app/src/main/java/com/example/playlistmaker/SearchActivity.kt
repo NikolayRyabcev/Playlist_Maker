@@ -22,16 +22,16 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
-    var trackList = ArrayList<Track>()
-    val refreshButton: Button = findViewById(R.id.refreshButton)
-    val nothingfoundPict: ImageView = findViewById(R.id.nothingfoundPict)
-    val loadingproblem: ImageView = findViewById(R.id.loadingproblem)
-    val nothingfoundText: TextView = findViewById(R.id.nothingfoundText)
-    val loadingproblemText: TextView = findViewById(R.id.loadingproblemText)
-    var trackAdapter = TrackAdapter(trackList)
-    var recyclerView: RecyclerView = findViewById(R.id.trackRecycler)
-    private val inputEditText: EditText = findViewById(R.id.searchUserText)
-    val clearButton: ImageView = findViewById(R.id.clearIcon)
+    lateinit var trackList: ArrayList<Track>
+    lateinit var refreshButton: Button
+    lateinit var nothingfoundPict: ImageView
+    lateinit var loadingproblem: ImageView
+    lateinit var nothingfoundText: TextView
+    lateinit var loadingproblemText: TextView
+    lateinit var trackAdapter: TrackAdapter
+    lateinit var recyclerView: RecyclerView
+    lateinit var inputEditText: EditText
+    lateinit var clearButton: ImageView
 
     private val iTunesBaseURL = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -45,6 +45,15 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        trackList = ArrayList()
+        trackAdapter = TrackAdapter(trackList)
+        recyclerView = findViewById(R.id.trackRecycler)
+        inputEditText = findViewById(R.id.searchUserText)
+        clearButton = findViewById(R.id.clearIcon)
+        refreshButton = findViewById(R.id.refreshButton)
+        nothingfoundPict = findViewById(R.id.loadingproblem)
+        nothingfoundText = findViewById(R.id.nothingfoundText)
+        loadingproblemText = findViewById(R.id.loadingproblemText)
 
         ifSearchOkVisibility()
 
@@ -115,6 +124,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun search(inputEditText: EditText) {
         trackList.clear()
+
         recyclerView.visibility = View.VISIBLE
         iTunesService.search(inputEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
