@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,6 +22,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+const val SEARCH_SHARED_PREFS_KEY = "123"
+
 class SearchActivity : AppCompatActivity() {
     lateinit var trackList: ArrayList<Track>
     lateinit var refreshButton: Button
@@ -32,6 +35,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     lateinit var inputEditText: EditText
     lateinit var clearButton: ImageView
+    lateinit var savedHistory: SharedPreferences
 
     private val iTunesBaseURL = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -54,7 +58,9 @@ class SearchActivity : AppCompatActivity() {
         nothingfoundPict = findViewById(R.id.nothingfoundPict)
         nothingfoundText = findViewById(R.id.nothingfoundText)
         loadingproblemText = findViewById(R.id.loadingproblemText)
-        loadingproblem=findViewById(R.id.loadingproblem)
+        loadingproblem = findViewById(R.id.loadingproblem)
+        val savedHistory: SharedPreferences =
+            applicationContext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, MODE_PRIVATE)
 
         ifSearchOkVisibility()
 
