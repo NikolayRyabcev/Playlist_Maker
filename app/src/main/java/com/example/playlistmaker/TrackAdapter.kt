@@ -2,15 +2,12 @@ package com.example.playlistmaker
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class TrackAdapter(
     var tracks: List<Track>
 ) : RecyclerView.Adapter<TrackViewHolder>() {
-
-    companion object {
-        var trackHistoryList: ArrayList<Long> = ArrayList()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_layout, parent, false)
@@ -18,13 +15,20 @@ class TrackAdapter(
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
+        App.getSharedPreferences()
         val searchHistoryObj = SearchHistory()
-        val searchActivityObj = SearchActivity()
         val historyTrackId = holder.itemId
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             searchHistoryObj.editArray(historyTrackId)
-            searchHistoryObj.saveHistory(searchActivityObj.savedHistory)
+
+            val toaster = SearchHistory()
+            var text = "$historyTrackId"
+
+            val duration = Toast.LENGTH_SHORT
+
+            val toast = Toast.makeText(holder.itemView.context, text, duration)
+            toast.show()
         }
     }
 

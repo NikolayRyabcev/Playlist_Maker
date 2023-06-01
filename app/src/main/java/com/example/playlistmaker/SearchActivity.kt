@@ -9,10 +9,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +32,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     lateinit var inputEditText: EditText
     lateinit var clearButton: ImageView
-    lateinit var savedHistory: SharedPreferences
+
 
     private val iTunesBaseURL = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -107,6 +104,8 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -183,4 +182,5 @@ class SearchActivity : AppCompatActivity() {
         loadingproblemText.visibility = GONE
         refreshButton.visibility = GONE
     }
+
 }
