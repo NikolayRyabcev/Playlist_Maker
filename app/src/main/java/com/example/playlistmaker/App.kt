@@ -13,4 +13,5 @@ class App : Application() {
         super.onCreate()
         savedHistory = applicationContext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, Context.MODE_PRIVATE)
     }
+
 }

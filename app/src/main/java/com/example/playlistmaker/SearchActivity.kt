@@ -1,7 +1,6 @@
 package com.example.playlistmaker
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -32,6 +32,9 @@ class SearchActivity : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     lateinit var inputEditText: EditText
     lateinit var clearButton: ImageView
+    lateinit var historyView: TextView
+    lateinit var historyRecycler: RecyclerView
+    lateinit var clearHistoryButton: Button
 
 
     private val iTunesBaseURL = "https://itunes.apple.com"
@@ -56,8 +59,42 @@ class SearchActivity : AppCompatActivity() {
         nothingfoundText = findViewById(R.id.nothingfoundText)
         loadingproblemText = findViewById(R.id.loadingproblemText)
         loadingproblem = findViewById(R.id.loadingproblem)
-        val savedHistory: SharedPreferences =
-            applicationContext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, MODE_PRIVATE)
+        historyView = findViewById(R.id.historyTextView)
+        historyRecycler = findViewById(R.id.historyRecycler)
+        clearHistoryButton = findViewById(R.id.clearHistoryButton)
+
+        applicationContext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, MODE_PRIVATE)
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+
+            if (hasFocus && inputEditText.text.isEmpty()) {
+                historyView.visibility = View.VISIBLE
+                historyRecycler.visibility = View.VISIBLE
+                clearHistoryButton.visibility = View.VISIBLE
+            } else {
+                historyView.visibility = View.GONE
+                historyRecycler.visibility = View.GONE
+                clearHistoryButton.visibility = View.GONE
+            }
+        }
+        inputEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (inputEditText.hasFocus() && p0?.isEmpty() == true) {
+                    historyView.visibility = View.VISIBLE
+                    historyRecycler.visibility = View.VISIBLE
+                    clearHistoryButton.visibility = View.VISIBLE
+                } else {
+                    historyView.visibility = View.GONE
+                    historyRecycler.visibility = View.GONE
+                    clearHistoryButton.visibility = View.GONE
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
 
         ifSearchOkVisibility()
 
