@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 class TrackAdapter(
     var tracks: List<Track>
 ) : RecyclerView.Adapter<TrackViewHolder>() {
-
+    var text = ""
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_layout, parent, false)
         return TrackViewHolder(view)
@@ -17,16 +17,15 @@ class TrackAdapter(
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         App.getSharedPreferences()
         val searchHistoryObj = SearchHistory()
-        val historyTrackId = holder.itemId
+
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
-            searchHistoryObj.editArray(historyTrackId)
-
-            val toaster = SearchHistory()
-            var text = "$historyTrackId"
+            val historyTrackId = holder.trackNumber
+            for (i in searchHistoryObj.editArray(historyTrackId)){
+                text = "$text $i"
+            }
 
             val duration = Toast.LENGTH_SHORT
-
             val toast = Toast.makeText(holder.itemView.context, text, duration)
             toast.show()
         }
@@ -35,4 +34,5 @@ class TrackAdapter(
     override fun getItemCount(): Int {
         return tracks.size
     }
+
 }
