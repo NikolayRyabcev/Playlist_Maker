@@ -4,9 +4,11 @@ import com.google.gson.Gson
 
 class SearchHistory {
     private val savedHistory = App.getSharedPreferences()
-    val trackHistoryList = ArrayList<Track>()
-    fun editArray(newHistoryTrack: Track): ArrayList<Track> {
+    private val trackHistoryList = ArrayList<Track>()
+    val gson = Gson()
+    lateinit var json:String
 
+    fun editArray(newHistoryTrack: Track) {
         if (trackHistoryList.contains(newHistoryTrack)) {
             trackHistoryList.remove(newHistoryTrack)
             trackHistoryList.add(0, newHistoryTrack)
@@ -17,25 +19,20 @@ class SearchHistory {
                 trackHistoryList.add(0, newHistoryTrack)
             }
         }
-        //saveHistory(trackHistoryList)
-        return trackHistoryList
+        saveHistory(newHistoryTrack)
     }
-
-    private fun saveHistory(trackHistoryList: ArrayList<Track>) {
+    private fun saveHistory(newHistoryTrack: Track) {
         val gson = Gson()
-
-        savedHistory.edit()
-            .clear()
-            .apply()
         for (i in 0 until trackHistoryList.size) {
+            json = gson.toJson(trackHistoryList[i])
             savedHistory.edit()
-                .putString(SEARCH_SHARED_PREFS_KEY, trackHistoryList[i])
+                .putString(SEARCH_SHARED_PREFS_KEY, json)
                 .apply()
         }
     }
-    private fun openHistory() :ArrayList<Track> {
-        val historyArray =ArrayList<Track>()
-
+    private fun openHistory(): ArrayList<Track> {
+        var historyArray = ArrayList<Track>()
+        //historyArray = gson.fromJson(json,Track::class.java)
         return historyArray
     }
 
