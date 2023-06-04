@@ -67,13 +67,9 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
 
             if (hasFocus && inputEditText.text.isEmpty()) {
-                historyView.visibility = View.VISIBLE
-                historyRecycler.visibility = View.VISIBLE
-                clearHistoryButton.visibility = View.VISIBLE
+                historyVisible()
             } else {
-                historyView.visibility = View.GONE
-                historyRecycler.visibility = View.GONE
-                clearHistoryButton.visibility = View.GONE
+                historyInVisible()
             }
         }
         inputEditText.addTextChangedListener(object : TextWatcher {
@@ -82,13 +78,9 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (inputEditText.hasFocus() && p0?.isEmpty() == true) {
-                    historyView.visibility = View.VISIBLE
-                    historyRecycler.visibility = View.VISIBLE
-                    clearHistoryButton.visibility = View.VISIBLE
+                    historyVisible()
                 } else {
-                    historyView.visibility = View.GONE
-                    historyRecycler.visibility = View.GONE
-                    clearHistoryButton.visibility = View.GONE
+                    historyInVisible()
                 }
             }
 
@@ -97,6 +89,7 @@ class SearchActivity : AppCompatActivity() {
         })
 
         ifSearchOkVisibility()
+        historyInVisible()
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
@@ -220,4 +213,21 @@ class SearchActivity : AppCompatActivity() {
         refreshButton.visibility = GONE
     }
 
+    private fun historyVisible() {
+        historyView.visibility = View.VISIBLE
+        historyRecycler.visibility = View.VISIBLE
+        clearHistoryButton.visibility = View.VISIBLE
+        recyclerView.visibility = GONE
+        nothingfoundPict.visibility = GONE
+        nothingfoundText.visibility = GONE
+        loadingproblem.visibility = GONE
+        loadingproblemText.visibility = GONE
+        refreshButton.visibility = GONE
+    }
+
+    private fun historyInVisible() {
+        historyView.visibility = GONE
+        historyRecycler.visibility = GONE
+        clearHistoryButton.visibility = GONE
+    }
 }

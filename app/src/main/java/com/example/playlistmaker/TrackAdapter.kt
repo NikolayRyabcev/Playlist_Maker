@@ -20,13 +20,8 @@ class TrackAdapter(
 
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
-            val historyTrackId = holder.trackNumber
-            searchHistoryObj.editArray(historyTrackId)
-
-            for (i in searchHistoryObj.editArray(historyTrackId)){
-                val j=i.toString()
-                text = "$text $j"
-            }
+            searchHistoryObj.editArray(tracks[position])
+            text= "added"
 
             val duration = Toast.LENGTH_SHORT
             val toast = Toast.makeText(holder.itemView.context, text, duration)

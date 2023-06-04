@@ -1,37 +1,40 @@
 package com.example.playlistmaker
 
+import com.google.gson.Gson
+
 class SearchHistory {
     private val savedHistory = App.getSharedPreferences()
+    val trackHistoryList = ArrayList<Track>()
+    fun editArray(newHistoryTrack: Track): ArrayList<Track> {
 
-
-    fun editArray(historyTrackId: Long): ArrayList<Long> {
-        val trackHistoryList = ArrayList<Long>()
-        if (trackHistoryList.contains(historyTrackId)) {
-            trackHistoryList.remove(historyTrackId)
-            trackHistoryList.add(0, historyTrackId)
+        if (trackHistoryList.contains(newHistoryTrack)) {
+            trackHistoryList.remove(newHistoryTrack)
+            trackHistoryList.add(0, newHistoryTrack)
         } else {
-            if (trackHistoryList.size < 10) trackHistoryList.add(0, historyTrackId)
+            if (trackHistoryList.size < 10) trackHistoryList.add(0, newHistoryTrack)
             else {
                 trackHistoryList.removeAt(9)
-                trackHistoryList.add(0, historyTrackId)
+                trackHistoryList.add(0, newHistoryTrack)
             }
         }
-        saveHistory(trackHistoryList)
+        //saveHistory(trackHistoryList)
         return trackHistoryList
     }
 
-    private fun saveHistory(trackHistoryList: ArrayList<Long>) {
+    private fun saveHistory(trackHistoryList: ArrayList<Track>) {
+        val gson = Gson()
+
         savedHistory.edit()
             .clear()
             .apply()
         for (i in 0 until trackHistoryList.size) {
             savedHistory.edit()
-                .putLong(SEARCH_SHARED_PREFS_KEY, trackHistoryList[i])
+                .putString(SEARCH_SHARED_PREFS_KEY, trackHistoryList[i])
                 .apply()
         }
     }
-    private fun openHistory() :ArrayList<Long> {
-        val historyArray =ArrayList<Long>()
+    private fun openHistory() :ArrayList<Track> {
+        val historyArray =ArrayList<Track>()
 
         return historyArray
     }
