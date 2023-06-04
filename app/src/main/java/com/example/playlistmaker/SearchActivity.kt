@@ -64,13 +64,17 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
 
         applicationContext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, MODE_PRIVATE)
-        inputEditText.setOnFocusChangeListener { view, hasFocus ->
 
+        historyRecycler.layoutManager = LinearLayoutManager(this)
+        historyRecycler.adapter = trackAdapter
+
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty()) {
                 historyVisible()
             } else {
                 historyInVisible()
             }
+
         }
         inputEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -124,6 +128,8 @@ class SearchActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = trackAdapter
+
+
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {

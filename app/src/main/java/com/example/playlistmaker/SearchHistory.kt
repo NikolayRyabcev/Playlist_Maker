@@ -1,17 +1,24 @@
 package com.example.playlistmaker
 
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class SearchHistory {
     private val savedHistory = App.getSharedPreferences()
-    private val trackHistoryList = ArrayList<Track>()
-    val gson = Gson()
-    lateinit var json:String
+    private var trackHistoryList = ArrayList<Track>()
+    private val gson = Gson()
+    private var json = ""
+
 
     fun editArray(newHistoryTrack: Track) {
+        if (!trackHistoryList.isNullOrEmpty()) {
+            val type = object : TypeToken<ArrayList<Track>>() {}.type
+            trackHistoryList = gson.fromJson(json, type)
+        }
         if (trackHistoryList.contains(newHistoryTrack)) {
             trackHistoryList.remove(newHistoryTrack)
             trackHistoryList.add(0, newHistoryTrack)
+
         } else {
             if (trackHistoryList.size < 10) trackHistoryList.add(0, newHistoryTrack)
             else {
@@ -19,21 +26,16 @@ class SearchHistory {
                 trackHistoryList.add(0, newHistoryTrack)
             }
         }
-        saveHistory(newHistoryTrack)
+        saveHistory()
     }
-    private fun saveHistory(newHistoryTrack: Track) {
-        val gson = Gson()
+
+    private fun saveHistory() {
         for (i in 0 until trackHistoryList.size) {
             json = gson.toJson(trackHistoryList[i])
             savedHistory.edit()
                 .putString(SEARCH_SHARED_PREFS_KEY, json)
                 .apply()
         }
-    }
-    private fun openHistory(): ArrayList<Track> {
-        var historyArray = ArrayList<Track>()
-        //historyArray = gson.fromJson(json,Track::class.java)
-        return historyArray
     }
 
 }
