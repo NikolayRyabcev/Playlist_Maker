@@ -12,8 +12,10 @@ class SearchHistory {
 
     fun editArray(newHistoryTrack: Track) {
         if (!trackHistoryList.isNullOrEmpty()) {
-            val type = object : TypeToken<ArrayList<Track>>() {}.type
-            trackHistoryList = gson.fromJson(json, type)
+            if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
+                val type = object : TypeToken<ArrayList<Track>>() {}.type
+                trackHistoryList = gson.fromJson(json, type)
+            }
         }
         if (trackHistoryList.contains(newHistoryTrack)) {
             trackHistoryList.remove(newHistoryTrack)
@@ -30,12 +32,14 @@ class SearchHistory {
     }
 
     private fun saveHistory() {
+        var history = ""
         for (i in 0 until trackHistoryList.size) {
             json = gson.toJson(trackHistoryList[i])
-            savedHistory.edit()
-                .putString(SEARCH_SHARED_PREFS_KEY, json)
-                .apply()
+            history += json
         }
+        savedHistory.edit()
+            .putString(SEARCH_SHARED_PREFS_KEY, history)
+            .apply()
     }
 
 }
