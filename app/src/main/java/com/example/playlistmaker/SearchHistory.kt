@@ -1,20 +1,26 @@
 package com.example.playlistmaker
 
+import android.content.Context
+import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+
 
 class SearchHistory {
     private val savedHistory = App.getSharedPreferences()
     private var trackHistoryList = ArrayList<Track>()
     private val gson = Gson()
     private var json = ""
+    var counter = 0
 
 
     fun editArray(newHistoryTrack: Track) {
-        if (!trackHistoryList.isNullOrEmpty()) {
-            if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
-                val type = object : TypeToken<ArrayList<Track>>() {}.type
-                trackHistoryList = gson.fromJson(json, type)
+        if (json.isNotEmpty()) {
+            if (trackHistoryList.isEmpty()) {
+                if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
+                    val type = object : TypeToken<ArrayList<Track>>() {}.type
+                    trackHistoryList = gson.fromJson(json, type)
+                }
             }
         }
         if (trackHistoryList.contains(newHistoryTrack)) {
@@ -32,14 +38,19 @@ class SearchHistory {
     }
 
     private fun saveHistory() {
-        var history = ""
-        for (i in 0 until trackHistoryList.size) {
-            json = gson.toJson(trackHistoryList[i])
-            history += json
-        }
+
+
+        json = gson.toJson(trackHistoryList)
+
         savedHistory.edit()
-            .putString(SEARCH_SHARED_PREFS_KEY, history)
+            .putString(SEARCH_SHARED_PREFS_KEY, json)
             .apply()
+        counter = trackHistoryList.size
     }
 
+    fun toaster(context: Context, text: String) {
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(context, text, duration)
+        toast.show()
+    }
 }
