@@ -71,7 +71,9 @@
             android:src="@drawable/clearbutton"
             android:visibility="gone" />
     </FrameLayout>
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -173,4 +175,5 @@
             android:textColor="?attr/colorSecondary"
             android:textSize="14sp" />
     </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

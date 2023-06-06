@@ -8,9 +8,11 @@ import android.view.View
 import android.view.View.GONE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -37,7 +39,6 @@ class SearchActivity : AppCompatActivity() {
     lateinit var historyRecycler: RecyclerView
     lateinit var clearHistoryButton: Button
     private val searchHistoryObj = SearchHistory()
-
 
     private val iTunesBaseURL = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -129,11 +130,8 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = trackAdapter
-
-
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -144,8 +142,6 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
-
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
