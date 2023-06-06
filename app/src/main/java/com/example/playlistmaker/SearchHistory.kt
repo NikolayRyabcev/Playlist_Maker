@@ -8,7 +8,7 @@ import com.google.gson.reflect.TypeToken
 
 class SearchHistory {
     private val savedHistory = App.getSharedPreferences()
-    private var trackHistoryList = ArrayList<Track>()
+    var trackHistoryList = ArrayList<Track>()
     private val gson = Gson()
     private var json = ""
     var counter = 0

@@ -29,12 +29,14 @@ class SearchActivity : AppCompatActivity() {
     lateinit var nothingfoundText: TextView
     lateinit var loadingproblemText: TextView
     lateinit var trackAdapter: TrackAdapter
+    lateinit var historyAdapter: TrackAdapter
     lateinit var recyclerView: RecyclerView
     lateinit var inputEditText: EditText
     lateinit var clearButton: ImageView
     lateinit var historyView: TextView
     lateinit var historyRecycler: RecyclerView
     lateinit var clearHistoryButton: Button
+    private val searchHistoryObj = SearchHistory()
 
 
     private val iTunesBaseURL = "https://itunes.apple.com"
@@ -51,6 +53,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
         trackList = ArrayList()
         trackAdapter = TrackAdapter(trackList)
+        historyAdapter = TrackAdapter(searchHistoryObj.trackHistoryList)
         recyclerView = findViewById(R.id.trackRecycler)
         inputEditText = findViewById(R.id.searchUserText)
         clearButton = findViewById(R.id.clearIcon)
@@ -66,13 +69,18 @@ class SearchActivity : AppCompatActivity() {
         applicationContext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, MODE_PRIVATE)
 
         historyRecycler.layoutManager = LinearLayoutManager(this)
-        historyRecycler.adapter = trackAdapter
+        historyRecycler.adapter = historyAdapter
 
+        ifSearchOkVisibility()
+        historyInVisible()
+        searchHistoryObj.toaster(this, "started")
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty()) {
                 historyVisible()
+                searchHistoryObj.toaster(this, "focusOn")
             } else {
                 historyInVisible()
+                searchHistoryObj.toaster(this, "focusOff")
             }
 
         }
@@ -91,10 +99,6 @@ class SearchActivity : AppCompatActivity() {
             override fun afterTextChanged(p0: Editable?) {
             }
         })
-
-        ifSearchOkVisibility()
-        historyInVisible()
-
         clearButton.setOnClickListener {
             inputEditText.setText("")
             val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
