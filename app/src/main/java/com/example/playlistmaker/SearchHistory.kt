@@ -8,30 +8,31 @@ import com.google.gson.reflect.TypeToken
 
 class SearchHistory {
     private val savedHistory = App.getSharedPreferences()
-    var trackHistoryList = ArrayList<Track>()
     private val gson = Gson()
     private var json = ""
     var counter = 0
+    private val searchValue = SearchActivity()
+    var historyList = searchValue.trackHistoryList
 
 
     fun editArray(newHistoryTrack: Track) {
         if (json.isNotEmpty()) {
-            if (trackHistoryList.isEmpty()) {
+            if (historyList.isEmpty()) {
                 if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
                     val type = object : TypeToken<ArrayList<Track>>() {}.type
-                    trackHistoryList = gson.fromJson(json, type)
+                    historyList = gson.fromJson(json, type)
                 }
             }
         }
-        if (trackHistoryList.contains(newHistoryTrack)) {
-            trackHistoryList.remove(newHistoryTrack)
-            trackHistoryList.add(0, newHistoryTrack)
+        if (historyList.contains(newHistoryTrack)) {
+            historyList.remove(newHistoryTrack)
+            historyList.add(0, newHistoryTrack)
 
         } else {
-            if (trackHistoryList.size < 10) trackHistoryList.add(0, newHistoryTrack)
+            if (historyList.size < 10) historyList.add(0, newHistoryTrack)
             else {
-                trackHistoryList.removeAt(9)
-                trackHistoryList.add(0, newHistoryTrack)
+                historyList.removeAt(9)
+                historyList.add(0, newHistoryTrack)
             }
         }
         saveHistory()
@@ -40,12 +41,12 @@ class SearchHistory {
     private fun saveHistory() {
 
 
-        json = gson.toJson(trackHistoryList)
+        json = gson.toJson(historyList)
 
         savedHistory.edit()
             .putString(SEARCH_SHARED_PREFS_KEY, json)
             .apply()
-        counter = trackHistoryList.size
+        counter = historyList.size
     }
 
     fun toaster(context: Context, text: String) {

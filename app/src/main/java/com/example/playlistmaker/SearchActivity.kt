@@ -25,6 +25,8 @@ const val SEARCH_SHARED_PREFS_KEY = "123"
 
 class SearchActivity : AppCompatActivity() {
     lateinit var trackList: ArrayList<Track>
+    lateinit var trackHistoryList: ArrayList<Track>
+
     lateinit var refreshButton: Button
     lateinit var nothingfoundPict: ImageView
     lateinit var loadingproblem: ImageView
@@ -53,8 +55,9 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         trackList = ArrayList()
+        trackHistoryList = ArrayList()
         trackAdapter = TrackAdapter(trackList)
-        historyAdapter = TrackAdapter(searchHistoryObj.trackHistoryList)
+        historyAdapter = TrackAdapter(trackHistoryList)
         recyclerView = findViewById(R.id.trackRecycler)
         inputEditText = findViewById(R.id.searchUserText)
         clearButton = findViewById(R.id.clearIcon)
