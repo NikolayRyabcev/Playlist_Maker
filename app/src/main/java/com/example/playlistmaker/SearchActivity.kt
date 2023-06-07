@@ -25,8 +25,6 @@ const val SEARCH_SHARED_PREFS_KEY = "123"
 
 class SearchActivity : AppCompatActivity() {
     lateinit var trackList: ArrayList<Track>
-    lateinit var trackHistoryList: ArrayList<Track>
-
     lateinit var refreshButton: Button
     lateinit var nothingfoundPict: ImageView
     lateinit var loadingproblem: ImageView
@@ -42,6 +40,7 @@ class SearchActivity : AppCompatActivity() {
     lateinit var clearHistoryButton: Button
     private val searchHistoryObj = SearchHistory()
 
+
     private val iTunesBaseURL = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseURL)
@@ -55,9 +54,9 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         trackList = ArrayList()
-        trackHistoryList = ArrayList()
+
         trackAdapter = TrackAdapter(trackList)
-        historyAdapter = TrackAdapter(trackHistoryList)
+        historyAdapter = TrackAdapter(searchHistoryObj.trackHistoryList)
         recyclerView = findViewById(R.id.trackRecycler)
         inputEditText = findViewById(R.id.searchUserText)
         clearButton = findViewById(R.id.clearIcon)
@@ -70,6 +69,7 @@ class SearchActivity : AppCompatActivity() {
         historyRecycler = findViewById(R.id.historyRecycler)
         clearHistoryButton = findViewById(R.id.clearHistoryButton)
 
+
         applicationContext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, MODE_PRIVATE)
 
         historyRecycler.layoutManager = LinearLayoutManager(this)
@@ -77,9 +77,9 @@ class SearchActivity : AppCompatActivity() {
 
         ifSearchOkVisibility()
         historyInVisible()
-        searchHistoryObj.toaster(this, "started")
+        //searchHistoryObj.toaster(this, "started")
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && inputEditText.text.isEmpty()) {
+            if (hasFocus && inputEditText.text.isEmpty() && App.trackHistoryList.isNotEmpty()) {
                 historyVisible()
                 searchHistoryObj.toaster(this, "focusOn")
             } else {
@@ -93,7 +93,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (inputEditText.hasFocus() && p0?.isEmpty() == true) {
+                if (inputEditText.hasFocus() && p0?.isEmpty() == true && App.trackHistoryList.isNotEmpty()) {
                     historyVisible()
                 } else {
                     historyInVisible()
@@ -144,6 +144,11 @@ class SearchActivity : AppCompatActivity() {
                 true
             }
             false
+        }
+        clearHistoryButton.setOnClickListener {
+            App.trackHistoryList.clear()
+            historyInVisible()
+            historyAdapter.notifyDataSetChanged()
         }
     }
 

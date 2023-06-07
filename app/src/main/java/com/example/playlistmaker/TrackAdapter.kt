@@ -15,12 +15,10 @@ class TrackAdapter(
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         App.getSharedPreferences()
-
-
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             searchHistoryObj.editArray(tracks[position])
-            searchHistoryObj.toaster(holder.itemView.context,searchHistoryObj.counter.toString() )
+           // searchHistoryObj.toaster(holder.itemView.context,searchHistoryObj.counter.toString() )
         }
     }
 
