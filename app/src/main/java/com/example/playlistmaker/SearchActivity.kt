@@ -81,10 +81,10 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty() && App.trackHistoryList.isNotEmpty()) {
                 historyVisible()
-                searchHistoryObj.toaster(this, "focusOn")
+               // searchHistoryObj.toaster(this, "focusOn")
             } else {
                 historyInVisible()
-                searchHistoryObj.toaster(this, "focusOff")
+               // searchHistoryObj.toaster(this, "focusOff")
             }
 
         }
