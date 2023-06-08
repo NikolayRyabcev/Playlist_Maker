@@ -39,6 +39,7 @@ class SearchHistory {
         json = gson.toJson(trackHistoryList)
 
         savedHistory.edit()
+            .clear()
             .putString(SEARCH_SHARED_PREFS_KEY, json)
             .apply()
         counter = trackHistoryList.size
