@@ -16,6 +16,8 @@
     <string name="NothingFound">Ничего не нашлось</string>
     <string name="LoadingProblemText">Проблемы со связью \n \n Загрузка не удалась. Проверьте \n подключение к интернету</string>
     <string name="RefreshText">Обновить</string>
+    <string name="youSearchedText">Вы искали</string>
+    <string name="clearHistoryButton">Очистить историю</string>
 
 
 </resources>

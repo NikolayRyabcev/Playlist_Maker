@@ -1,19 +1,18 @@
 package com.example.playlistmaker
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -22,7 +21,26 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+const val SEARCH_SHARED_PREFS_KEY = "123"
+
 class SearchActivity : AppCompatActivity() {
+    lateinit var trackList: ArrayList<Track>
+    lateinit var refreshButton: Button
+    lateinit var nothingfoundPict: ImageView
+    lateinit var loadingproblem: ImageView
+    lateinit var nothingfoundText: TextView
+    lateinit var loadingproblemText: TextView
+    lateinit var trackAdapter: TrackAdapter
+    lateinit var historyAdapter: TrackAdapter
+    lateinit var recyclerView: RecyclerView
+    lateinit var inputEditText: EditText
+    lateinit var clearButton: ImageView
+    lateinit var historyView: TextView
+    lateinit var historyRecycler: RecyclerView
+    lateinit var clearHistoryButton: Button
+    private val searchHistoryObj = SearchHistory()
+
+
     private val iTunesBaseURL = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseURL)
@@ -30,38 +48,68 @@ class SearchActivity : AppCompatActivity() {
         .build()
 
     private val iTunesService = retrofit.create(iTunesSearchAPI::class.java)
-    var trackList = ArrayList<Track>()
-    lateinit var nothingfoundPict: ImageView
-    lateinit var nothingfoundText: TextView
-    lateinit var loadingproblem: ImageView
-    lateinit var loadingproblemText: TextView
 
-
-    val KEY_TEXT = ""
+    private val KEY_TEXT = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        val nothingfoundPict: ImageView = findViewById(R.id.nothingfoundPict)
-        val loadingproblem: ImageView = findViewById(R.id.loadingproblem)
-        val nothingfoundText: TextView = findViewById(R.id.nothingfoundText)
-        val loadingproblemText: TextView = findViewById(R.id.loadingproblemText)
-        nothingfoundPict.visibility = View.GONE
-        nothingfoundText.visibility = View.GONE
-        loadingproblem.visibility = View.GONE
-        loadingproblemText.visibility = View.GONE
-        val inputEditText = findViewById<EditText>(R.id.searchUserText)
-        val clearButton = findViewById<ImageView>(R.id.clearIcon)
+        trackList = ArrayList()
 
+        trackAdapter = TrackAdapter(trackList)
+        historyAdapter = TrackAdapter(searchHistoryObj.trackHistoryList)
+        recyclerView = findViewById(R.id.trackRecycler)
+        inputEditText = findViewById(R.id.searchUserText)
+        clearButton = findViewById(R.id.clearIcon)
+        refreshButton = findViewById(R.id.refreshButton)
+        nothingfoundPict = findViewById(R.id.nothingfoundPict)
+        nothingfoundText = findViewById(R.id.nothingfoundText)
+        loadingproblemText = findViewById(R.id.loadingproblemText)
+        loadingproblem = findViewById(R.id.loadingproblem)
+        historyView = findViewById(R.id.historyTextView)
+        historyRecycler = findViewById(R.id.historyRecycler)
+        clearHistoryButton = findViewById(R.id.clearHistoryButton)
+
+
+        applicationContext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, MODE_PRIVATE)
+
+        historyRecycler.layoutManager = LinearLayoutManager(this)
+        historyRecycler.adapter = historyAdapter
+
+        ifSearchOkVisibility()
+        historyInVisible()
+        //searchHistoryObj.toaster(this, "started")
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && inputEditText.text.isEmpty() && App.trackHistoryList.isNotEmpty()) {
+                historyVisible()
+               // searchHistoryObj.toaster(this, "focusOn")
+            } else {
+                historyInVisible()
+               // searchHistoryObj.toaster(this, "focusOff")
+            }
+
+        }
+        inputEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (inputEditText.hasFocus() && p0?.isEmpty() == true && App.trackHistoryList.isNotEmpty()) {
+                    historyVisible()
+                } else {
+                    historyInVisible()
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
         clearButton.setOnClickListener {
             inputEditText.setText("")
             val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             keyboard.hideSoftInputFromWindow(inputEditText.windowToken, 0) // скрыть клавиатуру
             inputEditText.clearFocus()
             trackList.clear()
-            nothingfoundPict.visibility = View.GONE
-            nothingfoundText.visibility = View.GONE
-            loadingproblem.visibility = View.GONE
-            loadingproblemText.visibility = View.GONE
+            ifSearchOkVisibility()
         }
 
 
@@ -84,66 +132,24 @@ class SearchActivity : AppCompatActivity() {
         arrowButton.setOnClickListener {
             finish()
         }
-        val refreshButton = findViewById<Button>(R.id.refreshButton)
-        refreshButton.visibility = GONE
-        val recyclerView = findViewById<RecyclerView>(R.id.trackRecycler)
+
         recyclerView.layoutManager = LinearLayoutManager(this)
-        val trackAdapter = TrackAdapter(trackList)
         recyclerView.adapter = trackAdapter
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-
                 if (inputEditText.text.isNotEmpty()) {
-                    iTunesService.search(inputEditText.text.toString())
-                        .enqueue(object : Callback<TrackResponse> {
-
-                            override fun onResponse(
-                                call: Call<TrackResponse>,
-                                response: Response<TrackResponse>
-                            ) {
-                                if (response.code() == 200) {
-                                    trackList.clear()
-                                    recyclerView.visibility = View.VISIBLE
-                                    refreshButton.visibility = View.GONE
-                                    nothingfoundPict.visibility = View.GONE
-                                    nothingfoundText.visibility = View.GONE
-                                    loadingproblem.visibility = View.GONE
-                                    loadingproblemText.visibility = View.GONE
-                                    if (response.body()?.results?.isNotEmpty() == true) {
-                                        trackList.addAll(response.body()?.results!!)
-                                        trackAdapter.notifyDataSetChanged()
-                                    }
-                                    if (trackAdapter.tracks.isEmpty()) {
-                                        nothingfoundPict.visibility = View.VISIBLE
-                                        nothingfoundText.visibility = View.VISIBLE
-                                        trackAdapter.notifyDataSetChanged()
-                                    }
-                                } else {
-                                    loadingproblem.visibility = View.VISIBLE
-                                    loadingproblemText.visibility = View.VISIBLE
-                                    refreshButton.visibility = View.VISIBLE
-                                    recyclerView.visibility = View.GONE
-                                    refreshButton.setOnClickListener { search(inputEditText) }
-                                    trackAdapter.notifyDataSetChanged()
-                                }
-                            }
-
-                            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                                loadingproblem.visibility = View.VISIBLE
-                                loadingproblemText.visibility = View.VISIBLE
-                                refreshButton.visibility = View.VISIBLE
-                                recyclerView.visibility = View.GONE
-                                refreshButton.setOnClickListener { search(inputEditText) }
-                            }
-                        })
+                    search(inputEditText)
                 }
                 true
             }
             false
         }
-
-
+        clearHistoryButton.setOnClickListener {
+            App.trackHistoryList.clear()
+            historyInVisible()
+            historyAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -160,7 +166,7 @@ class SearchActivity : AppCompatActivity() {
     private fun clearButtonVisibility(s: CharSequence?): Int {
 
         return if (s.isNullOrEmpty()) {
-            View.GONE
+            GONE
         } else {
             View.VISIBLE
         }
@@ -168,33 +174,17 @@ class SearchActivity : AppCompatActivity() {
 
     private fun search(inputEditText: EditText) {
         trackList.clear()
-        val refreshButton = findViewById<Button>(R.id.refreshButton)
-        refreshButton.visibility = GONE
-        val trackAdapter = TrackAdapter(trackList)
-        val nothingfoundPict: ImageView = findViewById(R.id.nothingfoundPict)
-        val loadingproblem: ImageView = findViewById(R.id.loadingproblem)
-        val nothingfoundText: TextView = findViewById(R.id.nothingfoundText)
-        val loadingproblemText: TextView = findViewById(R.id.loadingproblemText)
-        val recyclerView = findViewById<RecyclerView>(R.id.trackRecycler)
-        nothingfoundPict.visibility = View.GONE
-        nothingfoundText.visibility = View.GONE
-        loadingproblem.visibility = View.GONE
-        loadingproblemText.visibility = View.GONE
+
+        recyclerView.visibility = View.VISIBLE
         iTunesService.search(inputEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
-
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
                     if (response.code() == 200) {
                         trackList.clear()
-                        recyclerView.visibility = View.VISIBLE
-                        nothingfoundPict.visibility = View.GONE
-                        nothingfoundText.visibility = View.GONE
-                        loadingproblem.visibility = View.GONE
-                        loadingproblemText.visibility = View.GONE
-                        refreshButton.visibility = View.GONE
+                        ifSearchOkVisibility()
                         if (response.body()?.results?.isNotEmpty() == true) {
                             trackList.addAll(response.body()?.results!!)
                             trackAdapter.notifyDataSetChanged()
@@ -202,14 +192,18 @@ class SearchActivity : AppCompatActivity() {
                         if (trackAdapter.tracks.isEmpty()) {
                             nothingfoundPict.visibility = View.VISIBLE
                             nothingfoundText.visibility = View.VISIBLE
+                            loadingproblem.visibility = GONE
+                            loadingproblemText.visibility = GONE
                             trackAdapter.notifyDataSetChanged()
                         }
                     } else {
                         loadingproblem.visibility = View.VISIBLE
                         loadingproblemText.visibility = View.VISIBLE
+                        nothingfoundPict.visibility = GONE
+                        nothingfoundText.visibility = GONE
                         refreshButton.setOnClickListener { search(inputEditText) }
                         refreshButton.visibility = View.VISIBLE
-                        recyclerView.visibility = View.GONE
+                        recyclerView.visibility = GONE
                         trackAdapter.notifyDataSetChanged()
                     }
                 }
@@ -218,9 +212,36 @@ class SearchActivity : AppCompatActivity() {
                     loadingproblem.visibility = View.VISIBLE
                     loadingproblemText.visibility = View.VISIBLE
                     refreshButton.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
+                    recyclerView.visibility = GONE
                     refreshButton.setOnClickListener { search(inputEditText) }
                 }
             })
+    }
+
+    private fun ifSearchOkVisibility() {
+        recyclerView.visibility = View.VISIBLE
+        nothingfoundPict.visibility = GONE
+        nothingfoundText.visibility = GONE
+        loadingproblem.visibility = GONE
+        loadingproblemText.visibility = GONE
+        refreshButton.visibility = GONE
+    }
+
+    private fun historyVisible() {
+        historyView.visibility = View.VISIBLE
+        historyRecycler.visibility = View.VISIBLE
+        clearHistoryButton.visibility = View.VISIBLE
+        recyclerView.visibility = GONE
+        nothingfoundPict.visibility = GONE
+        nothingfoundText.visibility = GONE
+        loadingproblem.visibility = GONE
+        loadingproblemText.visibility = GONE
+        refreshButton.visibility = GONE
+    }
+
+    private fun historyInVisible() {
+        historyView.visibility = GONE
+        historyRecycler.visibility = GONE
+        clearHistoryButton.visibility = GONE
     }
 }
