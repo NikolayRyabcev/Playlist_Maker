@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,10 @@ class TrackAdapter(
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             searchHistoryObj.editArray(tracks[position])
+            val intent = Intent(holder.itemView.context, PlayerActivity::class.java)
+            holder.itemView.context.startActivity(intent)
            // searchHistoryObj.toaster(holder.itemView.context,searchHistoryObj.counter.toString() )
+           // startActivity(Intent(holder.itemView.context, PlayerActivity::class.java))
         }
     }
 

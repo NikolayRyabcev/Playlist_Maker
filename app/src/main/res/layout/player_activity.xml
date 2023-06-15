@@ -29,7 +29,6 @@
         android:src="@drawable/arrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintTopt_toTopOf="parent"
         app:tint="?attr/colorOnSecondary" />
 
     <!--Обложка трека/плейсхолдер-->
