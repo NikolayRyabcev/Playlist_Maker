@@ -4,6 +4,8 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TrackAdapter(
     var tracks: List<Track>
@@ -20,6 +22,18 @@ class TrackAdapter(
         holder.itemView.setOnClickListener {
             searchHistoryObj.editArray(tracks[position])
             val intent = Intent(holder.itemView.context, PlayerActivity::class.java)
+            intent.putExtra("Track Name", tracks[position].trackName)
+            intent.putExtra("Artist Name", tracks[position].artistName)
+            val trackTime= SimpleDateFormat("mm:ss", Locale.getDefault()).format(tracks[position].trackTimeMillis)
+            intent.putExtra("Track Time", trackTime)
+            intent.putExtra("Album", tracks[position].collectionName)
+            intent.putExtra("Year", tracks[position].releaseDate)
+            intent.putExtra("Genre", tracks[position].primaryGenreName)
+            intent.putExtra("Country", tracks[position].country)
+            intent.putExtra("Cover", tracks[position].artworkUrl100)
+
+
+
             holder.itemView.context.startActivity(intent)
            // searchHistoryObj.toaster(holder.itemView.context,searchHistoryObj.counter.toString() )
            // startActivity(Intent(holder.itemView.context, PlayerActivity::class.java))

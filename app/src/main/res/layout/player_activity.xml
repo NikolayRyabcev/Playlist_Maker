@@ -209,7 +209,7 @@
 
     <!--Значения полей-->
     <TextView
-        android:id="@+id/trackTime"
+        android:id="@+id/time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="39dp"
@@ -240,7 +240,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/trackTimeName"
-        app:layout_constraintTop_toBottomOf="@id/trackTime" />
+        app:layout_constraintTop_toBottomOf="@id/time" />
 
     <TextView
         android:id="@+id/year"
