@@ -23,6 +23,7 @@ class PlayerActivity : AppCompatActivity() {
         val cover = findViewById<ImageView>(R.id.trackCover)
 
 
+
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
         arrowButton.setOnClickListener {
             finish()
