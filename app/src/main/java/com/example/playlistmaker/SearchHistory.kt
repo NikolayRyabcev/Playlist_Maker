@@ -9,11 +9,12 @@ import com.google.gson.reflect.TypeToken
 class SearchHistory {
     private val savedHistory = App.getSharedPreferences()
     private val gson = Gson()
-    private var json = ""
+
     var counter = 0
     var trackHistoryList = App.trackHistoryList
 
     fun editArray(newHistoryTrack: Track) {
+        var json = ""
         if (json.isNotEmpty()) {
             if (trackHistoryList.isEmpty()) {
                 if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
@@ -36,6 +37,7 @@ class SearchHistory {
     }
 
     private fun saveHistory() {
+        var json = ""
         json = gson.toJson(trackHistoryList)
         savedHistory.edit()
             .clear()

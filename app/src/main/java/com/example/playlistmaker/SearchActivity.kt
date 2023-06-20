@@ -38,7 +38,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyView: TextView
     private lateinit var historyRecycler: RecyclerView
     private lateinit var clearHistoryButton: Button
-    private val searchHistoryObj = SearchHistory()
+    val searchHistoryObj = SearchHistory()
 
 
     private val iTunesBaseURL = "https://itunes.apple.com"

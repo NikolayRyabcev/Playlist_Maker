@@ -10,7 +10,7 @@ import java.util.Locale
 class TrackAdapter(
     var tracks: ArrayList<Track>
 ) : RecyclerView.Adapter<TrackViewHolder>() {
-    private val searchHistoryObj = SearchHistory()
+    private val searchActivityObj = SearchActivity()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_layout, parent, false)
         return TrackViewHolder(view)
@@ -20,8 +20,6 @@ class TrackAdapter(
         App.getSharedPreferences()
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
-            searchHistoryObj.editArray(tracks[position])
-            notifyDataSetChanged()
 
             val intent = Intent(holder.itemView.context, PlayerActivity::class.java)
             intent.putExtra("Track Name", tracks[position].trackName)
@@ -34,6 +32,9 @@ class TrackAdapter(
             intent.putExtra("Country", tracks[position].country)
             intent.putExtra("Cover", tracks[position].artworkUrl100)
             holder.itemView.context.startActivity(intent)
+
+            searchActivityObj.searchHistoryObj.editArray(tracks[position])
+            notifyDataSetChanged()
         }
     }
 
