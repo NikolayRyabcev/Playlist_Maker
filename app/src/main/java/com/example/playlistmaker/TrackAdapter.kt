@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackAdapter(
-    var tracks: List<Track>
+    var tracks: ArrayList<Track>
 ) : RecyclerView.Adapter<TrackViewHolder>() {
     private val searchHistoryObj = SearchHistory()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -21,6 +21,8 @@ class TrackAdapter(
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             searchHistoryObj.editArray(tracks[position])
+            notifyDataSetChanged()
+
             val intent = Intent(holder.itemView.context, PlayerActivity::class.java)
             intent.putExtra("Track Name", tracks[position].trackName)
             intent.putExtra("Artist Name", tracks[position].artistName)
@@ -31,12 +33,7 @@ class TrackAdapter(
             intent.putExtra("Genre", tracks[position].primaryGenreName)
             intent.putExtra("Country", tracks[position].country)
             intent.putExtra("Cover", tracks[position].artworkUrl100)
-
-
-
             holder.itemView.context.startActivity(intent)
-           // searchHistoryObj.toaster(holder.itemView.context,searchHistoryObj.counter.toString() )
-           // startActivity(Intent(holder.itemView.context, PlayerActivity::class.java))
         }
     }
 
