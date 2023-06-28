@@ -18,6 +18,18 @@
     <string name="RefreshText">Обновить</string>
     <string name="youSearchedText">Вы искали</string>
     <string name="clearHistoryButton">Очистить историю</string>
+    <string name="track_name">Track name long long long long size</string>
+    <string name="artist_name">Artist name</string>
+    <string name="uncknowncountry">UncknownCountry</string>
+    <string name="uncknowngenre">UncknownGenre</string>
+    <string name="uncknownyear">UncknownYear</string>
+    <string name="uncknownalbum">UncknownAlbum</string>
+    <string name="_00_00">00:00</string>
+    <string name="Country">Страна</string>
+    <string name="Genre">Жанр</string>
+    <string name="year">Год</string>
+    <string name="album">Альбом</string>
+    <string name="tracktime">Длительность</string>
 
 
 </resources>

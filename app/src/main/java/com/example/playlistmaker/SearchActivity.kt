@@ -31,14 +31,14 @@ class SearchActivity : AppCompatActivity() {
     lateinit var nothingfoundText: TextView
     lateinit var loadingproblemText: TextView
     lateinit var trackAdapter: TrackAdapter
-    lateinit var historyAdapter: TrackAdapter
+    private lateinit var historyAdapter: TrackAdapter
     lateinit var recyclerView: RecyclerView
     lateinit var inputEditText: EditText
     lateinit var clearButton: ImageView
-    lateinit var historyView: TextView
-    lateinit var historyRecycler: RecyclerView
-    lateinit var clearHistoryButton: Button
-    private val searchHistoryObj = SearchHistory()
+    private lateinit var historyView: TextView
+    private lateinit var historyRecycler: RecyclerView
+    private lateinit var clearHistoryButton: Button
+    val searchHistoryObj = SearchHistory()
 
 
     private val iTunesBaseURL = "https://itunes.apple.com"
@@ -77,14 +77,11 @@ class SearchActivity : AppCompatActivity() {
 
         ifSearchOkVisibility()
         historyInVisible()
-        //searchHistoryObj.toaster(this, "started")
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && inputEditText.text.isEmpty() && App.trackHistoryList.isNotEmpty()) {
                 historyVisible()
-               // searchHistoryObj.toaster(this, "focusOn")
             } else {
                 historyInVisible()
-               // searchHistoryObj.toaster(this, "focusOff")
             }
 
         }
@@ -148,6 +145,8 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton.setOnClickListener {
             App.trackHistoryList.clear()
             historyInVisible()
+            trackAdapter.tracks.clear()
+            trackAdapter.notifyDataSetChanged()
             historyAdapter.notifyDataSetChanged()
         }
     }

@@ -17,5 +17,6 @@
         <item name="colorAccent">#E6E8EB</item>
         <item name="colorContainer">#AEAFB4</item>
         <item name="colorError">@color/text1</item>
+        <item name="colorOnBackground">#c01A1B22</item>
     </style>
 </resources>
