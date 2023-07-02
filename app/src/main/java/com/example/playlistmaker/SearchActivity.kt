@@ -2,11 +2,12 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.GONE
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -24,6 +25,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 const val SEARCH_SHARED_PREFS_KEY = "123"
 
 class SearchActivity : AppCompatActivity() {
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
+
     lateinit var trackList: ArrayList<Track>
     lateinit var refreshButton: Button
     lateinit var nothingfoundPict: ImageView
@@ -39,6 +44,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyRecycler: RecyclerView
     private lateinit var clearHistoryButton: Button
     val searchHistoryObj = SearchHistory()
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { search(inputEditText) }
 
 
     private val iTunesBaseURL = "https://itunes.apple.com"
@@ -92,14 +99,19 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (inputEditText.hasFocus() && p0?.isEmpty() == true && App.trackHistoryList.isNotEmpty()) {
                     historyVisible()
+
                 } else {
                     historyInVisible()
+                }
+                if (inputEditText.text.isNotEmpty()) {
+                    searchDebounce()
                 }
             }
 
             override fun afterTextChanged(p0: Editable?) {
             }
         })
+
         clearButton.setOnClickListener {
             inputEditText.setText("")
             val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -133,15 +145,16 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = trackAdapter
 
-        inputEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (inputEditText.text.isNotEmpty()) {
-                    search(inputEditText)
-                }
-                true
-            }
-            false
-        }
+        //inputEditText.setOnEditorActionListener { _, actionId, _ ->
+        //    if (actionId == EditorInfo.IME_ACTION_DONE) {
+        //       if (inputEditText.text.isNotEmpty()) {
+        //            search(inputEditText)
+        //       }
+        //       true
+        //   }
+        //    false
+        //}
+
         clearHistoryButton.setOnClickListener {
             App.trackHistoryList.clear()
             historyInVisible()
@@ -215,6 +228,7 @@ class SearchActivity : AppCompatActivity() {
                     refreshButton.setOnClickListener { search(inputEditText) }
                 }
             })
+        return
     }
 
     private fun ifSearchOkVisibility() {
@@ -242,5 +256,10 @@ class SearchActivity : AppCompatActivity() {
         historyView.visibility = GONE
         historyRecycler.visibility = GONE
         clearHistoryButton.visibility = GONE
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 }
