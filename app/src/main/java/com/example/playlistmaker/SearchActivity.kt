@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,23 +31,27 @@ class SearchActivity : AppCompatActivity() {
     }
 
     lateinit var trackList: ArrayList<Track>
+
     lateinit var refreshButton: Button
     lateinit var nothingfoundPict: ImageView
     lateinit var loadingproblem: ImageView
     lateinit var nothingfoundText: TextView
     lateinit var loadingproblemText: TextView
+
     lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
+    private lateinit var historyView: TextView
+    private lateinit var historyRecycler: RecyclerView
+
     lateinit var recyclerView: RecyclerView
     lateinit var inputEditText: EditText
     lateinit var clearButton: ImageView
-    private lateinit var historyView: TextView
-    private lateinit var historyRecycler: RecyclerView
     private lateinit var clearHistoryButton: Button
+
     val searchHistoryObj = SearchHistory()
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search(inputEditText) }
-
+    lateinit var progressBar: ProgressBar
 
     private val iTunesBaseURL = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -185,8 +190,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search(inputEditText: EditText) {
+        progressBar = findViewById(R.id.progressBar)
         trackList.clear()
-
+        progressBar.visibility = View.VISIBLE
         recyclerView.visibility = View.VISIBLE
         iTunesService.search(inputEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
@@ -208,6 +214,7 @@ class SearchActivity : AppCompatActivity() {
                             loadingproblemText.visibility = GONE
                             trackAdapter.notifyDataSetChanged()
                         }
+                        progressBar.visibility = View.GONE
                     } else {
                         loadingproblem.visibility = View.VISIBLE
                         loadingproblemText.visibility = View.VISIBLE
@@ -217,6 +224,7 @@ class SearchActivity : AppCompatActivity() {
                         refreshButton.visibility = View.VISIBLE
                         recyclerView.visibility = GONE
                         trackAdapter.notifyDataSetChanged()
+                        progressBar.visibility = View.GONE
                     }
                 }
 
@@ -226,6 +234,7 @@ class SearchActivity : AppCompatActivity() {
                     refreshButton.visibility = View.VISIBLE
                     recyclerView.visibility = GONE
                     refreshButton.setOnClickListener { search(inputEditText) }
+                    progressBar.visibility = View.GONE
                 }
             })
         return

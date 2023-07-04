@@ -21,7 +21,6 @@ class TrackAdapter(
     private val handler = Handler(Looper.getMainLooper())
 
     private val searchActivityObj = SearchActivity()
-    private val searchHistoryObj = SearchHistory()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_layout, parent, false)
         return TrackViewHolder(view)
@@ -32,9 +31,6 @@ class TrackAdapter(
         isClickAllowed = true
         holder.bind(tracks[position])
         if (clickDebounce()) {
-            val clicker:String
-            if (isClickAllowed) clicker="true" else clicker="false"
-            searchHistoryObj.toaster(holder.itemView.context, clicker)
             holder.itemView.setOnClickListener {
 
                 val intent = Intent(holder.itemView.context, PlayerActivity::class.java)
@@ -50,6 +46,7 @@ class TrackAdapter(
                 intent.putExtra("Genre", tracks[position].primaryGenreName)
                 intent.putExtra("Country", tracks[position].country)
                 intent.putExtra("Cover", tracks[position].artworkUrl100)
+                intent.putExtra("URL", tracks[position].previewUrl)
                 holder.itemView.context.startActivity(intent)
 
                 searchActivityObj.searchHistoryObj.editArray(tracks[position])
