@@ -20,7 +20,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private var playerState = STATE_DEFAULT
     private val mediaPlayer = MediaPlayer()
-    private lateinit var playButton:ImageButton
+    lateinit var playButton:ImageButton
     lateinit var pauseButton:ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,24 +77,29 @@ class PlayerActivity : AppCompatActivity() {
             playButton.isEnabled=true
             playerState=STATE_PREPARED
             playButton.visibility= View.GONE
-            playButton.visibility= View.VISIBLE
+            pauseButton.visibility= View.VISIBLE
 
         }
         mediaPlayer.setOnCompletionListener{
             playerState=STATE_PREPARED
             playButton.visibility= View.VISIBLE
-            playButton.visibility= View.GONE
+            pauseButton.visibility= View.GONE
         }
     }
 
     private fun startPlayer() {
         mediaPlayer.start()
         playerState=STATE_PLAYING
+        playButton.visibility= View.GONE
+        pauseButton.visibility= View.VISIBLE
     }
 
     private fun pausePlayer(){
+        super.onPause()
         mediaPlayer.pause()
         playerState=STATE_PAUSED
+        playButton.visibility= View.VISIBLE
+        pauseButton.visibility= View.GONE
     }
 
     private fun playbackControl (){
@@ -102,5 +107,9 @@ class PlayerActivity : AppCompatActivity() {
             STATE_PLAYING ->{pausePlayer()}
             STATE_PREPARED, STATE_PAUSED ->{startPlayer()}
         }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
     }
 }
