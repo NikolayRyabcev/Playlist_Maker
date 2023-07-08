@@ -2,8 +2,9 @@ package com.example.playlistmaker
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -16,12 +17,17 @@ class PlayerActivity : AppCompatActivity() {
         private val STATE_PREPARED = 1
         private val STATE_PLAYING = 2
         private val STATE_PAUSED = 3
+        const val DELAY=1000L
     }
 
     private var playerState = STATE_DEFAULT
     private val mediaPlayer = MediaPlayer()
-    lateinit var playButton:ImageButton
-    lateinit var pauseButton:ImageButton
+    lateinit var playButton: ImageButton
+    lateinit var pauseButton: ImageButton
+    lateinit var timer: TextView
+
+    private var mainThreadHandler: Handler? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +42,12 @@ class PlayerActivity : AppCompatActivity() {
         val country = findViewById<TextView>(R.id.country)
         val cover = findViewById<ImageView>(R.id.trackCover)
         playButton = findViewById(R.id.playButton)
-        pauseButton = findViewById(R.id.playButton)
+        pauseButton = findViewById(R.id.pauseButton)
+        timer = findViewById(R.id.trackTimer)
 
-        playButton.setOnClickListener{playbackControl()}
-        pauseButton.setOnClickListener{playbackControl()}
+
+        playButton.setOnClickListener { playbackControl() }
+        pauseButton.setOnClickListener { playbackControl() }
 
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
         arrowButton.setOnClickListener {
@@ -70,46 +78,68 @@ class PlayerActivity : AppCompatActivity() {
         if (!url.isNullOrEmpty()) preparePlayer(url)
     }
 
-    private fun preparePlayer(url:String) {
+    private fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener{
-            playButton.isEnabled=true
-            playerState=STATE_PREPARED
-            playButton.visibility= View.GONE
-            pauseButton.visibility= View.VISIBLE
+        mediaPlayer.setOnPreparedListener {
+            playButton.isEnabled = true
+            playerState = STATE_PREPARED
+            playButton.visibility = View.VISIBLE
+            pauseButton.visibility = View.GONE
 
         }
-        mediaPlayer.setOnCompletionListener{
-            playerState=STATE_PREPARED
-            playButton.visibility= View.VISIBLE
-            pauseButton.visibility= View.GONE
+        mediaPlayer.setOnCompletionListener {
+            playerState = STATE_PREPARED
+            playButton.visibility = View.VISIBLE
+            pauseButton.visibility = View.GONE
         }
     }
 
     private fun startPlayer() {
         mediaPlayer.start()
-        playerState=STATE_PLAYING
-        playButton.visibility= View.GONE
-        pauseButton.visibility= View.VISIBLE
+        playerState = STATE_PLAYING
+        playButton.visibility = View.GONE
+        pauseButton.visibility = View.VISIBLE
+        timing()
     }
 
-    private fun pausePlayer(){
+    private fun pausePlayer() {
         super.onPause()
         mediaPlayer.pause()
-        playerState=STATE_PAUSED
-        playButton.visibility= View.VISIBLE
-        pauseButton.visibility= View.GONE
+        playerState = STATE_PAUSED
+        playButton.visibility = View.VISIBLE
+        pauseButton.visibility = View.GONE
     }
 
-    private fun playbackControl (){
+    private fun playbackControl() {
         when (playerState) {
-            STATE_PLAYING ->{pausePlayer()}
-            STATE_PREPARED, STATE_PAUSED ->{startPlayer()}
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
+    }
+
+    fun timing(): Runnable {
+        return object : Runnable {
+            override fun run() {
+                mainThreadHandler = Handler(Looper.getMainLooper())
+                var time = 30
+                while (time>=0) {
+                    timer.text="00:$time.toString()"
+                    time=-1
+                    mainThreadHandler?.postDelayed(this, DELAY)
+                }
+
+            }
+        }
     }
 }
