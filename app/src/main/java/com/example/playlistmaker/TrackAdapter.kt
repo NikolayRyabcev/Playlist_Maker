@@ -64,7 +64,6 @@ class TrackAdapter(
         if (isClickAllowed) {
             isClickAllowed = false
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-
         }
         return current
     }

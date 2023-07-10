@@ -83,7 +83,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="140dp"
             android:indeterminate="true"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:progressTint="#3772E7"/>
 
         <FrameLayout
             android:layout_width="match_parent"

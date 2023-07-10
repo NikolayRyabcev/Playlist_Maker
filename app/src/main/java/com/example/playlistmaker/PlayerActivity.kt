@@ -29,6 +29,7 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var timer: TextView
 
     private var mainThreadHandler: Handler? = null
+    var time = 30
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +47,7 @@ class PlayerActivity : AppCompatActivity() {
         playButton = findViewById(R.id.playButton)
         pauseButton = findViewById(R.id.pauseButton)
         timer = findViewById(R.id.trackTimer)
-
+        mainThreadHandler = Handler(Looper.getMainLooper())
 
         playButton.setOnClickListener { playbackControl() }
         pauseButton.setOnClickListener { playbackControl() }
@@ -88,7 +89,6 @@ class PlayerActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
             playButton.visibility = View.VISIBLE
             pauseButton.visibility = View.GONE
-
         }
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
@@ -102,7 +102,6 @@ class PlayerActivity : AppCompatActivity() {
         playerState = STATE_PLAYING
         playButton.visibility = View.GONE
         pauseButton.visibility = View.VISIBLE
-        toaster(this, "Timer started")
         mainThreadHandler?.post(
             timing()
         )
@@ -124,6 +123,7 @@ class PlayerActivity : AppCompatActivity() {
 
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
+
             }
         }
     }
@@ -135,14 +135,15 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun timing(): Runnable {
         return object : Runnable {
-            override fun run() {
 
-                mainThreadHandler = Handler(Looper.getMainLooper())
-                var time = 30
-                while (time >= 0) {
-                    timer.text = "00:$time.toString()"
-                    time = -1
-                    mainThreadHandler?.postDelayed(this, DELAY)
+            override fun run() {
+                if (playerState == STATE_PLAYING) {
+                    if (time > 0) {
+                        time -= 1
+                        val postTime = time.toString()
+                        if (time < 10) timer.text = "00:0$postTime" else timer.text = "00:$postTime"
+                        mainThreadHandler?.postDelayed(this, DELAY)
+                    }
                 }
             }
         }
