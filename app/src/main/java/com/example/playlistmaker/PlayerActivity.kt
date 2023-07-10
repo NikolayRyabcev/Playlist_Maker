@@ -19,7 +19,7 @@ class PlayerActivity : AppCompatActivity() {
         private val STATE_PREPARED = 1
         private val STATE_PLAYING = 2
         private val STATE_PAUSED = 3
-        const val DELAY=1000L
+        const val DELAY = 1000L
     }
 
     private var playerState = STATE_DEFAULT
@@ -102,8 +102,10 @@ class PlayerActivity : AppCompatActivity() {
         playerState = STATE_PLAYING
         playButton.visibility = View.GONE
         pauseButton.visibility = View.VISIBLE
-        toaster(this,"Timer started")
-        timing()
+        toaster(this, "Timer started")
+        mainThreadHandler?.post(
+            timing()
+        )
     }
 
     private fun pausePlayer() {
@@ -137,9 +139,9 @@ class PlayerActivity : AppCompatActivity() {
 
                 mainThreadHandler = Handler(Looper.getMainLooper())
                 var time = 30
-                while (time>=0) {
-                    timer.text="00:$time.toString()"
-                    time=-1
+                while (time >= 0) {
+                    timer.text = "00:$time.toString()"
+                    time = -1
                     mainThreadHandler?.postDelayed(this, DELAY)
                 }
             }
