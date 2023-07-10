@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -8,6 +9,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 
@@ -100,6 +102,7 @@ class PlayerActivity : AppCompatActivity() {
         playerState = STATE_PLAYING
         playButton.visibility = View.GONE
         pauseButton.visibility = View.VISIBLE
+        toaster(this,"Timer started")
         timing()
     }
 
@@ -128,9 +131,10 @@ class PlayerActivity : AppCompatActivity() {
         mediaPlayer.release()
     }
 
-    fun timing(): Runnable {
+    private fun timing(): Runnable {
         return object : Runnable {
             override fun run() {
+
                 mainThreadHandler = Handler(Looper.getMainLooper())
                 var time = 30
                 while (time>=0) {
@@ -138,8 +142,13 @@ class PlayerActivity : AppCompatActivity() {
                     time=-1
                     mainThreadHandler?.postDelayed(this, DELAY)
                 }
-
             }
         }
+    }
+
+    private fun toaster(context: Context, text: String) {
+        val duration = Toast.LENGTH_SHORT
+        val toast = Toast.makeText(context, text, duration)
+        toast.show()
     }
 }
