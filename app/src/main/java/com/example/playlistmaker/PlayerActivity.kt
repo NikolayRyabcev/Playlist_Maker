@@ -133,6 +133,15 @@ class PlayerActivity : AppCompatActivity() {
         mediaPlayer.release()
     }
 
+    override fun onPause(){
+        super.onPause()
+        if (mediaPlayer.isPlaying) mediaPlayer.pause()
+    }
+    override fun onResume(){
+        super.onResume()
+        mediaPlayer.start()
+    }
+
     private fun timing(): Runnable {
         return object : Runnable {
 

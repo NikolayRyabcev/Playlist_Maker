@@ -108,7 +108,7 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     historyInVisible()
                 }
-                if (inputEditText.text.isNotEmpty()) {
+                if (!inputEditText.text.isNullOrEmpty()) {
                     searchDebounce()
                 }
             }
@@ -192,52 +192,54 @@ class SearchActivity : AppCompatActivity() {
     private fun search(inputEditText: EditText) {
         progressBar = findViewById(R.id.progressBar)
         trackList.clear()
-        progressBar.visibility = View.VISIBLE
-        recyclerView.visibility = View.VISIBLE
-        iTunesService.search(inputEditText.text.toString())
-            .enqueue(object : Callback<TrackResponse> {
-                override fun onResponse(
-                    call: Call<TrackResponse>,
-                    response: Response<TrackResponse>
-                ) {
-                    if (response.code() == 200) {
-                        trackList.clear()
-                        ifSearchOkVisibility()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            trackList.addAll(response.body()?.results!!)
+        if (!inputEditText.text.isNullOrEmpty()) {
+            progressBar.visibility = View.VISIBLE
+            recyclerView.visibility = View.VISIBLE
+            iTunesService.search(inputEditText.text.toString())
+                .enqueue(object : Callback<TrackResponse> {
+                    override fun onResponse(
+                        call: Call<TrackResponse>,
+                        response: Response<TrackResponse>
+                    ) {
+                        if (response.code() == 200) {
+                            trackList.clear()
+                            ifSearchOkVisibility()
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                trackList.addAll(response.body()?.results!!)
+                                trackAdapter.notifyDataSetChanged()
+                            }
+                            if (trackAdapter.tracks.isEmpty()) {
+                                nothingfoundPict.visibility = View.VISIBLE
+                                nothingfoundText.visibility = View.VISIBLE
+                                loadingproblem.visibility = GONE
+                                loadingproblemText.visibility = GONE
+                                trackAdapter.notifyDataSetChanged()
+                            }
+                            progressBar.visibility = GONE
+                        } else {
+                            loadingproblem.visibility = View.VISIBLE
+                            loadingproblemText.visibility = View.VISIBLE
+                            nothingfoundPict.visibility = GONE
+                            nothingfoundText.visibility = GONE
+                            refreshButton.setOnClickListener { search(inputEditText) }
+                            refreshButton.visibility = View.VISIBLE
+                            recyclerView.visibility = GONE
                             trackAdapter.notifyDataSetChanged()
+                            progressBar.visibility = GONE
                         }
-                        if (trackAdapter.tracks.isEmpty()) {
-                            nothingfoundPict.visibility = View.VISIBLE
-                            nothingfoundText.visibility = View.VISIBLE
-                            loadingproblem.visibility = GONE
-                            loadingproblemText.visibility = GONE
-                            trackAdapter.notifyDataSetChanged()
-                        }
-                        progressBar.visibility = View.GONE
-                    } else {
+                    }
+
+                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
                         loadingproblem.visibility = View.VISIBLE
                         loadingproblemText.visibility = View.VISIBLE
-                        nothingfoundPict.visibility = GONE
-                        nothingfoundText.visibility = GONE
-                        refreshButton.setOnClickListener { search(inputEditText) }
                         refreshButton.visibility = View.VISIBLE
                         recyclerView.visibility = GONE
-                        trackAdapter.notifyDataSetChanged()
-                        progressBar.visibility = View.GONE
+                        refreshButton.setOnClickListener { search(inputEditText) }
+                        progressBar.visibility = GONE
                     }
-                }
-
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    loadingproblem.visibility = View.VISIBLE
-                    loadingproblemText.visibility = View.VISIBLE
-                    refreshButton.visibility = View.VISIBLE
-                    recyclerView.visibility = GONE
-                    refreshButton.setOnClickListener { search(inputEditText) }
-                    progressBar.visibility = View.GONE
-                }
-            })
-        return
+                })
+            return
+        }
     }
 
     private fun ifSearchOkVisibility() {
