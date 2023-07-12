@@ -29,7 +29,7 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var timer: TextView
 
     private var mainThreadHandler: Handler? = null
-    var time = 30
+    var time = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -133,13 +133,17 @@ class PlayerActivity : AppCompatActivity() {
         mediaPlayer.release()
     }
 
-    override fun onPause(){
+    override fun onPause() {
         super.onPause()
         if (mediaPlayer.isPlaying) mediaPlayer.pause()
+        playerState = STATE_PAUSED
+        playButton.visibility = View.VISIBLE
+        pauseButton.visibility = View.GONE
     }
-    override fun onResume(){
+
+    override fun onResume() {
         super.onResume()
-        mediaPlayer.start()
+
     }
 
     private fun timing(): Runnable {
@@ -147,11 +151,18 @@ class PlayerActivity : AppCompatActivity() {
 
             override fun run() {
                 if (playerState == STATE_PLAYING) {
-                    if (time > 0) {
-                        time -= 1
-                        val postTime = time.toString()
+                    if (time < 31) {
+
+                        var postTime = time.toString()
                         if (time < 10) timer.text = "00:0$postTime" else timer.text = "00:$postTime"
                         mainThreadHandler?.postDelayed(this, DELAY)
+                        time += 1
+                        if (time == 31) {
+                            playerState = STATE_PAUSED
+                            time = 0
+                            postTime = time.toString()
+                            timer.text = "00:0$postTime"
+                        }
                     }
                 }
             }
