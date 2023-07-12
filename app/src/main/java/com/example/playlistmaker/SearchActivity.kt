@@ -27,9 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 const val SEARCH_SHARED_PREFS_KEY = "123"
 
 class SearchActivity : AppCompatActivity() {
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
+
 
     lateinit var trackList: ArrayList<Track>
 
@@ -274,6 +272,10 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+    }
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
     }
 }

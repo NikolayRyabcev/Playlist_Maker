@@ -14,15 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 
 class PlayerActivity : AppCompatActivity() {
-    companion object {
-        private val STATE_DEFAULT = 0
-        private val STATE_PREPARED = 1
-        private val STATE_PLAYING = 2
-        private val STATE_PAUSED = 3
-        const val DELAY = 1000L
-    }
 
-    private var playerState = STATE_DEFAULT
+
+    private var playerState = PlayerStates.STATE_DEFAULT
     private val mediaPlayer = MediaPlayer()
     lateinit var playButton: ImageButton
     lateinit var pauseButton: ImageButton
@@ -86,12 +80,12 @@ class PlayerActivity : AppCompatActivity() {
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playButton.isEnabled = true
-            playerState = STATE_PREPARED
+            playerState = PlayerStates.STATE_PREPARED
             playButton.visibility = View.VISIBLE
             pauseButton.visibility = View.GONE
         }
         mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
+            playerState = PlayerStates.STATE_PREPARED
             playButton.visibility = View.VISIBLE
             pauseButton.visibility = View.GONE
         }
@@ -99,7 +93,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun startPlayer() {
         mediaPlayer.start()
-        playerState = STATE_PLAYING
+        playerState = PlayerStates.STATE_PLAYING
         playButton.visibility = View.GONE
         pauseButton.visibility = View.VISIBLE
         mainThreadHandler?.post(
@@ -110,21 +104,23 @@ class PlayerActivity : AppCompatActivity() {
     private fun pausePlayer() {
         super.onPause()
         mediaPlayer.pause()
-        playerState = STATE_PAUSED
+        playerState = PlayerStates.STATE_PAUSED
         playButton.visibility = View.VISIBLE
         pauseButton.visibility = View.GONE
     }
 
     private fun playbackControl() {
         when (playerState) {
-            STATE_PLAYING -> {
+            PlayerStates.STATE_PLAYING -> {
                 pausePlayer()
             }
 
-            STATE_PREPARED, STATE_PAUSED -> {
+            PlayerStates.STATE_PREPARED, PlayerStates.STATE_PAUSED -> {
                 startPlayer()
 
             }
+
+            else -> {}
         }
     }
 
@@ -136,7 +132,7 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         if (mediaPlayer.isPlaying) mediaPlayer.pause()
-        playerState = STATE_PAUSED
+        playerState = PlayerStates.STATE_PAUSED
         playButton.visibility = View.VISIBLE
         pauseButton.visibility = View.GONE
     }
@@ -150,15 +146,15 @@ class PlayerActivity : AppCompatActivity() {
         return object : Runnable {
 
             override fun run() {
-                if (playerState == STATE_PLAYING) {
+                if (playerState == PlayerStates.STATE_PLAYING) {
                     if (time < 31) {
 
                         var postTime = time.toString()
                         if (time < 10) timer.text = "00:0$postTime" else timer.text = "00:$postTime"
-                        mainThreadHandler?.postDelayed(this, DELAY)
+                        mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
                         time += 1
                         if (time == 31) {
-                            playerState = STATE_PAUSED
+                            playerState = PlayerStates.STATE_PAUSED
                             time = 0
                             postTime = time.toString()
                             timer.text = "00:0$postTime"
@@ -173,5 +169,17 @@ class PlayerActivity : AppCompatActivity() {
         val duration = Toast.LENGTH_SHORT
         val toast = Toast.makeText(context, text, duration)
         toast.show()
+    }
+
+    companion object {
+
+        const val DELAY_MILLIS = 1000L
+    }
+
+    enum class PlayerStates {
+        STATE_DEFAULT,
+        STATE_PREPARED,
+        STATE_PLAYING,
+        STATE_PAUSED
     }
 }
