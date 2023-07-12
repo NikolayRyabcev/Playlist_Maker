@@ -8,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.GONE
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -109,6 +110,7 @@ class SearchActivity : AppCompatActivity() {
                     historyInVisible()
                 }
                 if (!inputEditText.text.isNullOrEmpty()) {
+                    recyclerView.visibility = GONE
                     searchDebounce()
                 }
             }
@@ -150,15 +152,16 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = trackAdapter
 
-        //inputEditText.setOnEditorActionListener { _, actionId, _ ->
-        //    if (actionId == EditorInfo.IME_ACTION_DONE) {
-        //       if (inputEditText.text.isNotEmpty()) {
-        //            search(inputEditText)
-        //       }
-        //       true
-        //   }
-        //    false
-        //}
+        inputEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (inputEditText.text.isNotEmpty()) {
+                    recyclerView.visibility = GONE
+                    search(inputEditText)
+                }
+                true
+            }
+            false
+        }
 
         clearHistoryButton.setOnClickListener {
             App.trackHistoryList.clear()
