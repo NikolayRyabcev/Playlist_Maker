@@ -50,7 +50,7 @@ class TrackAdapter(
                 holder.itemView.context.startActivity(intent)
 
                 searchActivityObj.searchHistoryObj.editArray(tracks[position])
-                notifyDataSetChanged()
+               // notifyDataSetChanged()
             }
         }
     }

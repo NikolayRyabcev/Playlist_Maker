@@ -86,6 +86,8 @@ class SearchActivity : AppCompatActivity() {
         historyRecycler.layoutManager = LinearLayoutManager(this)
         historyRecycler.adapter = historyAdapter
 
+        progressBar = findViewById(R.id.progressBar)
+
         ifSearchOkVisibility()
         historyInVisible()
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
@@ -191,17 +193,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search(inputEditText: EditText) {
-        progressBar = findViewById(R.id.progressBar)
+
         trackList.clear()
         if (!inputEditText.text.isNullOrEmpty()) {
+     //       recyclerView.visibility = View.VISIBLE
             progressBar.visibility = View.VISIBLE
-            recyclerView.visibility = View.VISIBLE
+
             iTunesService.search(inputEditText.text.toString())
                 .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(
                         call: Call<TrackResponse>,
                         response: Response<TrackResponse>
                     ) {
+                        progressBar.visibility = GONE
                         if (response.code() == 200) {
                             trackList.clear()
                             ifSearchOkVisibility()
