@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -12,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import java.text.SimpleDateFormat
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -23,7 +25,7 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var timer: TextView
 
     private var mainThreadHandler: Handler? = null
-    var time = 0
+    var time = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,43 +139,27 @@ class PlayerActivity : AppCompatActivity() {
         pauseButton.visibility = View.GONE
     }
 
-    override fun onResume() {
-        super.onResume()
-
-    }
-
     private fun timing(): Runnable {
         return object : Runnable {
-
             override fun run() {
                 if (playerState == PlayerStates.STATE_PLAYING) {
-                    if (time < 31) {
-
-                        var postTime = time.toString()
-                        if (time < 10) timer.text = "00:0$postTime" else timer.text = "00:$postTime"
-                        mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
-                        time += 1
-                        if (time == 31) {
-                            playerState = PlayerStates.STATE_PAUSED
-                            time = 0
-                            postTime = time.toString()
-                            timer.text = "00:0$postTime"
-                        }
-                    }
+                    val sdf = SimpleDateFormat("mm:ss")
+                    time = sdf.format(mediaPlayer.currentPosition)
+                    Log.d("playertime", time)
+                    timer.text = time
+                    mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
+                }
+                else {timer.text = "00:00"
+                    mainThreadHandler?.post(this)
                 }
             }
         }
+
     }
 
-    private fun toaster(context: Context, text: String) {
-        val duration = Toast.LENGTH_SHORT
-        val toast = Toast.makeText(context, text, duration)
-        toast.show()
-    }
 
     companion object {
-
-        const val DELAY_MILLIS = 1000L
+        const val DELAY_MILLIS = 100L
     }
 
     enum class PlayerStates {
