@@ -28,11 +28,10 @@ class TrackAdapter(
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         App.getSharedPreferences()
-        isClickAllowed = true
         holder.bind(tracks[position])
-        if (clickDebounce()) {
-            holder.itemView.setOnClickListener {
 
+        holder.itemView.setOnClickListener {
+            if (clickDebounce()) {
                 val intent = Intent(holder.itemView.context, PlayerActivity::class.java)
                 intent.putExtra("Track Name", tracks[position].trackName)
                 intent.putExtra("Artist Name", tracks[position].artistName)
@@ -50,7 +49,7 @@ class TrackAdapter(
                 holder.itemView.context.startActivity(intent)
 
                 searchActivityObj.searchHistoryObj.editArray(tracks[position])
-               // notifyDataSetChanged()
+                // notifyDataSetChanged()
             }
         }
     }
