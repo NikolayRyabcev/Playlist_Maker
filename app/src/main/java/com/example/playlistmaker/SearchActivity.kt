@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,11 +24,14 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 const val SEARCH_SHARED_PREFS_KEY = "123"
 
 class SearchActivity : AppCompatActivity() {
 
+    private var isClickAllowed = true
 
     lateinit var trackList: ArrayList<Track>
 
@@ -66,8 +70,12 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
         trackList = ArrayList()
 
-        trackAdapter = TrackAdapter(trackList)
-        historyAdapter = TrackAdapter(searchHistoryObj.trackHistoryList)
+        trackAdapter = TrackAdapter(trackList) {
+            clickAdapting(it)
+        }
+        historyAdapter = TrackAdapter(searchHistoryObj.trackHistoryList) {
+            clickAdapting(it)
+        }
         recyclerView = findViewById(R.id.trackRecycler)
         inputEditText = findViewById(R.id.searchUserText)
         clearButton = findViewById(R.id.clearIcon)
@@ -196,9 +204,7 @@ class SearchActivity : AppCompatActivity() {
 
         trackList.clear()
         if (!inputEditText.text.isNullOrEmpty()) {
-     //       recyclerView.visibility = View.VISIBLE
             progressBar.visibility = View.VISIBLE
-
             iTunesService.search(inputEditText.text.toString())
                 .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(
@@ -279,7 +285,42 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
     }
 
+    fun onClick() {
+
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    fun clickAdapting(item: Track) {
+        val intent = Intent(this, PlayerActivity::class.java)
+        intent.putExtra("Track Name", item.trackName)
+        intent.putExtra("Artist Name", item.artistName)
+        val trackTime = SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(item.trackTimeMillis)
+        intent.putExtra("Track Time", trackTime)
+        intent.putExtra("Album", item.collectionName)
+        intent.putExtra("Year", item.releaseDate)
+        intent.putExtra("Genre", item.primaryGenreName)
+        intent.putExtra("Country", item.country)
+        intent.putExtra("Cover", item.artworkUrl100)
+        intent.putExtra("URL", item.previewUrl)
+        this.startActivity(intent)
+
+        searchHistoryObj.editArray(item)
+
+    }
+
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1500L
     }
 }
