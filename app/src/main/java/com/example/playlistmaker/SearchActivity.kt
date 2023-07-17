@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.inputmethod.EditorInfo
@@ -65,23 +66,28 @@ class SearchActivity : AppCompatActivity() {
 
     private val iTunesService = retrofit.create(iTunesSearchAPI::class.java)
 
+    var isEnterPressed :Boolean = false
+
     private val KEY_TEXT = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        //isClickAllowed = true
+
         trackList = ArrayList()
 
         trackAdapter = TrackAdapter(trackList) {
             if (clickDebounce()) {
                 clickAdapting(it)
+
             }
         }
         historyAdapter = TrackAdapter(searchHistoryObj.trackHistoryList) {
             if (clickDebounce()) {
                 clickAdapting(it)
+
                 historyAdapter.notifyDataSetChanged()
+
             }
         }
         recyclerView = findViewById(R.id.trackRecycler)
@@ -173,6 +179,8 @@ class SearchActivity : AppCompatActivity() {
                 if (inputEditText.text.isNotEmpty()) {
                     recyclerView.visibility = GONE
                     search(inputEditText)
+                    isEnterPressed=true
+                    handler.postDelayed({ isEnterPressed=false }, 3000L)
                 }
                 true
             }
@@ -215,7 +223,7 @@ class SearchActivity : AppCompatActivity() {
 
         trackList.clear()
         if (!inputEditText.text.isNullOrEmpty()) {
-            progressBar.visibility = View.VISIBLE
+            if (!isEnterPressed) progressBar.visibility = View.VISIBLE
             iTunesService.search(inputEditText.text.toString())
                 .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(
@@ -223,6 +231,7 @@ class SearchActivity : AppCompatActivity() {
                         response: Response<TrackResponse>
                     ) {
                         progressBar.visibility = GONE
+
                         if (response.code() == 200) {
                             trackList.clear()
                             ifSearchOkVisibility()
@@ -265,6 +274,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun ifSearchOkVisibility() {
+        progressBar.visibility = GONE
         recyclerView.visibility = View.VISIBLE
         nothingfoundPict.visibility = GONE
         nothingfoundText.visibility = GONE
@@ -296,10 +306,6 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
     }
 
-    fun onClick() {
-
-    }
-
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -325,10 +331,9 @@ class SearchActivity : AppCompatActivity() {
         intent.putExtra("Cover", item.artworkUrl100)
         intent.putExtra("URL", item.previewUrl)
         this.startActivity(intent)
-
         searchHistoryObj.editArray(item)
-
     }
+
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
