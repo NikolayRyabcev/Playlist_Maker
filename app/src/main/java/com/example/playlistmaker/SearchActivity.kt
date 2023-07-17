@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.content.Context
 import android.content.Intent
+
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -71,10 +72,14 @@ class SearchActivity : AppCompatActivity() {
         trackList = ArrayList()
 
         trackAdapter = TrackAdapter(trackList) {
-            clickAdapting(it)
+            if (clickDebounce()) {
+                clickAdapting(it)
+            }
         }
         historyAdapter = TrackAdapter(searchHistoryObj.trackHistoryList) {
-            clickAdapting(it)
+            if (clickDebounce()) {
+                clickAdapting(it)
+            }
         }
         recyclerView = findViewById(R.id.trackRecycler)
         inputEditText = findViewById(R.id.searchUserText)
