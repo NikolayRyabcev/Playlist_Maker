@@ -81,6 +81,7 @@ class SearchActivity : AppCompatActivity() {
         historyAdapter = TrackAdapter(searchHistoryObj.trackHistoryList) {
             if (clickDebounce()) {
                 clickAdapting(it)
+                historyAdapter.notifyDataSetChanged()
             }
         }
         recyclerView = findViewById(R.id.trackRecycler)
@@ -197,8 +198,8 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         savedInstanceState.getString(KEY_TEXT, "")
     }
-    override fun onPause() {
-        super.onPause()
+    override fun onResume() {
+        super.onResume()
         isClickAllowed = true
     }
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -308,7 +309,7 @@ class SearchActivity : AppCompatActivity() {
         return current
     }
 
-    fun clickAdapting(item: Track) {
+    private fun clickAdapting(item: Track) {
         val intent = Intent(this, PlayerActivity::class.java)
         intent.putExtra("Track Name", item.trackName)
         intent.putExtra("Artist Name", item.artistName)
