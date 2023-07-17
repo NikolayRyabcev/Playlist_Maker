@@ -197,7 +197,10 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         savedInstanceState.getString(KEY_TEXT, "")
     }
-
+    override fun onPause() {
+        super.onPause()
+        isClickAllowed = true
+    }
     private fun clearButtonVisibility(s: CharSequence?): Int {
 
         return if (s.isNullOrEmpty()) {
