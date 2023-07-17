@@ -69,6 +69,8 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        isClickAllowed = true
         trackList = ArrayList()
 
         trackAdapter = TrackAdapter(trackList) {
@@ -326,6 +328,6 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1500L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
