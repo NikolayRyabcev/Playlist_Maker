@@ -70,7 +70,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        isClickAllowed = true
+        //isClickAllowed = true
         trackList = ArrayList()
 
         trackAdapter = TrackAdapter(trackList) {
