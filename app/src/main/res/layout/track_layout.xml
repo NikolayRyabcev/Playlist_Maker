@@ -45,6 +45,7 @@
             android:maxLines="1"
             android:fontFamily="@font/ys_display_regular"
             android:textColor="?attr/color"
+            android:textSize="11sp"
             tools:text="Group" />
 
         <ImageView
@@ -58,13 +59,14 @@
 
         <TextView
             android:id="@+id/trackTime"
-            android:layout_width="51dp"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginTop="34dp"
             android:fontFamily="@font/ys_display_regular"
             android:textColor="?attr/color"
-            tools:text="Time" />
+            tools:text="Time"
+            android:textSize="11sp"/>
     </LinearLayout>
 
     <ImageView
