@@ -1,15 +1,14 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.Track
 
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

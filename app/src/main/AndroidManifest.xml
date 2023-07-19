@@ -38,7 +38,7 @@
             android:exported="false"
             android:theme="@style/Theme.PlaylistMaker" />
         <activity
-            android:name=".MediaLibrary"
+            android:name=".MediaLibraryActivity"
             android:exported="false"
             android:theme="@style/Theme.PlaylistMaker">
 
@@ -47,7 +47,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".PlayerActivity"
+            android:name=".presentation.PlayerActivity"
             android:exported="false"
             android:theme="@style/Theme.PlaylistMaker" />
     </application>

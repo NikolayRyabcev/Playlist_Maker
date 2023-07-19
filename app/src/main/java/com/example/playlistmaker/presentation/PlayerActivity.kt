@@ -1,6 +1,5 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
-import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -10,28 +9,24 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.R
 import java.text.SimpleDateFormat
 
 class PlayerActivity : AppCompatActivity() {
-
-
     private var playerState = PlayerStates.STATE_DEFAULT
     private val mediaPlayer = MediaPlayer()
+
     lateinit var playButton: ImageButton
     lateinit var pauseButton: ImageButton
     lateinit var timer: TextView
 
     private var mainThreadHandler: Handler? = null
     var time = ""
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.player_activity)
-
         val playerTrackName = findViewById<TextView>(R.id.playerTrackName)
         val playerArtistName = findViewById<TextView>(R.id.playerArtistName)
         val trackTime = findViewById<TextView>(R.id.time)
@@ -43,15 +38,15 @@ class PlayerActivity : AppCompatActivity() {
         playButton = findViewById(R.id.playButton)
         pauseButton = findViewById(R.id.pauseButton)
         timer = findViewById(R.id.trackTimer)
-        mainThreadHandler = Handler(Looper.getMainLooper())
 
+        mainThreadHandler = Handler(Looper.getMainLooper())
         playButton.setOnClickListener { playbackControl() }
         pauseButton.setOnClickListener { playbackControl() }
-
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
         arrowButton.setOnClickListener {
             finish()
         }
+
 
         playerTrackName.text = intent.extras?.getString("Track Name") ?: "Unknown Track"
         playerArtistName.text = intent.extras?.getString("Artist Name") ?: "Unknown Artist"
@@ -64,7 +59,6 @@ class PlayerActivity : AppCompatActivity() {
             "100x100bb.jpg",
             "512x512bb.jpg"
         )
-
         if (getImage != "Unknown Cover") {
             getImage.replace("100x100bb.jpg", "512x512bb.jpg")
             Glide.with(this)
@@ -72,11 +66,10 @@ class PlayerActivity : AppCompatActivity() {
                 .placeholder(R.drawable.bfplaceholder)
                 .into(cover)
         }
-
         val url = intent.extras?.getString("URL")
         if (!url.isNullOrEmpty()) preparePlayer(url)
-    }
 
+    }
     private fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
@@ -92,7 +85,6 @@ class PlayerActivity : AppCompatActivity() {
             pauseButton.visibility = View.GONE
         }
     }
-
     private fun startPlayer() {
         mediaPlayer.start()
         playerState = PlayerStates.STATE_PLAYING
@@ -102,35 +94,28 @@ class PlayerActivity : AppCompatActivity() {
             timing()
         )
     }
-
     private fun pausePlayer() {
-        super.onPause()
+        //super.onPause()
         mediaPlayer.pause()
         playerState = PlayerStates.STATE_PAUSED
         playButton.visibility = View.VISIBLE
         pauseButton.visibility = View.GONE
     }
-
     private fun playbackControl() {
         when (playerState) {
             PlayerStates.STATE_PLAYING -> {
                 pausePlayer()
             }
-
             PlayerStates.STATE_PREPARED, PlayerStates.STATE_PAUSED -> {
                 startPlayer()
-
             }
-
             else -> {}
         }
     }
-
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
     }
-
     override fun onPause() {
         super.onPause()
         if (mediaPlayer.isPlaying) mediaPlayer.pause()
@@ -138,7 +123,6 @@ class PlayerActivity : AppCompatActivity() {
         playButton.visibility = View.VISIBLE
         pauseButton.visibility = View.GONE
     }
-
     private fun timing(): Runnable {
         return object : Runnable {
             override fun run() {
@@ -154,14 +138,10 @@ class PlayerActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
-
-
     companion object {
         const val DELAY_MILLIS = 100L
     }
-
     enum class PlayerStates {
         STATE_DEFAULT,
         STATE_PREPARED,
