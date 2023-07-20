@@ -1,8 +1,9 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.App
 
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.playlistmaker.presentation.ui.Activities.SEARCH_SHARED_PREFS_KEY
 import com.example.playlistmaker.domain.models.Track
 
 class App : Application() {
@@ -13,7 +14,8 @@ class App : Application() {
     }
     companion object {
         lateinit var savedHistory: SharedPreferences
-        fun getSharedPreferences():SharedPreferences { return savedHistory}
+        fun getSharedPreferences():SharedPreferences { return savedHistory
+        }
         var trackHistoryList = ArrayList<Track>()
     }
 }

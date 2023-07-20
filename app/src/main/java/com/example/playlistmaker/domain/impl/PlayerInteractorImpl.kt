@@ -1,21 +1,22 @@
-package com.example.playlistmaker.data.dto
+package com.example.playlistmaker.domain.impl
 
 import android.media.MediaPlayer
 import android.os.Handler
 import android.util.Log
+import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.presentation.PlayerActivity
-import com.example.playlistmaker.presentation.PlayerPresenter
+import com.example.playlistmaker.domain.api.PlayerRepository
+import com.example.playlistmaker.presentation.ui.Activities.PlayerActivity
 import java.text.SimpleDateFormat
 
-class PlayerInteractorImpl: PlayerInteractor {
-    private val mediaPlayer = MediaPlayer()
+class PlayerInteractorImpl(playerRepository: PlayerRepository) : PlayerInteractor {
+    private val playerRepository = PlayerRepositoryImpl()
+    private val mediaPlayer=MediaPlayer()
+    //private val playerActivity = PlayerActivity
     private var playerState = PlayerActivity.PlayerStates.STATE_DEFAULT
+
     var time = ""
     private var mainThreadHandler: Handler? = null
-
-
-
     override fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
@@ -29,7 +30,6 @@ class PlayerInteractorImpl: PlayerInteractor {
             onPlayButton ()
         }
     }
-
     override fun startPlayer() {
         mediaPlayer.start()
         playerState = PlayerActivity.PlayerStates.STATE_PLAYING
@@ -38,13 +38,11 @@ class PlayerInteractorImpl: PlayerInteractor {
             timing()
         )
     }
-
     override fun pausePlayer() {
         mediaPlayer.pause()
         playerState = PlayerActivity.PlayerStates.STATE_PAUSED
         onPlayButton ()
     }
-
     override fun playbackControl() {
         when (playerState) {
             PlayerActivity.PlayerStates.STATE_PLAYING -> {
@@ -56,7 +54,6 @@ class PlayerInteractorImpl: PlayerInteractor {
             else -> {}
         }
     }
-
     override fun timing(): Runnable {
         return object : Runnable {
             override fun run() {
@@ -73,16 +70,12 @@ class PlayerInteractorImpl: PlayerInteractor {
             }
         }
     }
-
-
-
     enum class PlayerStates {
         STATE_DEFAULT,
         STATE_PREPARED,
         STATE_PLAYING,
         STATE_PAUSED
     }
-
     companion object {
         const val DELAY_MILLIS = 100L
     }

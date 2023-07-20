@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.presentation.ui.Activities
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -38,11 +38,12 @@ class PlayerActivity : AppCompatActivity() {
         playButton = findViewById(R.id.playButton)
         pauseButton = findViewById(R.id.pauseButton)
         timer = findViewById(R.id.trackTimer)
+        val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
 
         mainThreadHandler = Handler(Looper.getMainLooper())
         playButton.setOnClickListener { playbackControl() }
         pauseButton.setOnClickListener { playbackControl() }
-        val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
+
         arrowButton.setOnClickListener {
             finish()
         }
