@@ -6,15 +6,15 @@ import android.util.Log
 import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
+import com.example.playlistmaker.domain.api.PlayerStateListener
 import com.example.playlistmaker.presentation.ui.Activities.PlayerActivity
 import java.text.SimpleDateFormat
 
 class PlayerInteractorImpl(playerRepository: PlayerRepository) : PlayerInteractor {
     private val playerRepository = PlayerRepositoryImpl()
-    private val mediaPlayer=MediaPlayer()
-    //private val playerActivity = PlayerActivity
+    private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerActivity.PlayerStates.STATE_DEFAULT
-
+    private var playerStateListener: PlayerStateListener? = null
     var time = ""
     private var mainThreadHandler: Handler? = null
     override fun preparePlayer(url: String) {
@@ -23,37 +23,43 @@ class PlayerInteractorImpl(playerRepository: PlayerRepository) : PlayerInteracto
         mediaPlayer.setOnPreparedListener {
             enablePlayButton()
             playerState = PlayerActivity.PlayerStates.STATE_PREPARED
-            onPlayButton ()
+            onPlayButton()
         }
         mediaPlayer.setOnCompletionListener {
             playerState = PlayerActivity.PlayerStates.STATE_PREPARED
-            onPlayButton ()
+            onPlayButton()
         }
     }
+
     override fun startPlayer() {
         mediaPlayer.start()
         playerState = PlayerActivity.PlayerStates.STATE_PLAYING
-        onPauseButton ()
+        onPauseButton()
         mainThreadHandler?.post(
             timing()
         )
     }
+
     override fun pausePlayer() {
         mediaPlayer.pause()
         playerState = PlayerActivity.PlayerStates.STATE_PAUSED
-        onPlayButton ()
+        onPlayButton()
     }
+
     override fun playbackControl() {
         when (playerState) {
             PlayerActivity.PlayerStates.STATE_PLAYING -> {
                 pausePlayer()
             }
+
             PlayerActivity.PlayerStates.STATE_PREPARED, PlayerActivity.PlayerStates.STATE_PAUSED -> {
                 startPlayer()
             }
+
             else -> {}
         }
     }
+
     override fun timing(): Runnable {
         return object : Runnable {
             override fun run() {
@@ -63,19 +69,21 @@ class PlayerInteractorImpl(playerRepository: PlayerRepository) : PlayerInteracto
                     Log.d("playertime", time)
                     setTimerText(time)
                     mainThreadHandler?.postDelayed(this, PlayerActivity.DELAY_MILLIS)
-                }
-                else {setTimerText("00:00")
+                } else {
+                    setTimerText("00:00")
                     mainThreadHandler?.post(this)
                 }
             }
         }
     }
-    enum class PlayerStates {
-        STATE_DEFAULT,
-        STATE_PREPARED,
-        STATE_PLAYING,
-        STATE_PAUSED
+
+    override fun setPlayerStateListener(listener: PlayerStateListener) {
+        playerStateListener = listener
     }
+    private fun notifyPlayerStateChanged(playerState: PlayerActivity.PlayerStates) {
+        playerStateListener?.onPlayerStateChanged(playerState)
+    }
+
     companion object {
         const val DELAY_MILLIS = 100L
     }

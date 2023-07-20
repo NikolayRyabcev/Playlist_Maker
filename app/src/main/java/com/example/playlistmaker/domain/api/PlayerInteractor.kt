@@ -6,4 +6,5 @@ interface PlayerInteractor {
     fun pausePlayer()
     fun playbackControl()
     fun timing(): Runnable
+    fun setPlayerStateListener(listener: PlayerStateListener)
 }
