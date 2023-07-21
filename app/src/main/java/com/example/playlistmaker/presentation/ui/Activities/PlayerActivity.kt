@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerStateListener
@@ -73,12 +74,11 @@ class PlayerActivity : AppCompatActivity(), PlayerStateListener {
         }
         val url = intent.extras?.getString("URL")
         if (!url.isNullOrEmpty()) preparePlayer(url)
+        val playerInteractor = Creator.providePlayerInteractor()
+        playerInteractor.setPlayerStateListener(this)
 
-
-        interactor = PlayerInteractorImpl()
-        interactor.setPlayerStateListener(this)
     }
-    private fun preparePlayer(url: String) {
+ /*   private fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
@@ -146,7 +146,7 @@ class PlayerActivity : AppCompatActivity(), PlayerStateListener {
                 }
             }
         }
-    }
+    }*/
     companion object {
         const val DELAY_MILLIS = 100L
     }

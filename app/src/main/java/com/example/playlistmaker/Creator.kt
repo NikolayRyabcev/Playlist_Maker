@@ -1,5 +1,12 @@
 package com.example.playlistmaker
 
-class Creator {
+import com.example.playlistmaker.domain.api.PlayerInteractor
+import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
+
+object Creator {
+    fun providePlayerInteractor(): PlayerInteractor
+    {
+        return PlayerInteractorImpl(getPlayerRepository)
+    }
 
 }

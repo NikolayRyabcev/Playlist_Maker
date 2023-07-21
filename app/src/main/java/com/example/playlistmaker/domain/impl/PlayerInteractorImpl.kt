@@ -80,9 +80,12 @@ class PlayerInteractorImpl(playerRepository: PlayerRepository) : PlayerInteracto
     override fun setPlayerStateListener(listener: PlayerStateListener) {
         playerStateListener = listener
     }
+
     private fun notifyPlayerStateChanged(playerState: PlayerActivity.PlayerStates) {
         playerStateListener?.onPlayerStateChanged(playerState)
     }
+
+    fun getPlayerRepository() {}
 
     companion object {
         const val DELAY_MILLIS = 100L
