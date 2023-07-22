@@ -1,7 +1,7 @@
 package com.example.playlistmaker.domain.api
 
-import com.example.playlistmaker.presentation.ui.Activities.PlayerActivity
+import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
 
 interface PlayerStateListener {
-    fun onPlayerStateChanged(playerState: PlayerActivity.PlayerStates)
+    fun onPlayerStateChanged(playerState: PlayerInteractorImpl.PlayerStates)
 }

@@ -1,10 +1,8 @@
 package com.example.playlistmaker.presentation.ui.Activities
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -13,14 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerStateListener
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
-import java.text.SimpleDateFormat
+import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 
-class PlayerActivity : AppCompatActivity(), PlayerStateListener {
-    private var playerState = PlayerStates.STATE_DEFAULT
-    private val mediaPlayer = MediaPlayer()
+class PlayerActivity (private val playerInteractor: PlayerInteractor): AppCompatActivity(), PlayerActivityModel, PlayerStateListener {
+    private var playerState = PlayerInteractorImpl.PlayerStates.STATE_DEFAULT
 
     lateinit var playButton: ImageButton
     lateinit var pauseButton: ImageButton
@@ -28,7 +26,8 @@ class PlayerActivity : AppCompatActivity(), PlayerStateListener {
 
     private var mainThreadHandler: Handler? = null
     var time = ""
-    private lateinit var interactor: PlayerInteractor
+    lateinit var repository : PlayerRepositoryImpl
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.player_activity)
@@ -46,8 +45,8 @@ class PlayerActivity : AppCompatActivity(), PlayerStateListener {
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
 
         mainThreadHandler = Handler(Looper.getMainLooper())
-        playButton.setOnClickListener { playbackControl() }
-        pauseButton.setOnClickListener { playbackControl() }
+        playButton.setOnClickListener { playerInteractor.playbackControl() }
+        pauseButton.setOnClickListener { playerInteractor.playbackControl() }
 
         arrowButton.setOnClickListener {
             finish()
@@ -73,9 +72,12 @@ class PlayerActivity : AppCompatActivity(), PlayerStateListener {
                 .into(cover)
         }
         val url = intent.extras?.getString("URL")
-        if (!url.isNullOrEmpty()) preparePlayer(url)
-        val playerInteractor = Creator.providePlayerInteractor()
-        playerInteractor.setPlayerStateListener(this)
+        repository = PlayerRepositoryImpl(this)
+        if (!url.isNullOrEmpty()) repository.saveAudioTrackUrl(url)
+        //val audioTrackUrl = repository.getAudioTrackUrl()
+
+        //val playerInteractor = Creator.providePlayerInteractor()
+        if (!url.isNullOrEmpty()) playerInteractor.setPlayerStateListener(this)
 
     }
  /*   private fun preparePlayer(url: String) {
@@ -120,10 +122,7 @@ class PlayerActivity : AppCompatActivity(), PlayerStateListener {
             else -> {}
         }
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaPlayer.release()
-    }
+
     override fun onPause() {
         super.onPause()
         if (mediaPlayer.isPlaying) mediaPlayer.pause()
@@ -147,17 +146,37 @@ class PlayerActivity : AppCompatActivity(), PlayerStateListener {
             }
         }
     }*/
-    companion object {
-        const val DELAY_MILLIS = 100L
-    }
-    enum class PlayerStates {
-        STATE_DEFAULT,
-        STATE_PREPARED,
-        STATE_PLAYING,
-        STATE_PAUSED
+ override fun onDestroy() {
+     super.onDestroy()
+   //  mediaPlayer.release()
+     repository.clearAudioTrackUrl()
+ }
+
+    override fun onPlayerStateChanged(playerState: PlayerInteractorImpl.PlayerStates) {
+        TODO("Not yet implemented")
     }
 
-    override fun onPlayerStateChanged(playerState: PlayerStates) {
-        TODO("Not yet implemented")
+    override fun preparePlayer(url: String) {
+        playButton.isEnabled = true
+        playButton.visibility = View.VISIBLE
+        pauseButton.visibility = View.GONE
+    }
+
+    override fun enablePlayButton() {
+        playButton.isEnabled = true
+    }
+
+    override fun onPlayButton() {
+        playButton.visibility = View.GONE
+        pauseButton.visibility = View.VISIBLE
+    }
+
+    override fun onPauseButton() {
+        playButton.visibility = View.VISIBLE
+        pauseButton.visibility = View.GONE
+    }
+
+    override fun setTimerText(time:String) {
+        timer.text = time
     }
 }
