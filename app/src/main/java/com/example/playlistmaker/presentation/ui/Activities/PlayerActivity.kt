@@ -13,21 +13,19 @@ import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
+import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.api.PlayerStateListener
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 
-class PlayerActivity (private val playerInteractor: PlayerInteractor): AppCompatActivity(), PlayerActivityModel, PlayerStateListener {
-    private var playerState = PlayerInteractorImpl.PlayerStates.STATE_DEFAULT
-
+class PlayerActivity() : AppCompatActivity(),
+    PlayerActivityModel, PlayerStateListener {
+    lateinit var playerInteractor : PlayerInteractor
     lateinit var playButton: ImageButton
     lateinit var pauseButton: ImageButton
     lateinit var timer: TextView
-
     private var mainThreadHandler: Handler? = null
-    var time = ""
-    lateinit var repository : PlayerRepositoryImpl
-
+    lateinit var repository: PlayerRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.player_activity)
@@ -43,7 +41,8 @@ class PlayerActivity (private val playerInteractor: PlayerInteractor): AppCompat
         pauseButton = findViewById(R.id.pauseButton)
         timer = findViewById(R.id.trackTimer)
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
-
+        repository=PlayerRepositoryImpl(this)
+        playerInteractor = PlayerInteractorImpl(repository, this)
         mainThreadHandler = Handler(Looper.getMainLooper())
         playButton.setOnClickListener { playerInteractor.playbackControl() }
         pauseButton.setOnClickListener { playerInteractor.playbackControl() }
@@ -80,77 +79,78 @@ class PlayerActivity (private val playerInteractor: PlayerInteractor): AppCompat
         if (!url.isNullOrEmpty()) playerInteractor.setPlayerStateListener(this)
 
     }
- /*   private fun preparePlayer(url: String) {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
-            playerState = PlayerStates.STATE_PREPARED
-            playButton.visibility = View.VISIBLE
-            pauseButton.visibility = View.GONE
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerState = PlayerStates.STATE_PREPARED
-            playButton.visibility = View.VISIBLE
-            pauseButton.visibility = View.GONE
-        }
-    }
-    private fun startPlayer() {
-        mediaPlayer.start()
-        playerState = PlayerStates.STATE_PLAYING
-        playButton.visibility = View.GONE
-        pauseButton.visibility = View.VISIBLE
-        mainThreadHandler?.post(
-            timing()
-        )
-    }
-    private fun pausePlayer() {
-        //super.onPause()
-        mediaPlayer.pause()
-        playerState = PlayerStates.STATE_PAUSED
-        playButton.visibility = View.VISIBLE
-        pauseButton.visibility = View.GONE
-    }
-    private fun playbackControl() {
-        when (playerState) {
-            PlayerStates.STATE_PLAYING -> {
-                pausePlayer()
-            }
-            PlayerStates.STATE_PREPARED, PlayerStates.STATE_PAUSED -> {
-                startPlayer()
-            }
-            else -> {}
-        }
-    }
 
-    override fun onPause() {
-        super.onPause()
-        if (mediaPlayer.isPlaying) mediaPlayer.pause()
-        playerState = PlayerStates.STATE_PAUSED
-        playButton.visibility = View.VISIBLE
-        pauseButton.visibility = View.GONE
+    /*   private fun preparePlayer(url: String) {
+           mediaPlayer.setDataSource(url)
+           mediaPlayer.prepareAsync()
+           mediaPlayer.setOnPreparedListener {
+               playButton.isEnabled = true
+               playerState = PlayerStates.STATE_PREPARED
+               playButton.visibility = View.VISIBLE
+               pauseButton.visibility = View.GONE
+           }
+           mediaPlayer.setOnCompletionListener {
+               playerState = PlayerStates.STATE_PREPARED
+               playButton.visibility = View.VISIBLE
+               pauseButton.visibility = View.GONE
+           }
+       }
+       private fun startPlayer() {
+           mediaPlayer.start()
+           playerState = PlayerStates.STATE_PLAYING
+           playButton.visibility = View.GONE
+           pauseButton.visibility = View.VISIBLE
+           mainThreadHandler?.post(
+               timing()
+           )
+       }
+       private fun pausePlayer() {
+           //super.onPause()
+           mediaPlayer.pause()
+           playerState = PlayerStates.STATE_PAUSED
+           playButton.visibility = View.VISIBLE
+           pauseButton.visibility = View.GONE
+       }
+       private fun playbackControl() {
+           when (playerState) {
+               PlayerStates.STATE_PLAYING -> {
+                   pausePlayer()
+               }
+               PlayerStates.STATE_PREPARED, PlayerStates.STATE_PAUSED -> {
+                   startPlayer()
+               }
+               else -> {}
+           }
+       }
+
+       override fun onPause() {
+           super.onPause()
+           if (mediaPlayer.isPlaying) mediaPlayer.pause()
+           playerState = PlayerStates.STATE_PAUSED
+           playButton.visibility = View.VISIBLE
+           pauseButton.visibility = View.GONE
+       }
+       private fun timing(): Runnable {
+           return object : Runnable {
+               override fun run() {
+                   if (playerState == PlayerStates.STATE_PLAYING) {
+                       val sdf = SimpleDateFormat("mm:ss")
+                       time = sdf.format(mediaPlayer.currentPosition)
+                       Log.d("playertime", time)
+                       timer.text = time
+                       mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
+                   }
+                   else {timer.text = "00:00"
+                       mainThreadHandler?.post(this)
+                   }
+               }
+           }
+       }*/
+    override fun onDestroy() {
+        super.onDestroy()
+        //  mediaPlayer.release()
+        repository.clearAudioTrackUrl()
     }
-    private fun timing(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (playerState == PlayerStates.STATE_PLAYING) {
-                    val sdf = SimpleDateFormat("mm:ss")
-                    time = sdf.format(mediaPlayer.currentPosition)
-                    Log.d("playertime", time)
-                    timer.text = time
-                    mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
-                }
-                else {timer.text = "00:00"
-                    mainThreadHandler?.post(this)
-                }
-            }
-        }
-    }*/
- override fun onDestroy() {
-     super.onDestroy()
-   //  mediaPlayer.release()
-     repository.clearAudioTrackUrl()
- }
 
     override fun onPlayerStateChanged(playerState: PlayerInteractorImpl.PlayerStates) {
         TODO("Not yet implemented")
@@ -176,7 +176,7 @@ class PlayerActivity (private val playerInteractor: PlayerInteractor): AppCompat
         pauseButton.visibility = View.GONE
     }
 
-    override fun setTimerText(time:String) {
+    override fun setTimerText(time: String) {
         timer.text = time
     }
 }
