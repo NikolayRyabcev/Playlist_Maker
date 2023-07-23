@@ -20,17 +20,30 @@ class PlayerInteractorImpl(
     var time = ""
     private var mainThreadHandler: Handler? = null
     val trackAdress = playerRepository.getAudioTrackUrl()
-    override fun preparePlayer(url: String) {
-        mediaPlayer.setDataSource(trackAdress)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerActivity.enablePlayButton()
-            playerState = PlayerStates.STATE_PREPARED
-            playerActivity.onPlayButton()
+    override fun playing() {
+        if (!trackAdress.isNullOrEmpty()) {
+            preparePlayer(trackAdress)
+            playbackControl()
         }
-        mediaPlayer.setOnCompletionListener {
-            playerState = PlayerStates.STATE_PREPARED
-            playerActivity.onPlayButton()
+    }
+
+    override fun preparePlayer(url: String) {
+        if (playerState == PlayerStates.STATE_DEFAULT) {
+            Log.d("player", "Track $url")
+            mediaPlayer.reset()
+            mediaPlayer.setDataSource(url)
+            mediaPlayer.prepareAsync()
+            mediaPlayer.setOnPreparedListener {
+                playerActivity.enablePlayButton()
+                playerState = PlayerStates.STATE_PREPARED
+                playerActivity.onPlayButton()
+                Log.d("player", "Prepared")
+            }
+            mediaPlayer.setOnCompletionListener {
+                playerState = PlayerStates.STATE_PREPARED
+                playerActivity.onPlayButton()
+            }
+            playbackControl()
         }
     }
 
@@ -38,6 +51,7 @@ class PlayerInteractorImpl(
         mediaPlayer.start()
         playerState = PlayerStates.STATE_PLAYING
         playerActivity.onPauseButton()
+        Log.d("player", "Started")
         mainThreadHandler?.post(
             timing()
         )
@@ -47,18 +61,21 @@ class PlayerInteractorImpl(
         mediaPlayer.pause()
         playerState = PlayerStates.STATE_PAUSED
         playerActivity.onPlayButton()
+        Log.d("player", "Paused")
     }
 
     override fun playbackControl() {
+        Log.d("player", "PlaybackControlSet")
         when (playerState) {
             PlayerStates.STATE_PLAYING -> {
                 pausePlayer()
+                Log.d("player", "Pause")
             }
 
             PlayerStates.STATE_PREPARED, PlayerStates.STATE_PAUSED -> {
                 startPlayer()
+                Log.d("player", "Start")
             }
-
             else -> {}
         }
     }
@@ -69,7 +86,7 @@ class PlayerInteractorImpl(
                 if (playerState == PlayerStates.STATE_PLAYING) {
                     val sdf = SimpleDateFormat("mm:ss")
                     time = sdf.format(mediaPlayer.currentPosition)
-                    Log.d("playertime", time)
+                    Log.d("player", time)
                     playerActivity.setTimerText(time)
                     mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
                 } else {
@@ -86,6 +103,11 @@ class PlayerInteractorImpl(
 
     private fun notifyPlayerStateChanged(playerState: PlayerStates) {
         playerStateListener?.onPlayerStateChanged(playerState)
+    }
+    override fun destroy() {
+        mediaPlayer.release()
+        playerState = PlayerStates.STATE_DEFAULT
+        playerActivity.enablePlayButton()
     }
 
     enum class PlayerStates {

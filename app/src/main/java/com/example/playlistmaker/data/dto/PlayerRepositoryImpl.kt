@@ -12,6 +12,7 @@ class PlayerRepositoryImpl(
     private val editor = sharedPreferences.edit()
 
     override fun saveAudioTrackUrl(url: String) {
+        editor.remove("audio_track_url")
         editor.putString("audio_track_url", url)
         editor.apply()
     }
