@@ -1,11 +1,11 @@
 package com.example.playlistmaker.domain.api
 
-import com.example.playlistmaker.domain.models.Track
-
 interface PlayerRepository {
-    fun saveAudioTrackUrl(url: String)
-
-    fun getAudioTrackUrl(): String?
-
-    fun clearAudioTrackUrl()
+    fun playing()
+    fun preparePlayer(url: String)
+    fun startPlayer()
+    fun pausePlayer()
+    fun playbackControl()
+    fun timing(): Runnable
+    fun destroy()
 }

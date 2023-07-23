@@ -10,23 +10,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.domain.api.PlayerRepository
-import com.example.playlistmaker.domain.api.PlayerStateListener
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 
 class PlayerActivity : AppCompatActivity(),
-    PlayerActivityModel, PlayerStateListener {
-    lateinit var playerInteractor : PlayerInteractor
+    PlayerActivityModel {
+    lateinit var playerInteractor: PlayerInteractor
     lateinit var playButton: ImageButton
     lateinit var pauseButton: ImageButton
     lateinit var timer: TextView
     private var mainThreadHandler: Handler? = null
-    lateinit var repository: PlayerRepository
+    private lateinit var repository : PlayerRepositoryImpl
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.player_activity)
@@ -42,8 +40,9 @@ class PlayerActivity : AppCompatActivity(),
         pauseButton = findViewById(R.id.pauseButton)
         timer = findViewById(R.id.trackTimer)
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
-        repository=PlayerRepositoryImpl(this)
-        playerInteractor = PlayerInteractorImpl(repository, this)
+
+        playerInteractor = PlayerInteractorImpl()
+
         mainThreadHandler = Handler(Looper.getMainLooper())
 
 
@@ -71,28 +70,24 @@ class PlayerActivity : AppCompatActivity(),
                 .into(cover)
         }
         val url = intent.extras?.getString("URL")
-        repository = PlayerRepositoryImpl(this)
-        if (!url.isNullOrEmpty()) repository.saveAudioTrackUrl(url)
-        //val audioTrackUrl = repository.getAudioTrackUrl()
+        if (!url.isNullOrEmpty()) playerInteractor.setTrackUrl(url)
 
-        //val playerInteractor = Creator.providePlayerInteractor()
-        if (!url.isNullOrEmpty()) playerInteractor.setPlayerStateListener(this)
-        playButton.setOnClickListener { playerInteractor.playing()
-            }
-        pauseButton.setOnClickListener { playerInteractor.playing()
-         }
+        repository = PlayerRepositoryImpl(this, playerInteractor)
+
+        playButton.setOnClickListener {
+            repository.playing()
+            Log.d("player", "Click")
+        }
+        pauseButton.setOnClickListener {
+            repository.playing()
+        }
 
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        playerInteractor.destroy()
-        repository.clearAudioTrackUrl()
-    }
-
-    override fun onPlayerStateChanged(playerState: PlayerInteractorImpl.PlayerStates) {
-        TODO("Not yet implemented")
+        repository.destroy()
     }
 
     override fun preparePlayer(url: String) {
@@ -118,6 +113,8 @@ class PlayerActivity : AppCompatActivity(),
     override fun setTimerText(time: String) {
         timer.text = time
     }
+
+
 }
 /*   private fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
