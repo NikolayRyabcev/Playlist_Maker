@@ -2,6 +2,7 @@ package com.example.playlistmaker.data.dto
 
 import android.media.MediaPlayer
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
@@ -15,31 +16,32 @@ class PlayerRepositoryImpl(
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     var time = ""
-    private var mainThreadHandler: Handler? = null
+    private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
     val trackAdress: String = playerInteractor.getTrackUrl()
     override fun playing() {
         if (!trackAdress.isNullOrEmpty()) {
-            Log.d("player", "Playing")
+        //    Log.d("player", "Playing")
             preparePlayer(trackAdress)
             playbackControl()
+
         }
     }
 
     override fun preparePlayer(url: String) {
         if (playerState == PlayerState.STATE_DEFAULT) {
-            Log.d("player", "Track $url")
+        //    Log.d("player", "Track $url")
             mediaPlayer.reset()
             mediaPlayer.setDataSource(url)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnPreparedListener {
                 playerActivity.enablePlayButton()
                 playerState = PlayerState.STATE_PREPARED
-                Log.d("player", "Prepared")
+          //      Log.d("player", "Prepared")
                 playbackControl()
             }
             mediaPlayer.setOnCompletionListener {
                 playerState = PlayerState.STATE_PREPARED
-                playerActivity.onPlayButton()
+                playerActivity.onPauseButton()
             }
 
         }
@@ -59,11 +61,11 @@ class PlayerRepositoryImpl(
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
         playerActivity.onPauseButton()
-        Log.d("player", "Paused")
+       // Log.d("player", "Paused")
     }
 
     override fun playbackControl() {
-        Log.d("player", "PlaybackControlSet")
+     //   Log.d("player", "PlaybackControlSet")
         when (playerState) {
             PlayerState.STATE_PLAYING -> {
                 pausePlayer()
@@ -80,7 +82,7 @@ class PlayerRepositoryImpl(
     override fun timing(): Runnable {
         return object : Runnable {
             override fun run() {
-                if (playerState == PlayerState.STATE_PLAYING) {
+                if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
                     val sdf = SimpleDateFormat("mm:ss")
                     time = sdf.format(mediaPlayer.currentPosition)
                     Log.d("player", time)
