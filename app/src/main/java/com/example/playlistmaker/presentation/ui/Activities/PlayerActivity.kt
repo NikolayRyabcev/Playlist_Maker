@@ -24,7 +24,6 @@ class PlayerActivity : AppCompatActivity(),
     lateinit var pauseButton: ImageButton
     lateinit var timer: TextView
     private var mainThreadHandler: Handler? = null
-    private lateinit var repository : PlayerRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,13 +44,9 @@ class PlayerActivity : AppCompatActivity(),
         playerInteractor = PlayerInteractorImpl()
 
         mainThreadHandler = Handler(Looper.getMainLooper())
-
-
         arrowButton.setOnClickListener {
             finish()
         }
-
-
         playerTrackName.text = intent.extras?.getString("Track Name") ?: "Unknown Track"
         playerArtistName.text = intent.extras?.getString("Artist Name") ?: "Unknown Artist"
         trackTime.text = intent.extras?.getString("Track Time") ?: "00:00"
@@ -72,8 +67,6 @@ class PlayerActivity : AppCompatActivity(),
         }
         val url = intent.extras?.getString("URL")
         if (!url.isNullOrEmpty()) playerInteractor.setTrackUrl(url)
-
-        repository = PlayerRepositoryImpl(this, playerInteractor)
         playerInteractor.setContext(this)
         playButton.setOnClickListener {
             playerInteractor.play()
@@ -88,7 +81,7 @@ class PlayerActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
-        repository.destroy()
+        playerInteractor.destroy()
     }
 
     override fun preparePlayer(url: String) {

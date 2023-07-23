@@ -29,6 +29,10 @@ class PlayerInteractorImpl : PlayerInteractor {
         repository.playing()
     }
 
+    override fun destroy() {
+        repository.destroy()
+    }
+
 
 }
 

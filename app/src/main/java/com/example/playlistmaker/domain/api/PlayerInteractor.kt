@@ -10,4 +10,5 @@ interface PlayerInteractor {
     fun setContext(activity: PlayerActivityModel)
     fun play()
     fun pause()
+    fun destroy()
 }
