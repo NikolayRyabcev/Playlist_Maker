@@ -50,7 +50,7 @@ class PlayerInteractorImpl(
     override fun startPlayer() {
         mediaPlayer.start()
         playerState = PlayerStates.STATE_PLAYING
-        playerActivity.onPauseButton()
+        playerActivity.onPlayButton()
         Log.d("player", "Started")
         mainThreadHandler?.post(
             timing()
@@ -60,7 +60,7 @@ class PlayerInteractorImpl(
     override fun pausePlayer() {
         mediaPlayer.pause()
         playerState = PlayerStates.STATE_PAUSED
-        playerActivity.onPlayButton()
+        playerActivity.onPauseButton()
         Log.d("player", "Paused")
     }
 
