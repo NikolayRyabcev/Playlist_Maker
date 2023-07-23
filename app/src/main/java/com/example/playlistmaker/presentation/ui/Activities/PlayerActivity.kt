@@ -74,13 +74,13 @@ class PlayerActivity : AppCompatActivity(),
         if (!url.isNullOrEmpty()) playerInteractor.setTrackUrl(url)
 
         repository = PlayerRepositoryImpl(this, playerInteractor)
-
+        playerInteractor.setContext(this)
         playButton.setOnClickListener {
-            repository.playing()
+            playerInteractor.play()
             Log.d("player", "Click")
         }
         pauseButton.setOnClickListener {
-            repository.playing()
+            playerInteractor.pause()
         }
 
     }
