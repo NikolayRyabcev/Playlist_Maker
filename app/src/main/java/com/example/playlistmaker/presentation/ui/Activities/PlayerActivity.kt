@@ -11,16 +11,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 
 class PlayerActivity : AppCompatActivity(),
     PlayerActivityModel {
-    lateinit var playerInteractor: PlayerInteractor
+
     lateinit var playButton: ImageButton
+    lateinit var playerInteractor: PlayerInteractor
     lateinit var pauseButton: ImageButton
     lateinit var timer: TextView
     private var mainThreadHandler: Handler? = null
@@ -41,7 +40,8 @@ class PlayerActivity : AppCompatActivity(),
         timer = findViewById(R.id.trackTimer)
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
 
-        playerInteractor = PlayerInteractorImpl()
+        playerInteractor = PlayerInteractorImpl(this)
+
 
         mainThreadHandler = Handler(Looper.getMainLooper())
         arrowButton.setOnClickListener {
@@ -67,7 +67,7 @@ class PlayerActivity : AppCompatActivity(),
         }
         val url = intent.extras?.getString("URL")
         if (!url.isNullOrEmpty()) playerInteractor.setTrackUrl(url)
-        playerInteractor.setContext(this)
+
         playButton.setOnClickListener {
             playerInteractor.play()
             Log.d("player", "Click")
@@ -110,69 +110,3 @@ class PlayerActivity : AppCompatActivity(),
 
 
 }
-/*   private fun preparePlayer(url: String) {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
-            playerState = PlayerStates.STATE_PREPARED
-            playButton.visibility = View.VISIBLE
-            pauseButton.visibility = View.GONE
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerState = PlayerStates.STATE_PREPARED
-            playButton.visibility = View.VISIBLE
-            pauseButton.visibility = View.GONE
-        }
-    }
-    private fun startPlayer() {
-        mediaPlayer.start()
-        playerState = PlayerStates.STATE_PLAYING
-        playButton.visibility = View.GONE
-        pauseButton.visibility = View.VISIBLE
-        mainThreadHandler?.post(
-            timing()
-        )
-    }
-    private fun pausePlayer() {
-        //super.onPause()
-        mediaPlayer.pause()
-        playerState = PlayerStates.STATE_PAUSED
-        playButton.visibility = View.VISIBLE
-        pauseButton.visibility = View.GONE
-    }
-    private fun playbackControl() {
-        when (playerState) {
-            PlayerStates.STATE_PLAYING -> {
-                pausePlayer()
-            }
-            PlayerStates.STATE_PREPARED, PlayerStates.STATE_PAUSED -> {
-                startPlayer()
-            }
-            else -> {}
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (mediaPlayer.isPlaying) mediaPlayer.pause()
-        playerState = PlayerStates.STATE_PAUSED
-        playButton.visibility = View.VISIBLE
-        pauseButton.visibility = View.GONE
-    }
-    private fun timing(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (playerState == PlayerStates.STATE_PLAYING) {
-                    val sdf = SimpleDateFormat("mm:ss")
-                    time = sdf.format(mediaPlayer.currentPosition)
-                    Log.d("playertime", time)
-                    timer.text = time
-                    mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
-                }
-                else {timer.text = "00:00"
-                    mainThreadHandler?.post(this)
-                }
-            }
-        }
-    }*/

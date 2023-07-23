@@ -6,21 +6,23 @@ import android.os.Looper
 import android.util.Log
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
-import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
+import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
+import com.example.playlistmaker.presentation.ui.Activities.PlayerActivity
 import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl(
-    private val playerActivity: PlayerActivityModel,
-    playerInteractor: PlayerInteractor
+    val playerActivity: PlayerActivity,
+    private var playerInteractor: PlayerInteractor
 ) : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     var time = ""
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
     val trackAdress: String = playerInteractor.getTrackUrl()
+
     override fun playing() {
+        playerInteractor=PlayerInteractorImpl(playerActivity)
         if (!trackAdress.isNullOrEmpty()) {
-        //    Log.d("player", "Playing")
             preparePlayer(trackAdress)
             playbackControl()
 
@@ -29,19 +31,17 @@ class PlayerRepositoryImpl(
 
     override fun preparePlayer(url: String) {
         if (playerState == PlayerState.STATE_DEFAULT) {
-        //    Log.d("player", "Track $url")
             mediaPlayer.reset()
             mediaPlayer.setDataSource(url)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnPreparedListener {
-                playerActivity.enablePlayButton()
+                playerInteractor.enablePlayButton()
                 playerState = PlayerState.STATE_PREPARED
-          //      Log.d("player", "Prepared")
                 playbackControl()
             }
             mediaPlayer.setOnCompletionListener {
                 playerState = PlayerState.STATE_PREPARED
-                playerActivity.onPauseButton()
+                playerInteractor.onPauseButton()
             }
 
         }
@@ -50,7 +50,7 @@ class PlayerRepositoryImpl(
     override fun startPlayer() {
         mediaPlayer.start()
         playerState = PlayerState.STATE_PLAYING
-        playerActivity.onPlayButton()
+        playerInteractor.onPlayButton()
         Log.d("player", "Started")
         mainThreadHandler?.post(
             timing()
@@ -60,7 +60,7 @@ class PlayerRepositoryImpl(
     override fun pausePlayer() {
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
-        playerActivity.onPauseButton()
+        playerInteractor.onPauseButton()
        // Log.d("player", "Paused")
     }
 
@@ -86,10 +86,10 @@ class PlayerRepositoryImpl(
                     val sdf = SimpleDateFormat("mm:ss")
                     time = sdf.format(mediaPlayer.currentPosition)
                     Log.d("player", time)
-                    playerActivity.setTimerText(time)
+                    playerInteractor.setTimerText(time)
                     mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
                 } else {
-                    playerActivity.setTimerText("00:00")
+                    playerInteractor.setTimerText("00:00")
                     mainThreadHandler?.post(this)
                 }
             }
@@ -99,7 +99,7 @@ class PlayerRepositoryImpl(
     override fun destroy() {
         mediaPlayer.release()
         playerState = PlayerState.STATE_DEFAULT
-        playerActivity.enablePlayButton()
+        playerInteractor.enablePlayButton()
     }
 
     enum class PlayerState {
