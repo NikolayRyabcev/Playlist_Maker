@@ -4,7 +4,7 @@ import com.example.playlistmaker.domain.api.PlayerInteractor
 
 interface PlayerActivityModel {
 
-    fun preparePlayer(url: String)
+    fun preparePlayer()
     fun enablePlayButton()
     fun onPlayButton()
     fun onPauseButton()

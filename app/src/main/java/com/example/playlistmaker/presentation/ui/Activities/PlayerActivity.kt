@@ -23,6 +23,7 @@ class PlayerActivity : AppCompatActivity(),
     lateinit var pauseButton: ImageButton
     lateinit var timer: TextView
     private var mainThreadHandler: Handler? = null
+    lateinit var playerState :PlayerInteractorImpl.PlayerState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +40,8 @@ class PlayerActivity : AppCompatActivity(),
         pauseButton = findViewById(R.id.pauseButton)
         timer = findViewById(R.id.trackTimer)
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
-
-        playerInteractor = PlayerInteractorImpl(this)
+        playerState = PlayerInteractorImpl.PlayerState.STATE_DEFAULT
+        playerInteractor = PlayerInteractorImpl()
 
 
         mainThreadHandler = Handler(Looper.getMainLooper())
@@ -76,6 +77,17 @@ class PlayerActivity : AppCompatActivity(),
             playerInteractor.pause()
         }
 
+        when (playerState) {
+            PlayerInteractorImpl.PlayerState.STATE_PLAYING -> {
+                onPlayButton()
+            }
+
+            PlayerInteractorImpl.PlayerState.STATE_PREPARED, PlayerInteractorImpl.PlayerState.STATE_PAUSED -> {
+                onPauseButton()
+            }
+
+            else -> {preparePlayer()}
+        }
     }
 
 
@@ -84,7 +96,7 @@ class PlayerActivity : AppCompatActivity(),
         playerInteractor.destroy()
     }
 
-    override fun preparePlayer(url: String) {
+    override fun preparePlayer() {
         playButton.isEnabled = true
         playButton.visibility = View.VISIBLE
         pauseButton.visibility = View.GONE

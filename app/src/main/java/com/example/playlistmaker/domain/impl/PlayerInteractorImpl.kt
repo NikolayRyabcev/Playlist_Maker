@@ -5,7 +5,7 @@ import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.presentation.ui.Activities.PlayerActivity
 
-class PlayerInteractorImpl(val playerActivity: PlayerActivity) : PlayerInteractor {
+class PlayerInteractorImpl : PlayerInteractor {
     var trackAdress = ""
 
     private lateinit var repository : PlayerRepository
@@ -18,7 +18,7 @@ class PlayerInteractorImpl(val playerActivity: PlayerActivity) : PlayerInteracto
     }
 
     override fun play() {
-        repository = PlayerRepositoryImpl(playerActivity, this)
+        repository = PlayerRepositoryImpl(this)
         repository.playing()
     }
 
@@ -30,20 +30,14 @@ class PlayerInteractorImpl(val playerActivity: PlayerActivity) : PlayerInteracto
         repository.destroy()
     }
 
-    override fun enablePlayButton() {
-        playerActivity.enablePlayButton()
-    }
-
-    override fun onPauseButton() {
-        playerActivity.onPauseButton()
-    }
-
-    override fun onPlayButton() {
-        playerActivity.onPlayButton()
-    }
-
     override fun setTimerText(time:String) {
         playerActivity.setTimerText(time)
+    }
+    enum class PlayerState {
+        STATE_DEFAULT,
+        STATE_PREPARED,
+        STATE_PLAYING,
+        STATE_PAUSED
     }
 }
 

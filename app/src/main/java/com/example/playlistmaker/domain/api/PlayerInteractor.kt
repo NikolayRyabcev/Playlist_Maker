@@ -10,8 +10,6 @@ interface PlayerInteractor {
     fun play()
     fun pause()
     fun destroy()
-    fun enablePlayButton()
-    fun onPauseButton()
-    fun onPlayButton()
+
     fun setTimerText(time:String)
 }
