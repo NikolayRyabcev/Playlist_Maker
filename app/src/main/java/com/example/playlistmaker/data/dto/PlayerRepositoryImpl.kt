@@ -15,7 +15,7 @@ class PlayerRepositoryImpl(
 ) : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerInteractorImpl.PlayerState.STATE_DEFAULT
-    var time = ""
+    var timePlayed = ""
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
     val trackAdress: String = playerInteractor.getTrackUrl()
     override fun playing() {
@@ -82,9 +82,9 @@ class PlayerRepositoryImpl(
             override fun run() {
                 if ((playerState == PlayerInteractorImpl.PlayerState.STATE_PLAYING) or (playerState == PlayerInteractorImpl.PlayerState.STATE_PAUSED)) {
                     val sdf = SimpleDateFormat("mm:ss")
-                    time = sdf.format(mediaPlayer.currentPosition)
-                    Log.d("player", time)
-                    playerInteractor.setTimerText(time)
+                    timePlayed = sdf.format(mediaPlayer.currentPosition)
+                    Log.d("player", timePlayed)
+                    playerInteractor.setTimerText(timePlayed)
                     mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
                 } else {
                     playerInteractor.setTimerText("00:00")
@@ -100,7 +100,7 @@ class PlayerRepositoryImpl(
     }
 
     override fun getTime(): String {
-        return time
+        return timePlayed
     }
     override fun subscribe(listener: TimeInteractor) {
         listener.onTimeChanged()

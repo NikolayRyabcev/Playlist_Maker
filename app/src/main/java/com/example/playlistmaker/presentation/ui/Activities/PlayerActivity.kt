@@ -16,7 +16,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.TimeInteractor
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
-import com.example.playlistmaker.domain.impl.TimeInteractorImpl
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 
 class PlayerActivity : AppCompatActivity(),
@@ -95,8 +94,8 @@ class PlayerActivity : AppCompatActivity(),
             else -> {preparePlayer()}
         }
         val timeRepository = Creator.providePlayerRepository()
-        timeInteractor = Creator.provideTimeInteractor()
-        timeInteractor.subscribe(Creator.provideTimeInteractor())
+        timeInteractor = provideTimeInteractor()
+        timeInteractor.subscribe(provideTimeInteractor())
 
         setTimerText(timeInteractor.onTimeChanged())
     }
