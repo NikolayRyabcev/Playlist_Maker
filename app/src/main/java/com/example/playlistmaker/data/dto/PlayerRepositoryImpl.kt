@@ -4,6 +4,7 @@ import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.example.playlistmaker.domain.api.OnTimeChangeListener
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
@@ -18,7 +19,6 @@ class PlayerRepositoryImpl(
     var time = ""
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
     val trackAdress: String = playerInteractor.getTrackUrl()
-
     override fun playing() {
         playerInteractor = PlayerInteractorImpl()
         if (!trackAdress.isNullOrEmpty()) {
@@ -100,6 +100,12 @@ class PlayerRepositoryImpl(
         playerState = PlayerInteractorImpl.PlayerState.STATE_DEFAULT
     }
 
+    override fun getTime(): String {
+        return time
+    }
+    override fun subscribe(listener: OnTimeChangeListener) {
+        listener.onTimeChanged(time)
+    }
     companion object {
         const val DELAY_MILLIS = 100L
     }

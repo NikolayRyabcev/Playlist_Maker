@@ -8,4 +8,6 @@ interface PlayerRepository {
     fun playbackControl()
     fun timing(): Runnable
     fun destroy()
+    fun getTime(): String
+    fun subscribe(listener: OnTimeChangeListener)
 }

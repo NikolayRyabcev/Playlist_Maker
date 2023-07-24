@@ -11,12 +11,16 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
+import com.example.playlistmaker.domain.api.OnTimeChangeListener
 import com.example.playlistmaker.domain.api.PlayerInteractor
+import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
+import com.example.playlistmaker.domain.impl.TimeInteractorImpl
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 
 class PlayerActivity : AppCompatActivity(),
-    PlayerActivityModel {
+    PlayerActivityModel, OnTimeChangeListener {
 
     lateinit var playButton: ImageButton
     lateinit var playerInteractor: PlayerInteractor
@@ -24,13 +28,15 @@ class PlayerActivity : AppCompatActivity(),
     lateinit var timer: TextView
     private var mainThreadHandler: Handler? = null
     lateinit var playerState :PlayerInteractorImpl.PlayerState
+    private lateinit var timeInteractor: TimeInteractorImpl
+    lateinit var trackTime:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.player_activity)
         val playerTrackName = findViewById<TextView>(R.id.playerTrackName)
         val playerArtistName = findViewById<TextView>(R.id.playerArtistName)
-        val trackTime = findViewById<TextView>(R.id.time)
+        trackTime = findViewById(R.id.time)
         val album = findViewById<TextView>(R.id.album)
         val year = findViewById<TextView>(R.id.year)
         val genre = findViewById<TextView>(R.id.genre)
@@ -88,6 +94,10 @@ class PlayerActivity : AppCompatActivity(),
 
             else -> {preparePlayer()}
         }
+        val timeRepository = PlayerRepositoryImpl(playerInteractor)
+        timeInteractor = TimeInteractorImpl(timeRepository)
+        timeInteractor.subscribe(this)
+
     }
 
 
@@ -118,6 +128,10 @@ class PlayerActivity : AppCompatActivity(),
 
     override fun setTimerText(time: String) {
         timer.text = time
+    }
+
+    override fun onTimeChanged(time: String) {
+        trackTime.text=time
     }
 
 
