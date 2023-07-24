@@ -26,9 +26,9 @@ class PlayerActivity : AppCompatActivity(),
     lateinit var pauseButton: ImageButton
     lateinit var timer: TextView
     private var mainThreadHandler: Handler? = null
-    lateinit var playerState :PlayerInteractorImpl.PlayerState
+    lateinit var playerState: PlayerInteractorImpl.PlayerState
     private lateinit var timeInteractor: TimeInteractor
-    lateinit var trackTime:TextView
+    lateinit var trackTime: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +91,9 @@ class PlayerActivity : AppCompatActivity(),
                 onPauseButton()
             }
 
-            else -> {preparePlayer()}
+            else -> {
+                preparePlayer()
+            }
         }
         val timeRepository = Creator.providePlayerRepository()
         timeInteractor = provideTimeInteractor()
@@ -127,10 +129,8 @@ class PlayerActivity : AppCompatActivity(),
     }
 
     override fun setTimerText(time: String) {
-        timer.text = time
+        if (time.isNullOrEmpty()) timer.text = "00:00" else timer.text = time
     }
-
-
 
 
 }
