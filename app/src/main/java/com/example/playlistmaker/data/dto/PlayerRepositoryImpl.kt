@@ -9,7 +9,7 @@ import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.api.TimeInteractor
 import java.text.SimpleDateFormat
 
-class PlayerRepositoryImpl : PlayerRepository {
+class PlayerRepositoryImpl(val trackAdress: String) : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     var timePlayed = ""
@@ -18,11 +18,8 @@ class PlayerRepositoryImpl : PlayerRepository {
     lateinit var timeInteractor: TimeInteractor
 
 
-
     override fun playing() {
-        val playerInteractor = Creator.providePlayerInteractor()
         timeInteractor = Creator.provideTimeInteractor()
-        val trackAdress: String = playerInteractor.getTrackUrl()
         Log.d("Плеер", "Адрес трека $trackAdress")
         if (trackAdress.isNotEmpty()) {
             preparePlayer(trackAdress)
@@ -107,18 +104,22 @@ class PlayerRepositoryImpl : PlayerRepository {
     override fun getTime(): String {
         return timePlayed
     }
+
     override fun subscribe(listener: TimeInteractor) {
         listener.onTimeChanged()
     }
-    override fun getPlayerState():PlayerState {
+
+    override fun getPlayerState(): PlayerState {
         return playerState
     }
+
     enum class PlayerState {
         STATE_DEFAULT,
         STATE_PREPARED,
         STATE_PLAYING,
         STATE_PAUSED
     }
+
     companion object {
         const val DELAY_MILLIS = 100L
     }

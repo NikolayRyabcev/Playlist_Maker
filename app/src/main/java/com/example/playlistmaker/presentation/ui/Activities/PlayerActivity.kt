@@ -15,6 +15,7 @@ import com.example.playlistmaker.Creator.provideTimeInteractor
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
+import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.api.TimeInteractor
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 
@@ -82,7 +83,8 @@ class PlayerActivity : AppCompatActivity(),
             playerInteractor.pause()
             Log.d("Плеер", "Click")
         }
-        val repository=Creator.providePlayerRepository()
+        val repository : PlayerRepository
+        if (!url.isNullOrEmpty()) {repository=Creator.providePlayerRepository(url)
         when (repository.getPlayerState()) {
             PlayerRepositoryImpl.PlayerState.STATE_PLAYING -> {
                 onPlayButton()
@@ -95,7 +97,7 @@ class PlayerActivity : AppCompatActivity(),
             else -> {
                 preparePlayer()
             }
-        }
+        }}
 
         timeInteractor = provideTimeInteractor()
         timeInteractor.subscribe(provideTimeInteractor())

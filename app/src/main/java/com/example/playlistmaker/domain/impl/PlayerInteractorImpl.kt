@@ -26,7 +26,7 @@ class PlayerInteractorImpl : PlayerInteractor {
     }
 
     override fun play() {
-        repository = Creator.providePlayerRepository()
+        repository = Creator.providePlayerRepository(trackAdress)
         repository.playing()
         Log.d("Плеер", "Запустили репозиторий")
     }
