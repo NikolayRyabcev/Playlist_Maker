@@ -4,11 +4,10 @@ import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import com.example.playlistmaker.domain.api.OnTimeChangeListener
+import com.example.playlistmaker.domain.api.TimeInteractor
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
-import com.example.playlistmaker.presentation.ui.Activities.PlayerActivity
 import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl(
@@ -103,7 +102,7 @@ class PlayerRepositoryImpl(
     override fun getTime(): String {
         return time
     }
-    override fun subscribe(listener: OnTimeChangeListener) {
+    override fun subscribe(listener: TimeInteractor) {
         listener.onTimeChanged(time)
     }
     companion object {

@@ -10,17 +10,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
-import com.example.playlistmaker.domain.api.OnTimeChangeListener
 import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.domain.impl.TimeInteractorImpl
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 
 class PlayerActivity : AppCompatActivity(),
-    PlayerActivityModel, OnTimeChangeListener {
+    PlayerActivityModel {
 
     lateinit var playButton: ImageButton
     lateinit var playerInteractor: PlayerInteractor
@@ -47,7 +45,7 @@ class PlayerActivity : AppCompatActivity(),
         timer = findViewById(R.id.trackTimer)
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
         playerState = PlayerInteractorImpl.PlayerState.STATE_DEFAULT
-        playerInteractor = PlayerInteractorImpl()
+        playerInteractor = Creator.providePlayerInteractor()
 
 
         mainThreadHandler = Handler(Looper.getMainLooper())
@@ -94,10 +92,9 @@ class PlayerActivity : AppCompatActivity(),
 
             else -> {preparePlayer()}
         }
-        val timeRepository = PlayerRepositoryImpl(playerInteractor)
+        val timeRepository = Creator.providePlayerRepository()
         timeInteractor = TimeInteractorImpl(timeRepository)
-        timeInteractor.subscribe(this)
-
+        timeInteractor.subscribe(Creator.provideTimeInteractor())
     }
 
 
@@ -130,9 +127,7 @@ class PlayerActivity : AppCompatActivity(),
         timer.text = time
     }
 
-    override fun onTimeChanged(time: String) {
-        trackTime.text=time
-    }
+
 
 
 }

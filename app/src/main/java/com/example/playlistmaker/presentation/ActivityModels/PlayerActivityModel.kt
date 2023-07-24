@@ -9,4 +9,5 @@ interface PlayerActivityModel {
     fun onPlayButton()
     fun onPauseButton()
     fun setTimerText(time:String)
+
 }

@@ -9,5 +9,5 @@ interface PlayerRepository {
     fun timing(): Runnable
     fun destroy()
     fun getTime(): String
-    fun subscribe(listener: OnTimeChangeListener)
+    fun subscribe(listener: TimeInteractor)
 }
