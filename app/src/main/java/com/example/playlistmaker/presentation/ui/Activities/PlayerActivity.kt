@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.Creator.provideTimeInteractor
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.TimeInteractor
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
@@ -26,7 +27,7 @@ class PlayerActivity : AppCompatActivity(),
     lateinit var pauseButton: ImageButton
     lateinit var timer: TextView
     private var mainThreadHandler: Handler? = null
-    lateinit var playerState: PlayerInteractorImpl.PlayerState
+
     private lateinit var timeInteractor: TimeInteractor
     lateinit var trackTime: TextView
 
@@ -45,7 +46,7 @@ class PlayerActivity : AppCompatActivity(),
         pauseButton = findViewById(R.id.pauseButton)
         timer = findViewById(R.id.trackTimer)
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
-        playerState = PlayerInteractorImpl.PlayerState.STATE_DEFAULT
+
         playerInteractor = Creator.providePlayerInteractor()
 
 
@@ -81,13 +82,14 @@ class PlayerActivity : AppCompatActivity(),
         pauseButton.setOnClickListener {
             playerInteractor.pause()
         }
-
+        val repository=Creator.providePlayerRepository()
+        var playerState = repository.getPlayerState()
         when (playerState) {
-            PlayerInteractorImpl.PlayerState.STATE_PLAYING -> {
+            PlayerRepositoryImpl.PlayerState.STATE_PLAYING -> {
                 onPlayButton()
             }
 
-            PlayerInteractorImpl.PlayerState.STATE_PREPARED, PlayerInteractorImpl.PlayerState.STATE_PAUSED -> {
+            PlayerRepositoryImpl.PlayerState.STATE_PREPARED, PlayerRepositoryImpl.PlayerState.STATE_PAUSED -> {
                 onPauseButton()
             }
 

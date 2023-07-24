@@ -12,9 +12,9 @@ object Creator {
         return PlayerInteractorImpl()
     }
     fun providePlayerRepository():PlayerRepository{
-        return PlayerRepositoryImpl(providePlayerInteractor())
+        return PlayerRepositoryImpl(providePlayerInteractor(), provideTimeInteractor())
     }
    fun provideTimeInteractor(): TimeInteractor {
-       return TimeInteractorImpl(providePlayerRepository())
+       return TimeInteractorImpl()
    }
 }

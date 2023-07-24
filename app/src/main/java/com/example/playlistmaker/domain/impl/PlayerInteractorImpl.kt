@@ -37,12 +37,8 @@ class PlayerInteractorImpl : PlayerInteractor {
         timeInteractor=Creator.provideTimeInteractor()
         timeInteractor.onTimeChanged()
     }
-    enum class PlayerState {
-        STATE_DEFAULT,
-        STATE_PREPARED,
-        STATE_PLAYING,
-        STATE_PAUSED
-    }
+
+
 }
 
 

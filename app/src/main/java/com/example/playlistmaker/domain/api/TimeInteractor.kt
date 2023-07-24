@@ -4,4 +4,5 @@ interface TimeInteractor {
     fun onTimeChanged():String
     fun getTime(): String
     fun subscribe(listener: TimeInteractor)
+    fun setTime(time:String)
 }

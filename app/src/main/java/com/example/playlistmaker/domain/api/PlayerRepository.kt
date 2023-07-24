@@ -1,5 +1,7 @@
 package com.example.playlistmaker.domain.api
 
+import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
+
 interface PlayerRepository {
     fun playing()
     fun preparePlayer(url: String)
@@ -10,4 +12,5 @@ interface PlayerRepository {
     fun destroy()
     fun getTime(): String
     fun subscribe(listener: TimeInteractor)
+    fun getPlayerState(): PlayerRepositoryImpl.PlayerState
 }
