@@ -5,28 +5,29 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.example.playlistmaker.Creator
-import com.example.playlistmaker.domain.api.TimeInteractor
-import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
-import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
+import com.example.playlistmaker.domain.api.TimeInteractor
 import java.text.SimpleDateFormat
 
-class PlayerRepositoryImpl(
-    private var playerInteractor: PlayerInteractor,
-    private var timeInteractor: TimeInteractor
-) : PlayerRepository {
+class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     var timePlayed = ""
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
-    val trackAdress: String = playerInteractor.getTrackUrl()
+
+    lateinit var timeInteractor: TimeInteractor
+
+
+
     override fun playing() {
-        playerInteractor = Creator.providePlayerInteractor()
+        val playerInteractor = Creator.providePlayerInteractor()
         timeInteractor = Creator.provideTimeInteractor()
-        if (!trackAdress.isNullOrEmpty()) {
+        val trackAdress: String = playerInteractor.getTrackUrl()
+        Log.d("Плеер", "Адрес трека $trackAdress")
+        if (trackAdress.isNotEmpty()) {
             preparePlayer(trackAdress)
             playbackControl()
-
+            Log.d("Плеер", "Репозиторий работает")
         }
     }
 
@@ -39,6 +40,7 @@ class PlayerRepositoryImpl(
 
                 playerState = PlayerState.STATE_PREPARED
                 playbackControl()
+                Log.d("Плеер", "Плеер готов")
             }
             mediaPlayer.setOnCompletionListener {
                 playerState = PlayerState.STATE_PREPARED
@@ -52,7 +54,7 @@ class PlayerRepositoryImpl(
         mediaPlayer.start()
         playerState = PlayerState.STATE_PLAYING
 
-        Log.d("player", "Started")
+        Log.d("Плеер", "Играем музыку")
         mainThreadHandler?.post(
             timing()
         )
@@ -62,7 +64,7 @@ class PlayerRepositoryImpl(
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
 
-        // Log.d("player", "Paused")
+        Log.d("Плеер", "Пауза")
     }
 
     override fun playbackControl() {
@@ -86,7 +88,7 @@ class PlayerRepositoryImpl(
                 if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
                     val sdf = SimpleDateFormat("mm:ss")
                     timePlayed = sdf.format(mediaPlayer.currentPosition)
-                    Log.d("player", timePlayed)
+                    Log.d("Плеер", "Время в репозитории $timePlayed")
                     timeInteractor.setTime(timePlayed)
                     mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
                 } else {

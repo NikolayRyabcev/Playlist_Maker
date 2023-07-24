@@ -16,7 +16,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.TimeInteractor
-import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 
 class PlayerActivity : AppCompatActivity(),
@@ -77,14 +76,14 @@ class PlayerActivity : AppCompatActivity(),
 
         playButton.setOnClickListener {
             playerInteractor.play()
-            Log.d("player", "Click")
+            Log.d("Плеер", "Click")
         }
         pauseButton.setOnClickListener {
             playerInteractor.pause()
+            Log.d("Плеер", "Click")
         }
         val repository=Creator.providePlayerRepository()
-        var playerState = repository.getPlayerState()
-        when (playerState) {
+        when (repository.getPlayerState()) {
             PlayerRepositoryImpl.PlayerState.STATE_PLAYING -> {
                 onPlayButton()
             }
@@ -97,7 +96,7 @@ class PlayerActivity : AppCompatActivity(),
                 preparePlayer()
             }
         }
-        val timeRepository = Creator.providePlayerRepository()
+
         timeInteractor = provideTimeInteractor()
         timeInteractor.subscribe(provideTimeInteractor())
 
@@ -131,7 +130,7 @@ class PlayerActivity : AppCompatActivity(),
     }
 
     override fun setTimerText(time: String) {
-        if (time.isNullOrEmpty()) timer.text = "00:00" else timer.text = time
+        if (time.isEmpty()) timer.text = "00:00" else timer.text = time
     }
 
 

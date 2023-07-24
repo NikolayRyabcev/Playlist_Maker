@@ -12,7 +12,7 @@ object Creator {
         return PlayerInteractorImpl()
     }
     fun providePlayerRepository():PlayerRepository{
-        return PlayerRepositoryImpl(providePlayerInteractor(), provideTimeInteractor())
+        return PlayerRepositoryImpl()
     }
    fun provideTimeInteractor(): TimeInteractor {
        return TimeInteractorImpl()
