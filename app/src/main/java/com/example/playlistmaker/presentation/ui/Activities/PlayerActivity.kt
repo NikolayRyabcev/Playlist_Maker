@@ -11,8 +11,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.Creator
+import com.example.playlistmaker.Creator.provideTimeInteractor
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.PlayerInteractor
+import com.example.playlistmaker.domain.api.TimeInteractor
 import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.example.playlistmaker.domain.impl.TimeInteractorImpl
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
@@ -26,7 +28,7 @@ class PlayerActivity : AppCompatActivity(),
     lateinit var timer: TextView
     private var mainThreadHandler: Handler? = null
     lateinit var playerState :PlayerInteractorImpl.PlayerState
-    private lateinit var timeInteractor: TimeInteractorImpl
+    private lateinit var timeInteractor: TimeInteractor
     lateinit var trackTime:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,8 +95,10 @@ class PlayerActivity : AppCompatActivity(),
             else -> {preparePlayer()}
         }
         val timeRepository = Creator.providePlayerRepository()
-        timeInteractor = TimeInteractorImpl(timeRepository)
+        timeInteractor = Creator.provideTimeInteractor()
         timeInteractor.subscribe(Creator.provideTimeInteractor())
+
+        setTimerText(timeInteractor.onTimeChanged())
     }
 
 

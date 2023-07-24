@@ -5,6 +5,9 @@ import com.example.playlistmaker.domain.api.PlayerRepository
 
 class TimeInteractorImpl (private val timeRepository: PlayerRepository):TimeInteractor {
     private val listeners = mutableListOf<TimeInteractor>()
+    override fun onTimeChanged():String{
+        return getTime()
+    }
 
 
     override fun getTime(): String {
@@ -12,6 +15,6 @@ class TimeInteractorImpl (private val timeRepository: PlayerRepository):TimeInte
     }
     override fun subscribe(listener: TimeInteractor) {
         listeners.add(listener)
-        listener.onTimeChanged(getTime())
+        listener.onTimeChanged()
     }
 }

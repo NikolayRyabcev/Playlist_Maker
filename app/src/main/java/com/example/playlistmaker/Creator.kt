@@ -14,7 +14,7 @@ object Creator {
     fun providePlayerRepository():PlayerRepository{
         return PlayerRepositoryImpl(providePlayerInteractor())
     }
-   fun provideTimeInteractor():TimeInteractor{
+   fun provideTimeInteractor(): TimeInteractor {
        return TimeInteractorImpl(providePlayerRepository())
    }
 }

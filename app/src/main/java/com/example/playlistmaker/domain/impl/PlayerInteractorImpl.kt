@@ -1,14 +1,17 @@
 package com.example.playlistmaker.domain.impl
 
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.domain.api.PlayerRepository
+import com.example.playlistmaker.domain.api.TimeInteractor
 import com.example.playlistmaker.presentation.ui.Activities.PlayerActivity
 
 class PlayerInteractorImpl : PlayerInteractor {
     var trackAdress = ""
 
     private lateinit var repository : PlayerRepository
+    private lateinit var timeInteractor :TimeInteractor
     override fun setTrackUrl(url: String) {
         trackAdress = url
     }
@@ -18,7 +21,7 @@ class PlayerInteractorImpl : PlayerInteractor {
     }
 
     override fun play() {
-        repository = PlayerRepositoryImpl(this)
+        repository = Creator.providePlayerRepository()
         repository.playing()
     }
 
@@ -31,7 +34,8 @@ class PlayerInteractorImpl : PlayerInteractor {
     }
 
     override fun setTimerText(time:String) {
-        playerActivity.setTimerText(time)
+        timeInteractor=Creator.provideTimeInteractor()
+        timeInteractor.onTimeChanged()
     }
     enum class PlayerState {
         STATE_DEFAULT,
