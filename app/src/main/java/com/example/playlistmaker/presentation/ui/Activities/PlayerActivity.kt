@@ -83,9 +83,8 @@ class PlayerActivity : AppCompatActivity(),
             playerInteractor.pause()
             Log.d("Плеер", "Click")
         }
-        val repository : PlayerRepository
-        if (!url.isNullOrEmpty()) {repository=Creator.providePlayerRepository(url)
-        when (repository.getPlayerState()) {
+
+        when (playerInteractor.putPlayerState()) {
             PlayerRepositoryImpl.PlayerState.STATE_PLAYING -> {
                 onPlayButton()
             }
@@ -97,7 +96,7 @@ class PlayerActivity : AppCompatActivity(),
             else -> {
                 preparePlayer()
             }
-        }}
+        }
 
         timeInteractor = provideTimeInteractor()
         timeInteractor.subscribe(provideTimeInteractor())

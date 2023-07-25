@@ -11,11 +11,13 @@ import com.example.playlistmaker.presentation.ui.Activities.PlayerActivity
 class PlayerInteractorImpl : PlayerInteractor {
     var trackAdress = ""
 
-    private lateinit var repository : PlayerRepository
+    lateinit var repository :PlayerRepository
     private lateinit var timeInteractor :TimeInteractor
+    var playerState= PlayerRepositoryImpl.PlayerState.STATE_DEFAULT
     override fun setTrackUrl(url: String) {
         Log.d("Плеер", "Принят адрес трека $url")
         trackAdress = url
+        repository= Creator.providePlayerRepository(trackAdress)
 
         Log.d("Плеер", "Сохранен адрес трека $trackAdress")
     }
@@ -26,7 +28,6 @@ class PlayerInteractorImpl : PlayerInteractor {
     }
 
     override fun play() {
-        repository = Creator.providePlayerRepository(trackAdress)
         repository.playing()
         Log.d("Плеер", "Запустили репозиторий")
     }
@@ -45,6 +46,13 @@ class PlayerInteractorImpl : PlayerInteractor {
         Log.d("Плеер", "setTimerText $time")
     }
 
+    override fun setPlayerState() {
+        playerState= repository.getPlayerState()
+    }
+
+    override fun putPlayerState() :PlayerRepositoryImpl.PlayerState{
+        return playerState
+    }
 
 }
 
