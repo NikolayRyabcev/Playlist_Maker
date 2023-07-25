@@ -84,7 +84,7 @@ class PlayerRepositoryImpl(val trackAdress: String) : PlayerRepository {
                     timeInteractor.setTime(timePlayed)
                    // mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
                 } else {
-                    timeInteractor.setTime("00:00")
+
                  //   mainThreadHandler?.post(this)
                 }
             }
