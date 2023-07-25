@@ -13,23 +13,20 @@ class PlayerInteractorImpl : PlayerInteractor {
 
     lateinit var repository :PlayerRepository
     private lateinit var timeInteractor :TimeInteractor
-    var playerState= PlayerRepositoryImpl.PlayerState.STATE_DEFAULT
+    lateinit var playerState: PlayerRepositoryImpl.PlayerState
     override fun setTrackUrl(url: String) {
-        Log.d("Плеер", "Принят адрес трека $url")
         trackAdress = url
         repository= Creator.providePlayerRepository(trackAdress)
+        playerState= PlayerRepositoryImpl.PlayerState.STATE_PLAYING
 
-        Log.d("Плеер", "Сохранен адрес трека $trackAdress")
     }
 
     override fun getTrackUrl(): String {
-        Log.d("Плеер", "Передан адрес трека $trackAdress")
         return trackAdress
     }
 
     override fun play() {
         repository.playing()
-        Log.d("Плеер", "Запустили репозиторий")
     }
 
     override fun pause() {
@@ -51,6 +48,7 @@ class PlayerInteractorImpl : PlayerInteractor {
     }
 
     override fun putPlayerState() :PlayerRepositoryImpl.PlayerState{
+        setPlayerState()
         return playerState
     }
 

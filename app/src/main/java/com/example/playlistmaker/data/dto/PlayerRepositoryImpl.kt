@@ -50,8 +50,6 @@ class PlayerRepositoryImpl(val trackAdress: String) : PlayerRepository {
     override fun startPlayer() {
         mediaPlayer.start()
         playerState = PlayerState.STATE_PLAYING
-
-        Log.d("Плеер", "Играем музыку")
         mainThreadHandler?.post(
             timing()
         )
@@ -60,12 +58,9 @@ class PlayerRepositoryImpl(val trackAdress: String) : PlayerRepository {
     override fun pausePlayer() {
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
-
-        Log.d("Плеер", "Пауза")
     }
 
     override fun playbackControl() {
-        //   Log.d("player", "PlaybackControlSet")
         when (playerState) {
             PlayerState.STATE_PLAYING -> {
                 pausePlayer()
@@ -87,10 +82,10 @@ class PlayerRepositoryImpl(val trackAdress: String) : PlayerRepository {
                     timePlayed = sdf.format(mediaPlayer.currentPosition)
                     Log.d("Плеер", "Время в репозитории $timePlayed")
                     timeInteractor.setTime(timePlayed)
-                    mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
+                   // mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
                 } else {
                     timeInteractor.setTime("00:00")
-                    mainThreadHandler?.post(this)
+                 //   mainThreadHandler?.post(this)
                 }
             }
         }

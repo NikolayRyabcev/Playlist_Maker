@@ -30,6 +30,7 @@ class PlayerActivity : AppCompatActivity(),
 
     private lateinit var timeInteractor: TimeInteractor
     lateinit var trackTime: TextView
+    lateinit var playState:PlayerRepositoryImpl.PlayerState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,29 +75,21 @@ class PlayerActivity : AppCompatActivity(),
         }
         val url = intent.extras?.getString("URL")
         if (!url.isNullOrEmpty()) playerInteractor.setTrackUrl(url)
-
+        playState=PlayerRepositoryImpl.PlayerState.STATE_DEFAULT
         playButton.setOnClickListener {
             playerInteractor.play()
             Log.d("Плеер", "Click")
+            playState=playerInteractor.putPlayerState()
+            stateListener()
         }
         pauseButton.setOnClickListener {
             playerInteractor.pause()
             Log.d("Плеер", "Click")
+            playState=playerInteractor.putPlayerState()
+            stateListener()
         }
 
-        when (playerInteractor.putPlayerState()) {
-            PlayerRepositoryImpl.PlayerState.STATE_PLAYING -> {
-                onPlayButton()
-            }
 
-            PlayerRepositoryImpl.PlayerState.STATE_PREPARED, PlayerRepositoryImpl.PlayerState.STATE_PAUSED -> {
-                onPauseButton()
-            }
-
-            else -> {
-                preparePlayer()
-            }
-        }
 
         timeInteractor = provideTimeInteractor()
         timeInteractor.subscribe(provideTimeInteractor())
@@ -133,6 +126,23 @@ class PlayerActivity : AppCompatActivity(),
     override fun setTimerText(time: String) {
         if (time.isEmpty()) timer.text = "00:00" else timer.text = time
     }
+    fun stateListener(){
+    when (playState) {
+        PlayerRepositoryImpl.PlayerState.STATE_PLAYING -> {
+            onPlayButton()
+            Log.d("Плеер", "Play")
+        }
 
+        PlayerRepositoryImpl.PlayerState.STATE_PREPARED, PlayerRepositoryImpl.PlayerState.STATE_PAUSED -> {
+            onPauseButton()
+            Log.d("Плеер", "Pause")
+        }
+
+        else -> {
+            Log.d("Плеер", "Default")
+            preparePlayer()
+        }
+    }
+}
 
 }
