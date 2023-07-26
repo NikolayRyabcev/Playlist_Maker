@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
+import com.example.playlistmaker.data.dto.PlayerState
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 
@@ -23,6 +24,7 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
     lateinit var progress: TextView
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
     lateinit var trackTime: TextView
+    lateinit var playerState: PlayerState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +44,7 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
 
         playerInteractor = Creator.providePlayerInteractor()
-
+        playerState=PlayerState.STATE_PAUSED
         mainThreadHandler = Handler(Looper.getMainLooper())
         arrowButton.setOnClickListener {
             finish()
@@ -72,15 +74,13 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
 
         playButton.setOnClickListener {
             playerInteractor.play()
-            playButton.visibility = View.GONE
-            pauseButton.visibility = View.VISIBLE
         }
         pauseButton.setOnClickListener {
             playerInteractor.pause()
-            pauseButton.visibility = View.GONE
-            playButton.visibility = View.VISIBLE
         }
-
+        mainThreadHandler?.post(
+            updateButton()
+        )
         mainThreadHandler?.post(
             updateTimer()
         )
@@ -99,11 +99,43 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
         pauseButton.visibility = View.GONE
     }
 
-
+    override fun playerStateDrawer() {
+        playerState = playerInteractor.playerStateListener()
+        when (playerState) {
+            PlayerState.STATE_DEFAULT -> {
+                playButton.visibility = View.VISIBLE
+                playButton.alpha = 0.5f
+                pauseButton.visibility = View.GONE
+            }
+            PlayerState.STATE_PREPARED -> {
+                playButton.visibility = View.VISIBLE
+                playButton.alpha = 1f
+                pauseButton.visibility = View.GONE
+            }
+            PlayerState.STATE_PAUSED -> {
+                playButton.visibility = View.VISIBLE
+                playButton.alpha = 1f
+                pauseButton.visibility = View.GONE
+            }
+            PlayerState.STATE_PLAYING -> {
+                pauseButton.visibility = View.VISIBLE
+                playButton.visibility = View.GONE
+            }
+        }
+    }
+    private fun updateButton(): Runnable {
+        val updatedButton = Runnable {
+            playerStateDrawer()
+            mainThreadHandler?.postDelayed(updateButton(), PlayerRepositoryImpl.DELAY_MILLIS)
+        }
+        return updatedButton
+    }
 
     private fun updateTimer(): Runnable {
-         val updatedTimer= Runnable { progress.text = playerInteractor.getTime()
-            mainThreadHandler?.postDelayed(updateTimer(), PlayerRepositoryImpl.DELAY_MILLIS)}
+        val updatedTimer = Runnable {
+            progress.text = playerInteractor.getTime()
+            mainThreadHandler?.postDelayed(updateTimer(), PlayerRepositoryImpl.DELAY_MILLIS)
+        }
         return updatedTimer
     }
 

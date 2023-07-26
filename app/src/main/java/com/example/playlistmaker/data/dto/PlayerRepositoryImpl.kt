@@ -68,6 +68,10 @@ class PlayerRepositoryImpl : PlayerRepository {
         return timePlayed
     }
 
+    override fun playerStateReporter(): PlayerState {
+        return playerState
+    }
+
     companion object {
         const val DELAY_MILLIS = 100L
     }

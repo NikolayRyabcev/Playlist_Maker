@@ -1,6 +1,7 @@
 package com.example.playlistmaker.domain.impl
 
 import com.example.playlistmaker.Creator
+import com.example.playlistmaker.data.dto.PlayerState
 import com.example.playlistmaker.domain.api.PlayerInteractor
 
 class PlayerInteractorImpl : PlayerInteractor {
@@ -25,6 +26,9 @@ class PlayerInteractorImpl : PlayerInteractor {
 
     override fun getTime(): String {
         return repository.timeTransfer()
+    }
+    override fun playerStateListener():PlayerState {
+        return repository.playerStateReporter()
     }
 
 }
