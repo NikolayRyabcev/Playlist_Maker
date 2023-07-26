@@ -11,5 +11,5 @@ interface PlayerInteractor {
     fun pause()
     fun destroy()
     fun createPlayer(url: String, completion: ()->Unit)
-    fun setTimerText(time:String)
+    fun getTime(): String
 }

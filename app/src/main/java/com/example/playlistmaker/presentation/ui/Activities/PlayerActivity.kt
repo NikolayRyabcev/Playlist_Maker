@@ -3,7 +3,6 @@ package com.example.playlistmaker.presentation.ui.Activities
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -11,15 +10,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.Creator
-import com.example.playlistmaker.Creator.provideTimeInteractor
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.domain.api.TimeInteractor
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
-import java.util.Timer
-import java.util.TimerTask
-import kotlin.concurrent.scheduleAtFixedRate
 
 class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
 
@@ -27,10 +21,7 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
     lateinit var playerInteractor: PlayerInteractor
     lateinit var pauseButton: ImageButton
     lateinit var progress: TextView
-    private var mainThreadHandler: Handler? = null
-
-    private val handler = Handler(Looper.getMainLooper())
-    private lateinit var timeInteractor: TimeInteractor
+    private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
     lateinit var trackTime: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,24 +69,22 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
         if (!url.isNullOrEmpty()) playerInteractor.createPlayer(url) {
             playButton.isEnabled = true
         }
+
         playButton.setOnClickListener {
             playerInteractor.play()
             playButton.visibility = View.GONE
             pauseButton.visibility = View.VISIBLE
-
         }
         pauseButton.setOnClickListener {
             playerInteractor.pause()
-            Log.d("Плеер", "Click")
             pauseButton.visibility = View.GONE
             playButton.visibility = View.VISIBLE
         }
 
-        timeInteractor = provideTimeInteractor()
-        timeInteractor.subscribe(provideTimeInteractor())
+        mainThreadHandler?.post(
+            updateTimer()
+        )
 
-        updateTimer()
-        setTimerText(timeInteractor.onTimeChanged())
     }
 
 
@@ -110,15 +99,12 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
         pauseButton.visibility = View.GONE
     }
 
-    private fun updateTimer() {
-        val updateRunnable = object : Runnable {
-            override fun run() {
-                progress.text = progress.text + "a"
-            }
-        }
-    }
-    override fun setTimerText(time: String) {
-        if (time.isEmpty()) progress.text = "00:00" else progress.text = time
+
+
+    private fun updateTimer(): Runnable {
+         val updatedTimer= Runnable { progress.text = playerInteractor.getTime()
+            mainThreadHandler?.postDelayed(updateTimer(), PlayerRepositoryImpl.DELAY_MILLIS)}
+        return updatedTimer
     }
 
 }

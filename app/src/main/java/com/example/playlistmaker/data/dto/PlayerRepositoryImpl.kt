@@ -4,18 +4,16 @@ import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import com.example.playlistmaker.Creator
 import com.example.playlistmaker.domain.api.PlayerRepository
-import com.example.playlistmaker.domain.api.TimeInteractor
 import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
-    var timePlayed = ""
+    var timePlayed = "00:00"
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
 
-    var timeInteractor: TimeInteractor = Creator.provideTimeInteractor()
+
 
     override fun preparePlayer(url: String, completion: () -> Unit) {
         if (playerState != PlayerState.STATE_DEFAULT) return
@@ -57,13 +55,19 @@ class PlayerRepositoryImpl : PlayerRepository {
                 if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
                     val sdf = SimpleDateFormat("mm:ss")
                     timePlayed = sdf.format(mediaPlayer.currentPosition)
-                    Log.d("Плеер", "Время в репозитории $timePlayed")
-                    timeInteractor.setTime(timePlayed)
+                    mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
+                } else {
+                    timePlayed = "00:00"
                     mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
                 }
             }
         }
     }
+
+    override fun timeTransfer(): String {
+        return timePlayed
+    }
+
     companion object {
         const val DELAY_MILLIS = 100L
     }

@@ -2,11 +2,10 @@ package com.example.playlistmaker.domain.impl
 
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.domain.api.TimeInteractor
 
 class PlayerInteractorImpl : PlayerInteractor {
     var repository= Creator.providePlayerRepository()
-    private lateinit var timeInteractor :TimeInteractor
+
 
     override fun play() {
         repository.play()
@@ -24,9 +23,8 @@ class PlayerInteractorImpl : PlayerInteractor {
         repository.preparePlayer(url, completion)
     }
 
-    override fun setTimerText(time:String) {
-        timeInteractor=Creator.provideTimeInteractor()
-        timeInteractor.onTimeChanged()
+    override fun getTime(): String {
+        return repository.timeTransfer()
     }
 
 }
