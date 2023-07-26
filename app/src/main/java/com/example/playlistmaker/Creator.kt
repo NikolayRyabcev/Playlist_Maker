@@ -11,8 +11,8 @@ object Creator {
     fun providePlayerInteractor(): PlayerInteractor {
         return PlayerInteractorImpl()
     }
-    fun providePlayerRepository(adress:String):PlayerRepository{
-        return PlayerRepositoryImpl(adress)
+    fun providePlayerRepository():PlayerRepository{
+        return PlayerRepositoryImpl()
     }
    fun provideTimeInteractor(): TimeInteractor {
        return TimeInteractorImpl()

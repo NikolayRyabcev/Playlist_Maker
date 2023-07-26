@@ -15,22 +15,23 @@ import com.example.playlistmaker.Creator.provideTimeInteractor
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.domain.api.PlayerRepository
 import com.example.playlistmaker.domain.api.TimeInteractor
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
+import java.util.Timer
+import java.util.TimerTask
+import kotlin.concurrent.scheduleAtFixedRate
 
-class PlayerActivity : AppCompatActivity(),
-    PlayerActivityModel {
+class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
 
     lateinit var playButton: ImageButton
     lateinit var playerInteractor: PlayerInteractor
     lateinit var pauseButton: ImageButton
-    lateinit var timer: TextView
+    lateinit var progress: TextView
     private var mainThreadHandler: Handler? = null
 
+    private val handler = Handler(Looper.getMainLooper())
     private lateinit var timeInteractor: TimeInteractor
     lateinit var trackTime: TextView
-    lateinit var playState:PlayerRepositoryImpl.PlayerState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,12 +45,12 @@ class PlayerActivity : AppCompatActivity(),
         val country = findViewById<TextView>(R.id.country)
         val cover = findViewById<ImageView>(R.id.trackCover)
         playButton = findViewById(R.id.playButton)
+        playButton.isEnabled = false
         pauseButton = findViewById(R.id.pauseButton)
-        timer = findViewById(R.id.trackTimer)
+        progress = findViewById(R.id.trackTimer)
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
 
         playerInteractor = Creator.providePlayerInteractor()
-
 
         mainThreadHandler = Handler(Looper.getMainLooper())
         arrowButton.setOnClickListener {
@@ -74,26 +75,26 @@ class PlayerActivity : AppCompatActivity(),
                 .into(cover)
         }
         val url = intent.extras?.getString("URL")
-        if (!url.isNullOrEmpty()) playerInteractor.setTrackUrl(url)
-        playState=PlayerRepositoryImpl.PlayerState.STATE_DEFAULT
+        if (!url.isNullOrEmpty()) playerInteractor.createPlayer(url) {
+            playButton.isEnabled = true
+        }
         playButton.setOnClickListener {
             playerInteractor.play()
-            Log.d("Плеер", "Click")
-            playState=playerInteractor.putPlayerState()
-            stateListener()
+            playButton.visibility = View.GONE
+            pauseButton.visibility = View.VISIBLE
+
         }
         pauseButton.setOnClickListener {
             playerInteractor.pause()
             Log.d("Плеер", "Click")
-            playState=playerInteractor.putPlayerState()
-            stateListener()
+            pauseButton.visibility = View.GONE
+            playButton.visibility = View.VISIBLE
         }
-
-
 
         timeInteractor = provideTimeInteractor()
         timeInteractor.subscribe(provideTimeInteractor())
 
+        updateTimer()
         setTimerText(timeInteractor.onTimeChanged())
     }
 
@@ -109,40 +110,15 @@ class PlayerActivity : AppCompatActivity(),
         pauseButton.visibility = View.GONE
     }
 
-    override fun enablePlayButton() {
-        playButton.isEnabled = true
+    private fun updateTimer() {
+        val updateRunnable = object : Runnable {
+            override fun run() {
+                progress.text = progress.text + "a"
+            }
+        }
     }
-
-    override fun onPlayButton() {
-        playButton.visibility = View.GONE
-        pauseButton.visibility = View.VISIBLE
-    }
-
-    override fun onPauseButton() {
-        playButton.visibility = View.VISIBLE
-        pauseButton.visibility = View.GONE
-    }
-
     override fun setTimerText(time: String) {
-        if (time.isEmpty()) timer.text = "00:00" else timer.text = time
+        if (time.isEmpty()) progress.text = "00:00" else progress.text = time
     }
-    fun stateListener(){
-    when (playState) {
-        PlayerRepositoryImpl.PlayerState.STATE_PLAYING -> {
-            onPlayButton()
-            Log.d("Плеер", "Play")
-        }
-
-        PlayerRepositoryImpl.PlayerState.STATE_PREPARED, PlayerRepositoryImpl.PlayerState.STATE_PAUSED -> {
-            onPauseButton()
-            Log.d("Плеер", "Pause")
-        }
-
-        else -> {
-            Log.d("Плеер", "Default")
-            preparePlayer()
-        }
-    }
-}
 
 }

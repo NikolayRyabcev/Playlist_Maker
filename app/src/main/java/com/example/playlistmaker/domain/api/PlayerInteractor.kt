@@ -7,13 +7,9 @@ import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
 import com.example.playlistmaker.presentation.ui.Activities.PlayerActivity
 
 interface PlayerInteractor {
-    fun setTrackUrl(url: String)
-    fun getTrackUrl(): String
     fun play()
     fun pause()
     fun destroy()
-
+    fun createPlayer(url: String, completion: ()->Unit)
     fun setTimerText(time:String)
-    fun setPlayerState ()
-    fun putPlayerState ():PlayerRepositoryImpl.PlayerState
 }
