@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.dto.PlayerRepositoryImpl
 import com.example.playlistmaker.data.dto.PlayerState
 import com.example.playlistmaker.domain.api.PlayerInteractor
 import com.example.playlistmaker.presentation.ActivityModels.PlayerActivityModel
@@ -44,7 +43,7 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
 
         playerInteractor = Creator.providePlayerInteractor()
-        playerState=PlayerState.STATE_PAUSED
+        playerState = PlayerState.STATE_PAUSED
         mainThreadHandler = Handler(Looper.getMainLooper())
         arrowButton.setOnClickListener {
             finish()
@@ -107,26 +106,30 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
                 playButton.alpha = 0.5f
                 pauseButton.visibility = View.GONE
             }
+
             PlayerState.STATE_PREPARED -> {
                 playButton.visibility = View.VISIBLE
                 playButton.alpha = 1f
                 pauseButton.visibility = View.GONE
             }
+
             PlayerState.STATE_PAUSED -> {
                 playButton.visibility = View.VISIBLE
                 playButton.alpha = 1f
                 pauseButton.visibility = View.GONE
             }
+
             PlayerState.STATE_PLAYING -> {
                 pauseButton.visibility = View.VISIBLE
                 playButton.visibility = View.GONE
             }
         }
     }
+
     private fun updateButton(): Runnable {
         val updatedButton = Runnable {
             playerStateDrawer()
-            mainThreadHandler?.postDelayed(updateButton(), PlayerRepositoryImpl.DELAY_MILLIS)
+            mainThreadHandler?.postDelayed(updateButton(), DELAY_MILLIS_Activity)
         }
         return updatedButton
     }
@@ -134,9 +137,12 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
     private fun updateTimer(): Runnable {
         val updatedTimer = Runnable {
             progress.text = playerInteractor.getTime()
-            mainThreadHandler?.postDelayed(updateTimer(), PlayerRepositoryImpl.DELAY_MILLIS)
+            mainThreadHandler?.postDelayed(updateTimer(), DELAY_MILLIS_Activity)
         }
         return updatedTimer
     }
 
+    companion object {
+        const val DELAY_MILLIS_Activity = 100L
+    }
 }
