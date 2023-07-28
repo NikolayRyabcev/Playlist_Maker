@@ -2,7 +2,7 @@ package com.example.playlistmaker.domain
 
 import android.content.Context
 import android.widget.Toast
-import com.example.playlistmaker.App.App
+import com.example.playlistmaker.app.App
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.presentation.ui.Activities.SEARCH_SHARED_PREFS_KEY
 import com.google.gson.Gson

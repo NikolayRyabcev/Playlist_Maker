@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.api
 
-import com.example.playlistmaker.data.dto.PlayerState
+import com.example.playlistmaker.domain.PlayerState
 
 interface PlayerInteractor {
     fun play()
