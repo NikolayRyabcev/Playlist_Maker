@@ -1,17 +1,15 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.TrackAdapterAndViewHolder
 
-import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.example.playlistmaker.app.App
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 
 class TrackAdapter(
     var tracks: ArrayList<Track>,
-    private val clickListener:TrackClick
+    private val clickListener: TrackClick
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -33,7 +31,7 @@ class TrackAdapter(
     }
 
     fun interface TrackClick {
-        fun onClick(track:Track)
+        fun onClick(track: Track)
     }
 
 }
