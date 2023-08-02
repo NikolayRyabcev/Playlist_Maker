@@ -3,7 +3,13 @@ package com.example.playlistmaker.Creator
 import com.example.playlistmaker.data.player.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.data.player.PlayerRepository
+import com.example.playlistmaker.data.settings.ThemeSettings
+import com.example.playlistmaker.data.settings.ThemeSettingsImpl
 import com.example.playlistmaker.domain.player.PlayerInteractorImpl
+import com.example.playlistmaker.domain.settings.SettingsInteractor
+import com.example.playlistmaker.domain.settings.SettingsInteractorImpl
+import com.example.playlistmaker.domain.sharing.SharingInteractor
+import com.example.playlistmaker.domain.sharing.SharingInteractorImpl
 
 object Creator {
     fun providePlayerInteractor(): PlayerInteractor {
@@ -12,4 +18,16 @@ object Creator {
     fun providePlayerRepository(): PlayerRepository {
         return PlayerRepositoryImpl()
     }
+
+    fun provideSettingsIneractor() :SettingsInteractor {
+        return SettingsInteractorImpl()
+    }
+
+    fun provideThemeSettings(): ThemeSettingsImpl {
+        return ThemeSettingsImpl()
+    }
+    fun provideSharingIneractor() : SharingInteractor {
+        return SharingInteractorImpl()
+    }
+
 }
