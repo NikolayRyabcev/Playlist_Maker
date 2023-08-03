@@ -32,10 +32,7 @@ class SettingsActivity : AppCompatActivity() {
         //share
         val textSendView = findViewById<FrameLayout>(R.id.ShareAppText)
         textSendView.setOnClickListener {
-            val intentSend = Intent(Intent.ACTION_SEND)
-            intentSend.type = "text/plain"
-            intentSend.putExtra(Intent.EXTRA_TEXT, getString(R.string.PractAdr))
-            startActivity(intentSend)
+
         }
 
         //share

@@ -10,6 +10,9 @@ class SettingsViewModel(
     private val sharingInteractor: SharingInteractor,
     private val settingsInteractor: SettingsInteractor,
 ) : ViewModel() {
+
+
+
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
