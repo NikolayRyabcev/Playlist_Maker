@@ -14,12 +14,10 @@ import com.example.playlistmaker.domain.settings.SettingsInteractor
 import com.example.playlistmaker.domain.sharing.SharingInteractor
 
 class SettingsViewModel(
-    private val sharingInteractor: SharingInteractor,
-    private val settingsInteractor: SettingsInteractor,
+    private var sharingInteractor: SharingInteractor,
+    private var settingsInteractor: SettingsInteractor,
 ) : ViewModel() {
-    init{
-        Log.d("startsettings", "viewModel built")
-    }
+
     //нажатие на кнопку назад
     private var onBackLiveData = MutableLiveData(false)
 
@@ -31,6 +29,7 @@ class SettingsViewModel(
 
 
     //Сохраняем темную тему в LiveData
+
     fun isDarkThemeEnabled(): Boolean {
         val applicationContext = App.instance.applicationContext
         val currentMode =
@@ -39,21 +38,38 @@ class SettingsViewModel(
         return currentMode == Configuration.UI_MODE_NIGHT_YES
     }
 
-    private val themeLiveData = MutableLiveData(isDarkThemeEnabled())
-    fun getthemeLiveData(): LiveData<Boolean> = themeLiveData
+    var themeLiveData = MutableLiveData(isDarkThemeEnabled())
+    fun getthemeLiveData(): LiveData<Boolean> {
+        return themeLiveData
+    }
 
+    fun themeSwitch() {
+        if (themeLiveData.value == true) {
+            themeLiveData.value = false
+            Log.d("darkmode", "model false")
+        } else {
+            themeLiveData.value = true
+            Log.d("darkmode", "model true")
+        }
+    }
 
+    //делимся приложением
+    fun shareApp() {
+        sharingInteractor = Creator.provideSharingIneractor()
+        settingsInteractor = Creator.provideSettingsIneractor()
+    }
 
     companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                Log.d("startsettings", "viewModel factory worked")
-                return SettingsViewModel(
-                    Creator.provideSharingIneractor(),
-                    Creator.provideSettingsIneractor()
-                ) as T
+        fun getViewModelFactory(): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    Log.d("startsettings", "viewModel factory worked")
+                    return SettingsViewModel(
+                        Creator.provideSharingIneractor(),
+                        Creator.provideSettingsIneractor()
+                    ) as T
+                }
             }
-        }
     }
 }

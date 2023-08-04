@@ -49,6 +49,7 @@
             android:layout_gravity="right|center_vertical"
             android:thumbTint="?attr/colorContainer"
             android:trackTint="?attr/colorAccent"
+            android:checked="false"
             tools:ignore="TouchTargetSizeCheck" />
 
     </FrameLayout>

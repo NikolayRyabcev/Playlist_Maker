@@ -10,17 +10,16 @@ import android.widget.ImageView
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.UI.settings.view_model.SettingsViewModel
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var settingsViewModel: SettingsViewModel
+    private lateinit var themeSwitcher : Switch
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        Log.d("startsettings", "started")
 
 
         //делаем viewmodel
@@ -35,14 +34,17 @@ class SettingsActivity : AppCompatActivity() {
             settingsViewModel.onBackClick()
         }
         settingsViewModel.getOnBackLiveData()
-            .observe(this) { onBackClick() }
+            .observe(this) { onBackLiveData -> onBackClick(onBackLiveData) }
 
 
-        // обновление видимости
-        var themeSwitcher = findViewById<Switch>(R.id.simpleSwitch)
+        // обновление темы
+        themeSwitcher = findViewById(R.id.simpleSwitch)
         settingsViewModel.getthemeLiveData().value?.let { themeSwitcher.isChecked = it }
+        themeSwitcher.setOnClickListener {
+            settingsViewModel.themeSwitch()
+        }
         settingsViewModel.getthemeLiveData()
-            .observe(this) {themeLiveData -> changeTheme(themeLiveData)}
+            .observe(this) { themeLiveData -> changeTheme(themeLiveData) }
 
 
         //share
@@ -71,14 +73,25 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun onBackClick() {
-        finish()
+    private fun onBackClick(back: Boolean) {
+        if (back) {
+            finish()
+        }
+
     }
-    fun changeTheme(theme: Boolean) {
+
+    private fun changeTheme(theme: Boolean) {
         if (theme) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else AppCompatDelegate.setDefaultNightMode(
-            AppCompatDelegate.MODE_NIGHT_NO
-        )
+            Log.d("darkmode", "night1")
+        } else {
+            AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_NO
+            )
+            Log.d("darkmode", "night2")
+        }
+
     }
 }
+
+
