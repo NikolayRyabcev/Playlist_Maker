@@ -20,21 +20,17 @@ class SettingsViewModel(
 
     //нажатие на кнопку назад
     private var onBackLiveData = MutableLiveData(false)
-
     fun onBackClick() {
         onBackLiveData.value = true
     }
-
     fun getOnBackLiveData(): LiveData<Boolean> = onBackLiveData
 
 
     //Сохраняем темную тему в LiveData
-
     fun isDarkThemeEnabled(): Boolean {
         val applicationContext = App.instance.applicationContext
         val currentMode =
             applicationContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-
         return currentMode == Configuration.UI_MODE_NIGHT_YES
     }
 
@@ -56,7 +52,8 @@ class SettingsViewModel(
     //делимся приложением
     fun shareApp() {
         sharingInteractor = Creator.provideSharingIneractor()
-        settingsInteractor = Creator.provideSettingsIneractor()
+        sharingInteractor.shareApp()
+
     }
 
     companion object {

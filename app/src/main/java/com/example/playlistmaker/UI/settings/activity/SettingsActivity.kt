@@ -50,7 +50,7 @@ class SettingsActivity : AppCompatActivity() {
         //share
         val textSendView = findViewById<FrameLayout>(R.id.ShareAppText)
         textSendView.setOnClickListener {
-
+            settingsViewModel.shareApp()
         }
 
         //share

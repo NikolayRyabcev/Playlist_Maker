@@ -7,5 +7,5 @@ interface ExternalNavigator {
 
     fun openEmail (adminEmailData: EmailData)
 
-
+    fun setShareLink ():String
 }
