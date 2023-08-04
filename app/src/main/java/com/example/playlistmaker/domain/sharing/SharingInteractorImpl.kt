@@ -15,18 +15,21 @@ class SharingInteractorImpl(
     }
 
     override fun openSupport() {
-        externalNavigator.openEmail(getSupportEmailData())
+        /*externalNavigator.openEmail(getSupportEmailData())*/
     }
 
     private fun getShareAppLink(): String {
         // Нужно реализовать
+        return ""
     }
 
-    private fun getSupportEmailData(): EmailData {
+    private fun getSupportEmailData() {
         // Нужно реализовать
+
     }
 
     private fun getTermsLink(): String {
         // Нужно реализовать
+        return ""
     }
 }

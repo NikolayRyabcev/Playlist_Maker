@@ -10,6 +10,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
         savedHistory =
             applicationContext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, Context.MODE_PRIVATE)
     }
@@ -21,5 +22,7 @@ class App : Application() {
         }
 
         var trackHistoryList = ArrayList<Track>()
+        lateinit var instance: App
+            private set
     }
 }

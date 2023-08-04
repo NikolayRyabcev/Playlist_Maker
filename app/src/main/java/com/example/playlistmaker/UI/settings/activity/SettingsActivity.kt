@@ -4,9 +4,12 @@ package com.example.playlistmaker.UI.settings.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
@@ -17,6 +20,8 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        Log.d("startsettings", "started")
+
 
         //делаем viewmodel
         settingsViewModel = ViewModelProvider(
@@ -24,10 +29,21 @@ class SettingsActivity : AppCompatActivity() {
             SettingsViewModel.getViewModelFactory()
         )[SettingsViewModel::class.java]
 
+        //кнопка назад
         val arrowButton = findViewById<ImageView>(R.id.searchButtonArrow)
         arrowButton.setOnClickListener {
-            finish()
+            settingsViewModel.onBackClick()
         }
+        settingsViewModel.getOnBackLiveData()
+            .observe(this) { onBackClick() }
+
+
+        // обновление видимости
+        var themeSwitcher = findViewById<Switch>(R.id.simpleSwitch)
+        settingsViewModel.getthemeLiveData().value?.let { themeSwitcher.isChecked = it }
+        settingsViewModel.getthemeLiveData()
+            .observe(this) {themeLiveData -> changeTheme(themeLiveData)}
+
 
         //share
         val textSendView = findViewById<FrameLayout>(R.id.ShareAppText)
@@ -53,5 +69,16 @@ class SettingsActivity : AppCompatActivity() {
                 Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.AgreementURL)))
             startActivity(intentAgreement3)
         }
+    }
+
+    private fun onBackClick() {
+        finish()
+    }
+    fun changeTheme(theme: Boolean) {
+        if (theme) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else AppCompatDelegate.setDefaultNightMode(
+            AppCompatDelegate.MODE_NIGHT_NO
+        )
     }
 }
