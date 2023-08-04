@@ -2,14 +2,12 @@ package com.example.playlistmaker.UI.settings.view_model
 
 import android.content.res.Configuration
 import android.util.Log
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.Creator.Creator
-import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.app.App
+import com.example.playlistmaker.app.App
 import com.example.playlistmaker.domain.settings.SettingsInteractor
 import com.example.playlistmaker.domain.sharing.SharingInteractor
 
@@ -17,6 +15,7 @@ class SettingsViewModel(
     private var sharingInteractor: SharingInteractor,
     private var settingsInteractor: SettingsInteractor,
 ) : ViewModel() {
+    init{        sharingInteractor = Creator.provideSharingIneractor()}
 
     //нажатие на кнопку назад
     private var onBackLiveData = MutableLiveData(false)
@@ -51,11 +50,20 @@ class SettingsViewModel(
 
     //делимся приложением
     fun shareApp() {
-        sharingInteractor = Creator.provideSharingIneractor()
         sharingInteractor.shareApp()
 
     }
 
+    //пишем в поддержку
+    fun writeSupport() {
+        sharingInteractor.openSupport()
+    }
+
+
+    //читаем соглашение
+    fun readAgreement (){
+        sharingInteractor.openTerms()
+    }
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {

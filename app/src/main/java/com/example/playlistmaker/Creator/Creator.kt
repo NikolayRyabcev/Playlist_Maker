@@ -1,5 +1,7 @@
 package com.example.playlistmaker.Creator
 
+import android.app.Application
+import com.example.playlistmaker.app.App
 import com.example.playlistmaker.data.player.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.data.player.PlayerRepository
@@ -14,6 +16,9 @@ import com.example.playlistmaker.domain.sharing.SharingInteractor
 import com.example.playlistmaker.domain.sharing.SharingInteractorImpl
 
 object Creator {
+
+    private lateinit var application: App
+    fun init(application: App) { this.application = application }
     fun providePlayerInteractor(): PlayerInteractor {
         return PlayerInteractorImpl()
     }
@@ -35,6 +40,9 @@ object Creator {
     }
 
     fun provideExternalNavigator(): ExternalNavigator {
-        return ExternalNavigatorImpl()
+        return ExternalNavigatorImpl(application)
     }
+
+
+
 }

@@ -47,29 +47,22 @@ class SettingsActivity : AppCompatActivity() {
             .observe(this) { themeLiveData -> changeTheme(themeLiveData) }
 
 
-        //share
+        //Поделиться
         val textSendView = findViewById<FrameLayout>(R.id.ShareAppText)
         textSendView.setOnClickListener {
             settingsViewModel.shareApp()
         }
 
-        //share
+        //Написать в поддержку
         val textSendToView2 = findViewById<FrameLayout>(R.id.WriteSupportText)
         textSendToView2.setOnClickListener {
-            val intentSendTo2 = Intent(Intent.ACTION_SENDTO)
-            intentSendTo2.data = Uri.parse("mailto:")
-            val email = getString(R.string.myemail)
-            intentSendTo2.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-            intentSendTo2.putExtra(Intent.EXTRA_TEXT, getString(R.string.ShareText))
-            startActivity(intentSendTo2)
+            settingsViewModel.writeSupport()
         }
 
         //share
         val textAgreementView3 = findViewById<FrameLayout>(R.id.AgreementText)
         textAgreementView3.setOnClickListener {
-            val intentAgreement3 =
-                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.AgreementURL)))
-            startActivity(intentAgreement3)
+            settingsViewModel.readAgreement ()
         }
     }
 
