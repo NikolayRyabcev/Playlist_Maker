@@ -3,7 +3,7 @@ package com.example.playlistmaker.UI.search.view_model.TrackAdapterAndViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.app.App
+import com.example.playlistmaker.App.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.models.Track
 

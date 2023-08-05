@@ -1,8 +1,6 @@
 package com.example.playlistmaker.UI.settings.activity
 
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
@@ -39,13 +37,10 @@ class SettingsActivity : AppCompatActivity() {
 
         // обновление темы
         themeSwitcher = findViewById(R.id.simpleSwitch)
-        settingsViewModel.getthemeLiveData().value?.let { themeSwitcher.isChecked = it }
+        settingsViewModel.getThemeLiveData().value?.let { themeSwitcher.isChecked = it }
         themeSwitcher.setOnClickListener {
             settingsViewModel.themeSwitch()
         }
-        settingsViewModel.getthemeLiveData()
-            .observe(this) { themeLiveData -> changeTheme(themeLiveData) }
-
 
         //Поделиться
         val textSendView = findViewById<FrameLayout>(R.id.ShareAppText)

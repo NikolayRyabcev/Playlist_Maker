@@ -1,11 +1,9 @@
 package com.example.playlistmaker.Creator
 
-import android.app.Application
-import com.example.playlistmaker.app.App
+import com.example.playlistmaker.App.App
 import com.example.playlistmaker.data.player.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.data.player.PlayerRepository
-import com.example.playlistmaker.data.settings.ThemeSettings
 import com.example.playlistmaker.data.settings.ThemeSettingsImpl
 import com.example.playlistmaker.data.sharing.ExternalNavigator
 import com.example.playlistmaker.data.sharing.ExternalNavigatorImpl

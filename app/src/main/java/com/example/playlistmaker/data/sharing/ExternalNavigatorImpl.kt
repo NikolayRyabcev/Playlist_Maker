@@ -3,7 +3,7 @@ package com.example.playlistmaker.data.sharing
 import android.content.Intent
 import android.net.Uri
 import com.example.playlistmaker.R
-import com.example.playlistmaker.app.App
+import com.example.playlistmaker.App.App
 
 
 class ExternalNavigatorImpl(private val application: App):ExternalNavigator {

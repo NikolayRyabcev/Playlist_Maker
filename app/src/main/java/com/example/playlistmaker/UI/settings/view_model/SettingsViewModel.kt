@@ -1,19 +1,19 @@
 package com.example.playlistmaker.UI.settings.view_model
 
-import android.content.res.Configuration
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.Creator.Creator
-import com.example.playlistmaker.app.App
+import com.example.playlistmaker.App.App
 import com.example.playlistmaker.domain.settings.SettingsInteractor
 import com.example.playlistmaker.domain.sharing.SharingInteractor
 
 class SettingsViewModel(
     private var sharingInteractor: SharingInteractor,
     private var settingsInteractor: SettingsInteractor,
+    val application: App
 ) : ViewModel() {
     init{        sharingInteractor = Creator.provideSharingIneractor()}
 
@@ -25,25 +25,20 @@ class SettingsViewModel(
     fun getOnBackLiveData(): LiveData<Boolean> = onBackLiveData
 
 
-    //Сохраняем темную тему в LiveData
-    fun isDarkThemeEnabled(): Boolean {
-        val applicationContext = App.instance.applicationContext
-        val currentMode =
-            applicationContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        return currentMode == Configuration.UI_MODE_NIGHT_YES
-    }
-
-    var themeLiveData = MutableLiveData(isDarkThemeEnabled())
-    fun getthemeLiveData(): LiveData<Boolean> {
+    //Сохраняем тему в LiveData
+    private var themeLiveData = MutableLiveData(application.giveTheme())
+    fun getThemeLiveData(): LiveData<Boolean> {
         return themeLiveData
     }
 
     fun themeSwitch() {
         if (themeLiveData.value == true) {
             themeLiveData.value = false
+            application.appThemeSwitch ()
             Log.d("darkmode", "model false")
         } else {
             themeLiveData.value = true
+            application.appThemeSwitch ()
             Log.d("darkmode", "model true")
         }
     }
@@ -51,7 +46,6 @@ class SettingsViewModel(
     //делимся приложением
     fun shareApp() {
         sharingInteractor.shareApp()
-
     }
 
     //пишем в поддержку
@@ -69,10 +63,11 @@ class SettingsViewModel(
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    Log.d("startsettings", "viewModel factory worked")
+                    val app = App()
                     return SettingsViewModel(
                         Creator.provideSharingIneractor(),
-                        Creator.provideSettingsIneractor()
+                        Creator.provideSettingsIneractor(),
+                        app
                     ) as T
                 }
             }

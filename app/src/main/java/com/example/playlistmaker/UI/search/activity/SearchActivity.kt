@@ -20,7 +20,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.app.App
+import com.example.playlistmaker.App.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.UI.player.activity.PlayerActivity
 import com.example.playlistmaker.domain.search.SearchHistory
