@@ -73,7 +73,7 @@ class SettingsActivity : AppCompatActivity() {
 
     }
 
-    private fun changeTheme(theme: Boolean) {
+    fun changeTheme(theme: Boolean) {
         if (theme) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             Log.d("darkmode", "night1")
