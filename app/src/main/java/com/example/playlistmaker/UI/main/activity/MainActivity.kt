@@ -12,7 +12,7 @@ import com.example.playlistmaker.UI.search.activity.SearchActivity
 import com.example.playlistmaker.UI.settings.activity.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
-private lateinit var mainViewModel:MainViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,17 +30,8 @@ private lateinit var mainViewModel:MainViewModel
         val settButton = findViewById<Button>(R.id.SettingsButton)
 
         //ставим обработку кликов
-        searchButton.setOnClickListener { startActivity(Intent(this, SearchActivity::class.java)) }
-        mediaLibButton.setOnClickListener {
-            startActivity(
-                Intent(
-                    this,
-                    MediaLibraryActivity::class.java
-                )
-            )
-        }
-        settButton.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
+        searchButton.setOnClickListener { mainViewModel.pressSearch() }
+        mediaLibButton.setOnClickListener { mainViewModel.pressMediaTech() }
+        settButton.setOnClickListener { mainViewModel.pressSettings() }
     }
 }
