@@ -8,7 +8,7 @@ import com.example.playlistmaker.App.App
 
 class ExternalNavigatorImpl(private val application: App):ExternalNavigator {
 
-    val app = App()
+    //val app = App()
 
     override fun shareLink(shareAppLink: String) {
 

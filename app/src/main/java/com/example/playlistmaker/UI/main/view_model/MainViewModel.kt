@@ -4,13 +4,11 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App.App
-import com.example.playlistmaker.Creator.Creator
 import com.example.playlistmaker.UI.media_library.Activities.MediaLibraryActivity
 import com.example.playlistmaker.UI.search.activity.SearchActivity
 import com.example.playlistmaker.UI.settings.activity.SettingsActivity
-import com.example.playlistmaker.UI.settings.view_model.SettingsViewModel
 
-class MainViewModel(val application: App) : ViewModel() {
+class MainViewModel(private val application: App) : ViewModel() {
 
     fun pressSearch() {
         application.startActivity(Intent(application, SearchActivity::class.java))
