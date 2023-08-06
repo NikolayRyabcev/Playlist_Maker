@@ -1,6 +1,7 @@
 package com.example.playlistmaker.UI.settings.view_model
 
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,6 +42,15 @@ class SettingsViewModel(
         themeLiveData.value = settingsInteractor.updateThemeSettings()
         val getting = if (themeLiveData.value!!) "day" else "night"
         Log.d("Тема", "ViewModel switch $getting")
+        makeTheme(themeLiveData.value!!)
+    }
+
+    private fun makeTheme(theme: Boolean) {
+        if (theme) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
     }
 
     //делимся приложением

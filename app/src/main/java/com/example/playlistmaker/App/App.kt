@@ -19,8 +19,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        var logger = if (appTheme) "Начальная Светлая" else "Начальная Темная"
-        Log.d("Тема", logger)
+
         instance = this
         savedHistory =
             applicationContext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, Context.MODE_PRIVATE)
@@ -29,7 +28,8 @@ class App : Application() {
         //выставляем тему экрана
         val settingsInteractor = Creator.provideSettingsIneractor()
         appTheme = settingsInteractor.getThemeSettings()
-
+        var logger = if (appTheme) "Начальная Светлая" else "Начальная Темная"
+        Log.d("Тема", logger)
         makeTheme(appTheme)
     }
 

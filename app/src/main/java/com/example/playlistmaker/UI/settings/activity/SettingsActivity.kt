@@ -37,10 +37,10 @@ class SettingsActivity : AppCompatActivity() {
 
         // обновление темы
         themeSwitcher = findViewById(R.id.simpleSwitch)
-        settingsViewModel.getThemeLiveData().value?.let { themeSwitcher.isChecked = it }
+        themeSwitcher.isChecked = settingsViewModel.getThemeLiveData().value!!
         themeSwitcher.setOnClickListener {
             settingsViewModel.themeSwitch()
-            settingsViewModel.getThemeLiveData().value?.let { themeSwitcher.isChecked = it }
+            themeSwitcher.isChecked = settingsViewModel.getThemeLiveData().value!!
         }
 
         //Поделиться
