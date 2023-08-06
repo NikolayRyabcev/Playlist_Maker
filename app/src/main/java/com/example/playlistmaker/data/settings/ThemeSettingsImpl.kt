@@ -10,15 +10,20 @@ const val THEME_KEY = "theme"
 
 class ThemeSettingsImpl(private val application: App) :ThemeSettings{
     private var appTheme: Boolean = false
+    private lateinit var themeSharedPrefs: SharedPreferences
     override fun lookAtTheme () :Boolean {
-        val themeSharedPrefs: SharedPreferences = application.getSharedPreferences(THEME_KEY, MODE_PRIVATE)
+        themeSharedPrefs = application.getSharedPreferences(THEME_KEY, MODE_PRIVATE)
         if (themeSharedPrefs.contains(THEME_KEY)) {
             appTheme = themeSharedPrefs.getBoolean(THEME_KEY, isLightThemeEnabled())
+            val getting = if (appTheme) "day" else "night"
+            Log.d("Тема", "SP contains $getting")
         } else {
-            appTheme= !isLightThemeEnabled()
+            appTheme= isLightThemeEnabled()
             val editor = themeSharedPrefs.edit()
             editor.putBoolean(THEME_KEY, appTheme)
             editor.apply()
+            val getting = if (appTheme) "day" else "night"
+            Log.d("Тема", "SP put $getting")
         }
         val getting = if (appTheme) "day" else "night"
         Log.d("Тема", "Repository look $getting")
@@ -33,7 +38,12 @@ class ThemeSettingsImpl(private val application: App) :ThemeSettings{
 
     override fun appThemeSwitch(): Boolean {
         appTheme = !appTheme
-        val getting = if (appTheme) "day" else "night"
+        val editor = themeSharedPrefs.edit()
+        editor.putBoolean(THEME_KEY, appTheme)
+        editor.apply()
+        var getting = if (appTheme) "day" else "night"
+        Log.d("Тема", "SP put $getting")
+        getting = if (appTheme) "day" else "night"
         Log.d("Тема", "Repository switch $getting")
         return appTheme
     }
