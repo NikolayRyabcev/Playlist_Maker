@@ -18,6 +18,8 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.App.App
@@ -28,6 +30,8 @@ import com.example.playlistmaker.data.search.TrackResponse
 import com.example.playlistmaker.data.search.iTunesSearchAPI
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.UI.search.view_model.TrackAdapterAndViewHolder.TrackAdapter
+import com.example.playlistmaker.UI.search.view_model_for_activity.SearchViewModel
+import com.example.playlistmaker.UI.settings.view_model.SettingsViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,7 +43,8 @@ import java.util.Locale
 const val SEARCH_SHARED_PREFS_KEY = "123"
 
 class SearchActivity : AppCompatActivity() {
-
+// viewModel:
+    private lateinit var searchViewModel:ViewModel
     private var isClickAllowed = true
 
     lateinit var trackList: ArrayList<Track>
@@ -80,6 +85,11 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        //делаем ViewModel
+        searchViewModel = ViewModelProvider(
+            this,
+            SearchViewModel.getViewModelFactory()
+        )[SettingsViewModel::class.java]
 
         trackList = ArrayList()
 

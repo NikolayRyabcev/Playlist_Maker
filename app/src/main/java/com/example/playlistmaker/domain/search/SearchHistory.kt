@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken
 
 
 class SearchHistory {
-    private val savedHistory = App.getSharedPreferences()
+    private val savedHistory = App.getTrackSharedPreferences()
     private val gson = Gson()
 
     var counter = 0

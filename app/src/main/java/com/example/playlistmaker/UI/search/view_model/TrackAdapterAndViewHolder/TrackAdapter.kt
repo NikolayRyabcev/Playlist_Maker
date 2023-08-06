@@ -18,7 +18,7 @@ class TrackAdapter(
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        App.getSharedPreferences()
+        App.getTrackSharedPreferences()
         holder.bind(tracks[position])
 
         holder.itemView.setOnClickListener {

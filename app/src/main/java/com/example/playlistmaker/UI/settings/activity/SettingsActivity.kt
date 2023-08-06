@@ -40,6 +40,7 @@ class SettingsActivity : AppCompatActivity() {
         settingsViewModel.getThemeLiveData().value?.let { themeSwitcher.isChecked = it }
         themeSwitcher.setOnClickListener {
             settingsViewModel.themeSwitch()
+            settingsViewModel.getThemeLiveData().value?.let { themeSwitcher.isChecked = it }
         }
 
         //Поделиться

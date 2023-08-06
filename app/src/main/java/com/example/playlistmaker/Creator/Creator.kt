@@ -26,11 +26,11 @@ object Creator {
     }
 
     fun provideSettingsIneractor(): SettingsInteractor {
-        return SettingsInteractorImpl()
+        return SettingsInteractorImpl(provideThemeSettings())
     }
 
     fun provideThemeSettings(): ThemeSettingsImpl {
-        return ThemeSettingsImpl()
+        return ThemeSettingsImpl(application)
     }
 
     fun provideSharingIneractor(): SharingInteractor {

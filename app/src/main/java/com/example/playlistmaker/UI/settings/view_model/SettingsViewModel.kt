@@ -12,35 +12,35 @@ import com.example.playlistmaker.domain.sharing.SharingInteractor
 
 class SettingsViewModel(
     private var sharingInteractor: SharingInteractor,
-    private var settingsInteractor: SettingsInteractor,
-    val application: App
+    private var settingsInteractor: SettingsInteractor
 ) : ViewModel() {
-    init{        sharingInteractor = Creator.provideSharingIneractor()}
+    init {
+        sharingInteractor = Creator.provideSharingIneractor()
+        settingsInteractor = Creator.provideSettingsIneractor()
+    }
 
     //нажатие на кнопку назад
     private var onBackLiveData = MutableLiveData(false)
     fun onBackClick() {
         onBackLiveData.value = true
     }
+
     fun getOnBackLiveData(): LiveData<Boolean> = onBackLiveData
 
 
     //Сохраняем тему в LiveData
-    private var themeLiveData = MutableLiveData(application.giveTheme())
+
+    private var themeLiveData = MutableLiveData(settingsInteractor.getThemeSettings())
     fun getThemeLiveData(): LiveData<Boolean> {
+        val getting = if (themeLiveData.value!!) "day" else "night"
+        Log.d("Тема", "ViewModel get $getting")
         return themeLiveData
     }
 
     fun themeSwitch() {
-        if (themeLiveData.value == true) {
-            themeLiveData.value = false
-            application.appThemeSwitch ()
-            Log.d("darkmode", "model false")
-        } else {
-            themeLiveData.value = true
-            application.appThemeSwitch ()
-            Log.d("darkmode", "model true")
-        }
+        themeLiveData.value = settingsInteractor.updateThemeSettings()
+        val getting = if (themeLiveData.value!!) "day" else "night"
+        Log.d("Тема", "ViewModel switch $getting")
     }
 
     //делимся приложением
@@ -55,9 +55,10 @@ class SettingsViewModel(
 
 
     //читаем соглашение
-    fun readAgreement (){
+    fun readAgreement() {
         sharingInteractor.openTerms()
     }
+
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
@@ -66,8 +67,7 @@ class SettingsViewModel(
                     val app = App()
                     return SettingsViewModel(
                         Creator.provideSharingIneractor(),
-                        Creator.provideSettingsIneractor(),
-                        app
+                        Creator.provideSettingsIneractor()
                     ) as T
                 }
             }
