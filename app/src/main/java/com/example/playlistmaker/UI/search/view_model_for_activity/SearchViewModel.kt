@@ -5,8 +5,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App.App
 import com.example.playlistmaker.Creator.Creator
 import com.example.playlistmaker.UI.settings.view_model.SettingsViewModel
+import com.example.playlistmaker.domain.search.SearchInteractor
 
-class SearchViewModel  : ViewModel() {
+class SearchViewModel (private var searchInteractor: SearchInteractor) : ViewModel() {
+   // init {
+   //     searchInteractor = Creator.provideSearchInteractor()
+   // }
     fun setDefault (){}
     fun onFocusSearcher(){}
     fun searchResults(){}
@@ -18,7 +22,7 @@ class SearchViewModel  : ViewModel() {
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(
+                    return SearchViewModel(Creator.provideSearchInteractor()
                     ) as T
                 }
             }
