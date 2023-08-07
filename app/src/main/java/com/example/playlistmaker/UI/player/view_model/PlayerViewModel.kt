@@ -13,6 +13,7 @@ class PlayerViewModel (
     fun preparePlayer(completion: ()->Unit){
         playerInteractor.createPlayer(trackId, completion)
     }
+
     fun playerStateDrawer(){}
     companion object {
         fun getViewModelFactory(trackId: String): ViewModelProvider.Factory =

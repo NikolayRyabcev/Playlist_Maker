@@ -15,25 +15,28 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.UI.player.view_model.PlayerViewModel
+import com.example.playlistmaker.databinding.PlayerActivityBinding
 
 class PlayerActivity : AppCompatActivity() {
 
-    lateinit var playButton: ImageButton
-    lateinit var playerInteractor: PlayerInteractor
-    lateinit var pauseButton: ImageButton
-    lateinit var progress: TextView
+    //lateinit var playButton: ImageButton
+    //lateinit var pauseButton: ImageButton
+    //lateinit var progress: TextView
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
-    lateinit var trackTime: TextView
+    //lateinit var trackTime: TextView
     lateinit var playerState: PlayerState
     lateinit var viewModel: PlayerViewModel
+    private lateinit var binding: PlayerActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.player_activity)
+        binding=PlayerActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         //вью-модель
-        val viewModel=ViewModelProvider(this,PlayerViewModel.getViewModelFactory(""))[PlayerViewModel::class.java]
-        val playerTrackName = findViewById<TextView>(R.id.playerTrackName)
+        viewModel=ViewModelProvider(this,PlayerViewModel.getViewModelFactory(""))[PlayerViewModel::class.java]
+
+        /*val playerTrackName = findViewById<TextView>(R.id.playerTrackName)
         val playerArtistName = findViewById<TextView>(R.id.playerArtistName)
         trackTime = findViewById(R.id.time)
         val album = findViewById<TextView>(R.id.album)
@@ -41,26 +44,25 @@ class PlayerActivity : AppCompatActivity() {
         val genre = findViewById<TextView>(R.id.genre)
         val country = findViewById<TextView>(R.id.country)
         val cover = findViewById<ImageView>(R.id.trackCover)
-        playButton = findViewById(R.id.playButton)
-        playButton.isEnabled = false
-        pauseButton = findViewById(R.id.pauseButton)
-        progress = findViewById(R.id.trackTimer)
-        val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
+        playButton = findViewById(R.id.playButton)*/
+        binding.playButton.isEnabled = false
+        //pauseButton = findViewById(R.id.pauseButton)
+        //progress = findViewById(R.id.trackTimer)
+        //val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
 
 
-        playerInteractor = Creator.providePlayerInteractor()
         playerState = PlayerState.STATE_PAUSED
         mainThreadHandler = Handler(Looper.getMainLooper())
-        arrowButton.setOnClickListener {
+        binding.playerBackButtonArrow.setOnClickListener {
             finish()
         }
-        playerTrackName.text = intent.extras?.getString("Track Name") ?: "Unknown Track"
-        playerArtistName.text = intent.extras?.getString("Artist Name") ?: "Unknown Artist"
-        trackTime.text = intent.extras?.getString("Track Time") ?: "00:00"
-        album.text = intent.extras?.getString("Album") ?: "Unknown Album"
-        year.text = (intent.extras?.getString("Year") ?: "Year").take(4)
-        genre.text = intent.extras?.getString("Genre") ?: "Unknown Genre"
-        country.text = intent.extras?.getString("Country") ?: "Unknown Country"
+        binding.playerTrackName.text = intent.extras?.getString("Track Name") ?: "Unknown Track"
+        binding.playerArtistName.text = intent.extras?.getString("Artist Name") ?: "Unknown Artist"
+        binding.trackTimer.text = intent.extras?.getString("Track Time") ?: "00:00"
+        binding.album.text = intent.extras?.getString("Album") ?: "Unknown Album"
+        binding.year.text = (intent.extras?.getString("Year") ?: "Year").take(4)
+        binding.genre.text = intent.extras?.getString("Genre") ?: "Unknown Genre"
+        binding.country.text = intent.extras?.getString("Country") ?: "Unknown Country"
         val getImage = (intent.extras?.getString("Cover") ?: "Unknown Cover").replace(
             "100x100bb.jpg",
             "512x512bb.jpg"
@@ -70,20 +72,20 @@ class PlayerActivity : AppCompatActivity() {
             Glide.with(this)
                 .load(getImage)
                 .placeholder(R.drawable.bfplaceholder)
-                .into(cover)
+                .into(binding.trackCover)
         }
         val url = intent.extras?.getString("URL")
 
         viewModel.preparePlayer { preparePlayer() }
 
         if (!url.isNullOrEmpty()) playerInteractor.createPlayer(url) {
-            playButton.isEnabled = true
+            binding.playButton.isEnabled = true
         }
 
-        playButton.setOnClickListener {
+        binding.playButton.setOnClickListener {
             playerInteractor.play()
         }
-        pauseButton.setOnClickListener {
+        binding.pauseButton.setOnClickListener {
             playerInteractor.pause()
         }
         mainThreadHandler?.post(
@@ -102,35 +104,35 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     fun preparePlayer() {
-        playButton.isEnabled = true
-        playButton.visibility = View.VISIBLE
-        pauseButton.visibility = View.GONE
+        binding.playButton.isEnabled = true
+        binding.playButton.visibility = View.VISIBLE
+        binding.pauseButton.visibility = View.GONE
     }
 
     fun playerStateDrawer() {
         playerState = playerInteractor.playerStateListener()
         when (playerState) {
             PlayerState.STATE_DEFAULT -> {
-                playButton.visibility = View.VISIBLE
-                playButton.alpha = 0.5f
-                pauseButton.visibility = View.GONE
+                binding.playButton.visibility = View.VISIBLE
+                binding.playButton.alpha = 0.5f
+                binding.pauseButton.visibility = View.GONE
             }
 
             PlayerState.STATE_PREPARED -> {
-                playButton.visibility = View.VISIBLE
-                playButton.alpha = 1f
-                pauseButton.visibility = View.GONE
+                binding.playButton.visibility = View.VISIBLE
+                binding.playButton.alpha = 1f
+                binding.pauseButton.visibility = View.GONE
             }
 
             PlayerState.STATE_PAUSED -> {
-                playButton.visibility = View.VISIBLE
-                playButton.alpha = 1f
-                pauseButton.visibility = View.GONE
+                binding.playButton.visibility = View.VISIBLE
+                binding.playButton.alpha = 1f
+                binding.pauseButton.visibility = View.GONE
             }
 
             PlayerState.STATE_PLAYING -> {
-                pauseButton.visibility = View.VISIBLE
-                playButton.visibility = View.GONE
+                binding.pauseButton.visibility = View.VISIBLE
+                binding.playButton.visibility = View.GONE
             }
         }
     }
@@ -145,7 +147,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun updateTimer(): Runnable {
         val updatedTimer = Runnable {
-            progress.text = playerInteractor.getTime()
+            binding.trackTimer.text = playerInteractor.getTime()
             mainThreadHandler?.postDelayed(updateTimer(), DELAY_MILLIS_Activity)
         }
         return updatedTimer
