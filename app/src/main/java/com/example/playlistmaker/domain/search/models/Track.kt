@@ -3,7 +3,7 @@ package com.example.playlistmaker.domain.search.models
 data class Track(
     val trackName: String, // Название композиции
     val artistName: String, // Имя исполнителя
-    val trackTimeMillis: Long, // Продолжительность трека
+    val trackTimeMillis: String, // Продолжительность трека
     val artworkUrl100: String, // Ссылка на изображение обложки
     val trackId: Long,
     val collectionName: String,

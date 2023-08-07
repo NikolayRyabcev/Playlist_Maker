@@ -5,10 +5,11 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.util.Log
 import com.example.playlistmaker.App.App
+import com.example.playlistmaker.domain.settings.ThemeSettings
 
 const val THEME_KEY = "theme"
 
-class ThemeSettingsImpl(private val application: App) :ThemeSettings{
+class ThemeSettingsImpl(private val application: App) : ThemeSettings {
     private var appTheme: Boolean = false
     private lateinit var themeSharedPrefs: SharedPreferences
     override fun lookAtTheme () :Boolean {

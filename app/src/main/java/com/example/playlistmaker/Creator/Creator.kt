@@ -5,7 +5,7 @@ import com.example.playlistmaker.data.player.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.data.player.PlayerRepository
 import com.example.playlistmaker.data.settings.ThemeSettingsImpl
-import com.example.playlistmaker.data.sharing.ExternalNavigator
+import com.example.playlistmaker.domain.sharing.ExternalNavigator
 import com.example.playlistmaker.data.sharing.ExternalNavigatorImpl
 import com.example.playlistmaker.domain.player.PlayerInteractorImpl
 import com.example.playlistmaker.domain.settings.SettingsInteractor

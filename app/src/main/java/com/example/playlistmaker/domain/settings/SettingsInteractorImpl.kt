@@ -2,7 +2,6 @@ package com.example.playlistmaker.domain.settings
 
 import android.util.Log
 import com.example.playlistmaker.Creator.Creator
-import com.example.playlistmaker.data.settings.ThemeSettings
 
 class SettingsInteractorImpl (private var themeSettings: ThemeSettings):SettingsInteractor {
     init {
