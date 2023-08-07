@@ -19,11 +19,7 @@ import com.example.playlistmaker.databinding.PlayerActivityBinding
 
 class PlayerActivity : AppCompatActivity() {
 
-    //lateinit var playButton: ImageButton
-    //lateinit var pauseButton: ImageButton
-    //lateinit var progress: TextView
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
-    //lateinit var trackTime: TextView
     lateinit var playerState: PlayerState
     lateinit var viewModel: PlayerViewModel
     private lateinit var binding: PlayerActivityBinding
@@ -36,20 +32,7 @@ class PlayerActivity : AppCompatActivity() {
         //вью-модель
         viewModel=ViewModelProvider(this,PlayerViewModel.getViewModelFactory(""))[PlayerViewModel::class.java]
 
-        /*val playerTrackName = findViewById<TextView>(R.id.playerTrackName)
-        val playerArtistName = findViewById<TextView>(R.id.playerArtistName)
-        trackTime = findViewById(R.id.time)
-        val album = findViewById<TextView>(R.id.album)
-        val year = findViewById<TextView>(R.id.year)
-        val genre = findViewById<TextView>(R.id.genre)
-        val country = findViewById<TextView>(R.id.country)
-        val cover = findViewById<ImageView>(R.id.trackCover)
-        playButton = findViewById(R.id.playButton)*/
         binding.playButton.isEnabled = false
-        //pauseButton = findViewById(R.id.pauseButton)
-        //progress = findViewById(R.id.trackTimer)
-        //val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
-
 
         playerState = PlayerState.STATE_PAUSED
         mainThreadHandler = Handler(Looper.getMainLooper())
