@@ -3,9 +3,13 @@ package com.example.playlistmaker.data.search
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.models.Track
 
-class TracksRepositoryImpl:TracksRepository {
+class TracksRepositoryImpl : TracksRepository {
     override fun searchTracks(expression: String): List<Track> {
         val response = NetworkClient.doRequest(TrackSearchRequest(expression))
-        if (response.resultCode=200)
+        if (response.resultCode = 200) {
+            return (response as TrackResponse)
+        } else {
+            return emptyList()
+        }
     }
 }
