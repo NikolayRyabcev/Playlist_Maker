@@ -4,15 +4,19 @@ import com.example.playlistmaker.App.App
 import com.example.playlistmaker.data.player.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.data.player.PlayerRepository
-import com.example.playlistmaker.data.search.RetrofitNetworkClient
+import com.example.playlistmaker.data.search.request_and_response.RetrofitNetworkClient
 import com.example.playlistmaker.data.search.TracksRepositoryImpl
+import com.example.playlistmaker.data.search.history.SearchHistory
+import com.example.playlistmaker.data.search.history.SearchHistoryImpl
 import com.example.playlistmaker.data.settings.ThemeSettingsImpl
 import com.example.playlistmaker.domain.sharing.ExternalNavigator
 import com.example.playlistmaker.data.sharing.ExternalNavigatorImpl
 import com.example.playlistmaker.domain.player.PlayerInteractorImpl
-import com.example.playlistmaker.domain.search.SearchInteractor
-import com.example.playlistmaker.domain.search.SearchInteractorImpl
+import com.example.playlistmaker.domain.search.searching_and_responding.SearchInteractor
+import com.example.playlistmaker.domain.search.searching_and_responding.SearchInteractorImpl
 import com.example.playlistmaker.domain.search.TracksRepository
+import com.example.playlistmaker.domain.search.history.SearchHistoryInteractor
+import com.example.playlistmaker.domain.search.history.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.settings.SettingsInteractor
 import com.example.playlistmaker.domain.settings.SettingsInteractorImpl
 import com.example.playlistmaker.domain.settings.ThemeSettings
@@ -26,6 +30,7 @@ object Creator {
         this.application = application
     }
 
+    //player
     fun providePlayerInteractor(): PlayerInteractor {
         return PlayerInteractorImpl()
     }
@@ -34,6 +39,27 @@ object Creator {
         return PlayerRepositoryImpl()
     }
 
+    //search
+    fun provideSearchInteractor(): SearchInteractor {
+        return SearchInteractorImpl(provideTracksRepository())
+    }
+
+    fun provideTracksRepository(): TracksRepository {
+        return TracksRepositoryImpl(RetrofitNetworkClient())
+    }
+
+    fun provideSearchHistory():SearchHistory {
+        return SearchHistoryImpl()
+    }
+
+    fun provideSearchHistoryInteractor (): SearchHistoryInteractor {
+        return SearchHistoryInteractorImpl()
+    }
+
+
+
+
+    //settings
     fun provideSettingsIneractor(): SettingsInteractor {
         return SettingsInteractorImpl(provideThemeSettings())
     }
@@ -42,6 +68,7 @@ object Creator {
         return ThemeSettingsImpl(application)
     }
 
+    //sharing
     fun provideSharingIneractor(): SharingInteractor {
         return SharingInteractorImpl(provideExternalNavigator())
     }
@@ -50,12 +77,6 @@ object Creator {
         return ExternalNavigatorImpl(application)
     }
 
-    fun provideSearchInteractor(): SearchInteractor {
-        return SearchInteractorImpl(provideTracksRepository())
-    }
 
-    fun provideTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient())
-    }
 
 }

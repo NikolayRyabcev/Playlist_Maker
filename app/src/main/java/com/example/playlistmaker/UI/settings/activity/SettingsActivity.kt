@@ -11,14 +11,18 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.UI.settings.view_model.SettingsViewModel
+import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var settingsViewModel: SettingsViewModel
     private lateinit var themeSwitcher : Switch
+    private lateinit var binding: ActivitySettingsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-
+        binding=ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         //делаем viewmodel
         settingsViewModel = ViewModelProvider(
@@ -27,8 +31,7 @@ class SettingsActivity : AppCompatActivity() {
         )[SettingsViewModel::class.java]
 
         //кнопка назад
-        val arrowButton = findViewById<ImageView>(R.id.searchButtonArrow)
-        arrowButton.setOnClickListener {
+        binding.backButtonArrow.setOnClickListener {
             settingsViewModel.onBackClick()
         }
         settingsViewModel.getOnBackLiveData()
@@ -36,28 +39,24 @@ class SettingsActivity : AppCompatActivity() {
 
 
         // обновление темы
-        themeSwitcher = findViewById(R.id.simpleSwitch)
-        themeSwitcher.isChecked = settingsViewModel.getThemeLiveData().value!!
-        themeSwitcher.setOnClickListener {
+        binding.simpleSwitch.isChecked = settingsViewModel.getThemeLiveData().value!!
+        binding.simpleSwitch.setOnClickListener {
             settingsViewModel.themeSwitch()
             themeSwitcher.isChecked = settingsViewModel.getThemeLiveData().value!!
         }
 
         //Поделиться
-        val textSendView = findViewById<FrameLayout>(R.id.ShareAppText)
-        textSendView.setOnClickListener {
+        binding.ShareAppText.setOnClickListener {
             settingsViewModel.shareApp()
         }
 
         //Написать в поддержку
-        val textSendToView2 = findViewById<FrameLayout>(R.id.WriteSupportText)
-        textSendToView2.setOnClickListener {
+        binding.WriteSupportText.setOnClickListener {
             settingsViewModel.writeSupport()
         }
 
         //share
-        val textAgreementView3 = findViewById<FrameLayout>(R.id.AgreementText)
-        textAgreementView3.setOnClickListener {
+        binding.AgreementText.setOnClickListener {
             settingsViewModel.readAgreement ()
         }
     }
@@ -66,20 +65,6 @@ class SettingsActivity : AppCompatActivity() {
         if (back) {
             finish()
         }
-
-    }
-
-    fun changeTheme(theme: Boolean) {
-        if (theme) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            Log.d("darkmode", "night1")
-        } else {
-            AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_NO
-            )
-            Log.d("darkmode", "night2")
-        }
-
     }
 }
 

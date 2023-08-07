@@ -1,4 +1,6 @@
-package com.example.playlistmaker.domain.search
+package com.example.playlistmaker.domain.search.searching_and_responding
+
+import com.example.playlistmaker.domain.search.TracksRepository
 
 class SearchInteractorImpl(private val repository: TracksRepository) : SearchInteractor {
 

@@ -2,10 +2,8 @@ package com.example.playlistmaker.UI.search.view_model_for_activity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.App.App
 import com.example.playlistmaker.Creator.Creator
-import com.example.playlistmaker.UI.settings.view_model.SettingsViewModel
-import com.example.playlistmaker.domain.search.SearchInteractor
+import com.example.playlistmaker.domain.search.searching_and_responding.SearchInteractor
 
 class SearchViewModel (private var searchInteractor: SearchInteractor) : ViewModel() {
    // init {

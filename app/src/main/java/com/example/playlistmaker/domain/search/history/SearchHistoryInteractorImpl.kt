@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.search
+package com.example.playlistmaker.domain.search.history
 
 import android.content.Context
 import android.widget.Toast
@@ -9,7 +9,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
-class SearchHistory {
+class SearchHistoryInteractorImpl:SearchHistoryInteractor {
     private val savedHistory = App.getTrackSharedPreferences()
     private val gson = Gson()
 
@@ -49,9 +49,15 @@ class SearchHistory {
         counter = trackHistoryList.size
     }
 
-    fun toaster(context: Context, text: String) {
-        val duration = Toast.LENGTH_SHORT
-        val toast = Toast.makeText(context, text, duration)
-        toast.show()
+    override fun addItem(item: Track) {
+        TODO("Not yet implemented")
+    }
+
+    override fun clearHistory() {
+        TODO("Not yet implemented")
+    }
+
+    override fun provideHistory(): ArrayList<Track> {
+        TODO("Not yet implemented")
     }
 }

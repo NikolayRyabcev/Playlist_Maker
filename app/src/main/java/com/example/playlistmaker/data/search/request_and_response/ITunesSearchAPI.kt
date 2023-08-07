@@ -1,6 +1,5 @@
-package com.example.playlistmaker.data.search
+package com.example.playlistmaker.data.search.request_and_response
 
-import com.example.playlistmaker.data.search.TrackResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -14,7 +14,7 @@
         android:layout_marginTop="@dimen/settingsTopString14dp">
 
         <ImageView
-            android:id="@+id/searchButtonArrow"
+            android:id="@+id/backButtonArrow"
             android:layout_width="@dimen/iconSize"
             android:layout_height="@dimen/iconSize"
             android:layout_gravity="center_vertical"

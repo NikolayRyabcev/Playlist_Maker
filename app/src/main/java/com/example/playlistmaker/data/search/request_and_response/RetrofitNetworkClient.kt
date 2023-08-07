@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.search
+package com.example.playlistmaker.data.search.request_and_response
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -12,7 +12,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -25,20 +24,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.App.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.UI.player.activity.PlayerActivity
-import com.example.playlistmaker.domain.search.SearchHistory
-import com.example.playlistmaker.data.search.TrackResponse
-import com.example.playlistmaker.data.search.iTunesSearchAPI
+import com.example.playlistmaker.domain.search.history.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.UI.search.view_model.TrackAdapterAndViewHolder.TrackAdapter
 import com.example.playlistmaker.UI.search.view_model_for_activity.SearchViewModel
 import com.example.playlistmaker.UI.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.databinding.PlayerActivityBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -59,7 +50,7 @@ class SearchActivity : AppCompatActivity() {
 
     lateinit var recyclerView: RecyclerView
 
-    val searchHistoryObj = SearchHistory()
+    val searchHistoryObj = SearchHistoryInteractorImpl()
     private val handler = Handler(Looper.getMainLooper())
     //private val searchRunnable = Runnable { search(inputEditText) }
     lateinit var progressBar: ProgressBar
@@ -122,7 +113,7 @@ class SearchActivity : AppCompatActivity() {
                 }
                 if (!binding.searchUserText.text.isNullOrEmpty()) {
                     recyclerView.visibility = GONE
-                    searchDebounce()
+                   // searchDebounce()
                 }
             }
 
@@ -155,7 +146,7 @@ class SearchActivity : AppCompatActivity() {
         }
         binding.searchUserText.addTextChangedListener(simpleTextWatcher)
 
-        val arrowButton = findViewById<ImageView>(R.id.searchButtonArrow)
+        val arrowButton = findViewById<ImageView>(R.id.backButtonArrow)
         arrowButton.setOnClickListener {
             finish()
         }
@@ -290,10 +281,10 @@ class SearchActivity : AppCompatActivity() {
         binding.clearHistoryButton.visibility = GONE
     }
 
-    private fun searchDebounce() {
+   /* private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
-    }
+    }*/
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed

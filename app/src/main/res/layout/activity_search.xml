@@ -13,7 +13,7 @@
         android:paddingStart="@dimen/settingsLeftMargin16dp">
 
         <ImageView
-            android:id="@+id/searchButtonArrow"
+            android:id="@+id/backButtonArrow"
             android:layout_width="@dimen/arrowSize"
             android:layout_height="@dimen/arrowSize"
             android:layout_gravity="center_vertical"
