@@ -237,7 +237,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search(inputEditText: EditText) {
-
+/*
         trackList.clear()
         if (!inputEditText.text.isNullOrEmpty()) {
             if (!isEnterPressed) progressBar.visibility = View.VISIBLE
@@ -287,7 +287,7 @@ class SearchActivity : AppCompatActivity() {
                     }
                 })
             return
-        }
+        }*/
     }
 
     private fun ifSearchOkVisibility() {

@@ -8,14 +8,15 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.Creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerInteractor
-import com.example.playlistmaker.UI.player.view_model.PlayerActivityModel
+import com.example.playlistmaker.UI.player.view_model.PlayerViewModel
 
-class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
+class PlayerActivity : AppCompatActivity() {
 
     lateinit var playButton: ImageButton
     lateinit var playerInteractor: PlayerInteractor
@@ -24,10 +25,14 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
     lateinit var trackTime: TextView
     lateinit var playerState: PlayerState
+    lateinit var viewModel: PlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.player_activity)
+
+        //вью-модель
+        val viewModel=ViewModelProvider(this,PlayerViewModel.getViewModelFactory(""))[PlayerViewModel::class.java]
         val playerTrackName = findViewById<TextView>(R.id.playerTrackName)
         val playerArtistName = findViewById<TextView>(R.id.playerArtistName)
         trackTime = findViewById(R.id.time)
@@ -41,6 +46,7 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
         pauseButton = findViewById(R.id.pauseButton)
         progress = findViewById(R.id.trackTimer)
         val arrowButton = findViewById<ImageView>(R.id.playerBackButtonArrow)
+
 
         playerInteractor = Creator.providePlayerInteractor()
         playerState = PlayerState.STATE_PAUSED
@@ -67,6 +73,9 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
                 .into(cover)
         }
         val url = intent.extras?.getString("URL")
+
+        viewModel.preparePlayer { preparePlayer() }
+
         if (!url.isNullOrEmpty()) playerInteractor.createPlayer(url) {
             playButton.isEnabled = true
         }
@@ -92,13 +101,13 @@ class PlayerActivity : AppCompatActivity(), PlayerActivityModel {
         playerInteractor.destroy()
     }
 
-    override fun preparePlayer() {
+    fun preparePlayer() {
         playButton.isEnabled = true
         playButton.visibility = View.VISIBLE
         pauseButton.visibility = View.GONE
     }
 
-    override fun playerStateDrawer() {
+    fun playerStateDrawer() {
         playerState = playerInteractor.playerStateListener()
         when (playerState) {
             PlayerState.STATE_DEFAULT -> {
