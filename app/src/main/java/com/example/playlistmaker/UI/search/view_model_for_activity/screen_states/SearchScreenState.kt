@@ -6,4 +6,5 @@ sealed class SearchScreenState {
     class SearchIsOk(): SearchScreenState()
     class NothingFound(): SearchScreenState()
     class ConnectionError(): SearchScreenState()
+    class SearchWithHistory():SearchScreenState()
 }
