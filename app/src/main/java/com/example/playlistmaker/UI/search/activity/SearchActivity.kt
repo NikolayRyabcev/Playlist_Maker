@@ -2,7 +2,6 @@ package com.example.playlistmaker.UI.search.activity
 
 import android.content.Context
 import android.content.Intent
-
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,29 +15,26 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.App.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.UI.player.activity.PlayerActivity
-import com.example.playlistmaker.domain.search.history.SearchHistoryInteractorImpl
-import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.UI.search.view_model.TrackAdapterAndViewHolder.TrackAdapter
 import com.example.playlistmaker.UI.search.view_model_for_activity.SearchViewModel
 import com.example.playlistmaker.UI.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.example.playlistmaker.domain.search.models.Track
 
 const val SEARCH_SHARED_PREFS_KEY = "123"
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
 // viewModel:
-    private lateinit var searchViewModel:ViewModel
+    private var searchViewModel by viewModels<SearchViewModel> {SearchViewModel.getViewModelFactory()}
     private var isClickAllowed = true
 
     lateinit var trackList: ArrayList<Track>
@@ -50,7 +46,7 @@ class SearchActivity : AppCompatActivity() {
 
     lateinit var recyclerView: RecyclerView
 
-    val searchHistoryObj = SearchHistoryInteractorImpl()
+    //val searchHistoryObj = SearchHistoryInteractorImpl()
     private val handler = Handler(Looper.getMainLooper())
     //private val searchRunnable = Runnable { search(inputEditText) }
     lateinit var progressBar: ProgressBar
@@ -68,7 +64,10 @@ class SearchActivity : AppCompatActivity() {
             this,
             SearchViewModel.getViewModelFactory()
         )[SettingsViewModel::class.java]
+        searchViewModel.getStateLiveData()
 
+        //поиск
+        searchViewModel.searchResults()
         trackList = ArrayList()
 
         trackAdapter = TrackAdapter(trackList) {
@@ -76,6 +75,8 @@ class SearchActivity : AppCompatActivity() {
                 clickAdapting(it)
             }
         }
+
+        //история
         historyAdapter = TrackAdapter(searchHistoryObj.trackHistoryList) {
             if (clickDebounce()) {
                 clickAdapting(it)
@@ -297,19 +298,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clickAdapting(item: Track) {
         val intent = Intent(this, PlayerActivity::class.java)
-        intent.putExtra("Track Name", item.trackName)
-        intent.putExtra("Artist Name", item.artistName)
-        val trackTime = SimpleDateFormat(
-            "mm:ss",
-            Locale.getDefault()
-        ).format(item.trackTimeMillis)
-        intent.putExtra("Track Time", trackTime)
-        intent.putExtra("Album", item.collectionName)
-        intent.putExtra("Year", item.releaseDate)
-        intent.putExtra("Genre", item.primaryGenreName)
-        intent.putExtra("Country", item.country)
-        intent.putExtra("Cover", item.artworkUrl100)
-        intent.putExtra("URL", item.previewUrl)
+        intent.putExtra("Track", item)
         this.startActivity(intent)
         searchHistoryObj.editArray(item)
     }
