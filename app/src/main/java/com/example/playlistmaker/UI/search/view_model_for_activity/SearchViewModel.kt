@@ -20,20 +20,19 @@ class SearchViewModel(
     fun getStateLiveData(): LiveData<SearchScreenState> {
         return stateLiveData
     }
-
-    fun setDefault() {}
-    fun onFocusSearcher() {}
-    private var trackResultList :ArrayList<Track> = ArrayList()
     private val tracksConsumer = object : SearchInteractor.TracksConsumer {
         override fun consume(tracks: LiveData<List<Track>>) {
             tracks.observeForever { receivedTracks ->
-                trackResultList= receivedTracks as ArrayList<Track>
+                trackResultList= receivedTracks as MutableLiveData<List<Track>>
             }
         }
-
     }
-    fun searchResults(searchExpression:String):List<Track> {
-        val trackList= searchInteractor.search(searchExpression, tracksConsumer)
+
+    fun onFocusSearcher() {}
+    private var trackResultList :MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
+
+    fun searchResults(searchExpression:String):LiveData<List<Track>> {
+        trackResultList= searchInteractor.search(searchExpression, tracksConsumer)
         return trackResultList
     }
     fun searchHistory() {}
