@@ -2,62 +2,29 @@ package com.example.playlistmaker.domain.search.history
 
 import android.content.Context
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.playlistmaker.App.App
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.UI.search.activity.SEARCH_SHARED_PREFS_KEY
+import com.example.playlistmaker.data.search.history.SearchHistory
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
-class SearchHistoryInteractorImpl:SearchHistoryInteractor {
-    private val savedHistory = App.getTrackSharedPreferences()
-    private val gson = Gson()
-
-    var counter = 0
-    var trackHistoryList = App.trackHistoryList
-
-    fun editArray(newHistoryTrack: Track) {
-        var json = ""
-        if (json.isNotEmpty()) {
-            if (trackHistoryList.isEmpty()) {
-                if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
-                    val type = object : TypeToken<ArrayList<Track>>() {}.type
-                    trackHistoryList = gson.fromJson(json, type)
-                }
-            }
-        }
-        if (trackHistoryList.contains(newHistoryTrack)) {
-            trackHistoryList.remove(newHistoryTrack)
-            trackHistoryList.add(0, newHistoryTrack)
-        } else {
-            if (trackHistoryList.size < 10) trackHistoryList.add(0, newHistoryTrack)
-            else {
-                trackHistoryList.removeAt(9)
-                trackHistoryList.add(0, newHistoryTrack)
-            }
-        }
-        saveHistory()
-    }
-
-    private fun saveHistory() {
-        var json = ""
-        json = gson.toJson(trackHistoryList)
-        savedHistory.edit()
-            .clear()
-            .putString(SEARCH_SHARED_PREFS_KEY, json)
-            .apply()
-        counter = trackHistoryList.size
-    }
-
+class SearchHistoryInteractorImpl(private val historyRepository: SearchHistory) :
+    SearchHistoryInteractor {
+    var tracksLiveData = MutableLiveData<List<Track>>()
     override fun addItem(item: Track) {
-        TODO("Not yet implemented")
+        historyRepository.addItem(item)
     }
 
     override fun clearHistory() {
-        TODO("Not yet implemented")
+        historyRepository.clearHistory()
     }
 
-    override fun provideHistory(): ArrayList<Track> {
-        TODO("Not yet implemented")
+    override fun provideHistory(): List<Track>? {
+        tracksLiveData.postValue(provideHistory())
+        return tracksLiveData.value
     }
 }

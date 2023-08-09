@@ -20,22 +20,32 @@ class SearchViewModel(
     fun getStateLiveData(): LiveData<SearchScreenState> {
         return stateLiveData
     }
+
+    //поиск трека
     private val tracksConsumer = object : SearchInteractor.TracksConsumer {
         override fun consume(tracks: LiveData<List<Track>>) {
             tracks.observeForever { receivedTracks ->
-                trackResultList= receivedTracks as MutableLiveData<List<Track>>
+                trackResultList = receivedTracks as MutableLiveData<List<Track>>
             }
         }
     }
 
-    fun onFocusSearcher() {}
-    private var trackResultList :MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
-
-    fun searchResults(searchExpression:String):LiveData<List<Track>> {
-        trackResultList= searchInteractor.search(searchExpression, tracksConsumer)
+    private var trackResultList: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
+    fun searchRequesting(searchExpression: String) {
+        trackResultList = searchInteractor.search(searchExpression, tracksConsumer)
+    }
+    fun searchResults(): LiveData<List<Track>> {
         return trackResultList
     }
-    fun searchHistory() {}
+    fun clearTrackList(){
+        trackResultList.value= emptyList<Track>()
+    }
+
+    //история
+    private var trackHistoryList: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
+    fun addItem(item: Track) {}
+    fun clearHistory() {}
+    fun provideHistory(): LiveData<List<Track>> {return trackHistoryList}
 
 
     companion object {
