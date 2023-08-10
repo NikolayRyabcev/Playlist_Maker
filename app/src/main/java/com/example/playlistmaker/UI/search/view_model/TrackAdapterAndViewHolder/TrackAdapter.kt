@@ -7,23 +7,30 @@ import com.example.playlistmaker.databinding.TrackLayoutBinding
 import com.example.playlistmaker.domain.search.models.Track
 
 class TrackAdapter(
-    var tracks: ArrayList<Track>,
     private val clickListener: TrackClick
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+
+    private var _items: List<Track> = emptyList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)
         return TrackViewHolder(TrackLayoutBinding.inflate(layoutInspector, parent, false))
     }
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
+        holder.bind(_items[position])
         holder.itemView.setOnClickListener {
-            clickListener.onClick(tracks[position])
+            clickListener.onClick(_items[position])
         }
+
     }
     override fun getItemCount(): Int {
-        return tracks.size
+        return _items.size
     }
+
     fun interface TrackClick {
         fun onClick(track: Track)
+    }
+
+    fun setItems(items: List<Track>) {
+        _items = items
     }
 }

@@ -3,7 +3,7 @@ package com.example.playlistmaker.Creator
 import com.example.playlistmaker.App.App
 import com.example.playlistmaker.data.player.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.player.PlayerInteractor
-import com.example.playlistmaker.data.player.PlayerRepository
+import com.example.playlistmaker.domain.player.PlayerRepository
 import com.example.playlistmaker.data.search.request_and_response.RetrofitNetworkClient
 import com.example.playlistmaker.data.search.TracksRepositoryImpl
 import com.example.playlistmaker.data.search.history.SearchHistory
@@ -53,10 +53,8 @@ object Creator {
     }
 
     fun provideSearchHistoryInteractor (): SearchHistoryInteractor {
-        return SearchHistoryInteractorImpl()
+        return SearchHistoryInteractorImpl(provideSearchHistory())
     }
-
-
 
 
     //settings

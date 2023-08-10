@@ -17,7 +17,6 @@ class TrackViewHolder(private val binding:TrackLayoutBinding) : RecyclerView.Vie
             .load(item.artworkUrl100)
             .placeholder(R.drawable.musicalbum)
             .into(binding.trackImage)
-
     }
 
 }

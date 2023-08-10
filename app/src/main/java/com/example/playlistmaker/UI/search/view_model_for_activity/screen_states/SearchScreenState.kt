@@ -1,10 +1,13 @@
 package com.example.playlistmaker.UI.search.view_model_for_activity.screen_states
 
+import com.example.playlistmaker.domain.search.models.Track
+
 sealed class SearchScreenState {
-    class DefaultSearch() : SearchScreenState()
-    class Loading(): SearchScreenState()
-    class SearchIsOk(): SearchScreenState()
-    class NothingFound(): SearchScreenState()
-    class ConnectionError(): SearchScreenState()
-    class SearchWithHistory():SearchScreenState()
+    object DefaultSearch                            : SearchScreenState()
+    object Loading                                  : SearchScreenState()
+    object NothingFound                             : SearchScreenState()
+    object ConnectionError                          : SearchScreenState()
+    object SearchWithHistory                        : SearchScreenState()
+    data class SearchIsOk(val data: List<Track>)    : SearchScreenState()
+
 }

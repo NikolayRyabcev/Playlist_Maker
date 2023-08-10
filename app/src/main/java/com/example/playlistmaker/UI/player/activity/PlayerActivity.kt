@@ -1,8 +1,10 @@
 package com.example.playlistmaker.UI.player.activity
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -16,6 +18,7 @@ import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.UI.player.view_model.PlayerViewModel
 import com.example.playlistmaker.databinding.PlayerActivityBinding
+import com.example.playlistmaker.domain.search.models.Track
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -23,9 +26,11 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var playerState: PlayerState
     lateinit var viewModel: PlayerViewModel
     private lateinit var binding: PlayerActivityBinding
+    var url=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding=PlayerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -39,14 +44,16 @@ class PlayerActivity : AppCompatActivity() {
         binding.playerBackButtonArrow.setOnClickListener {
             finish()
         }
-        binding.playerTrackName.text = intent.extras?.getString("Track Name") ?: "Unknown Track"
-        binding.playerArtistName.text = intent.extras?.getString("Artist Name") ?: "Unknown Artist"
-        binding.trackTimer.text = intent.extras?.getString("Track Time") ?: "00:00"
-        binding.album.text = intent.extras?.getString("Album") ?: "Unknown Album"
-        binding.year.text = (intent.extras?.getString("Year") ?: "Year").take(4)
-        binding.genre.text = intent.extras?.getString("Genre") ?: "Unknown Genre"
-        binding.country.text = intent.extras?.getString("Country") ?: "Unknown Country"
-        val getImage = (intent.extras?.getString("Cover") ?: "Unknown Cover").replace(
+        val track = intent.getParcelableExtra<Track>("track")
+
+        binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
+        binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
+        binding.trackTimer.text = track?.trackTimeMillis ?: "00:00"
+        binding.album.text = track?.collectionName?: "Unknown Album"
+        binding.year.text = (track?.releaseDate ?: "Year").take(4)
+        binding.genre.text = track?.primaryGenreName ?: "Unknown Genre"
+        binding.country.text = track?.country ?: "Unknown Country"
+        val getImage = (track?.artworkUrl100 ?: "Unknown Cover").replace(
             "100x100bb.jpg",
             "512x512bb.jpg"
         )
@@ -57,19 +64,18 @@ class PlayerActivity : AppCompatActivity() {
                 .placeholder(R.drawable.bfplaceholder)
                 .into(binding.trackCover)
         }
-        val url = intent.extras?.getString("URL")
+        url = track?.previewUrl ?: return
 
-        viewModel.preparePlayer { preparePlayer() }
 
-        if (!url.isNullOrEmpty()) playerInteractor.createPlayer(url) {
-            binding.playButton.isEnabled = true
+        viewModel.createPlayer(url) {
+            preparePlayer()
         }
 
         binding.playButton.setOnClickListener {
-            playerInteractor.play()
+            viewModel.play()
         }
         binding.pauseButton.setOnClickListener {
-            playerInteractor.pause()
+            viewModel.pause()
         }
         mainThreadHandler?.post(
             updateButton()
@@ -80,10 +86,20 @@ class PlayerActivity : AppCompatActivity() {
 
     }
 
+    /*override fun onResume() {
+        super.onResume()
+        viewModel.createPlayer(url) {
+            preparePlayer()
+        }
+    }*/
+    override fun onPause (){
+        super.onPause()
+        viewModel.pause()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
-        playerInteractor.destroy()
+        viewModel.destroy()
     }
 
     fun preparePlayer() {
@@ -93,7 +109,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     fun playerStateDrawer() {
-        playerState = playerInteractor.playerStateListener()
+        playerState = viewModel.playerStateListener()
         when (playerState) {
             PlayerState.STATE_DEFAULT -> {
                 binding.playButton.visibility = View.VISIBLE
@@ -130,7 +146,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun updateTimer(): Runnable {
         val updatedTimer = Runnable {
-            binding.trackTimer.text = playerInteractor.getTime()
+            binding.trackTimer.text = viewModel.getTime()
             mainThreadHandler?.postDelayed(updateTimer(), DELAY_MILLIS_Activity)
         }
         return updatedTimer

@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -34,7 +35,7 @@ class SearchActivity : ComponentActivity() {
     private val searchViewModel by viewModels<SearchViewModel> { SearchViewModel.getViewModelFactory() }
     private var isClickAllowed = true
 
-    lateinit var trackAdapter: TrackAdapter
+    private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
     private lateinit var historyRecycler: RecyclerView
 
@@ -42,25 +43,30 @@ class SearchActivity : ComponentActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private val searchRunnable = Runnable { search(binding.searchUserText) }
 
-    var isEnterPressed: Boolean = false
+    private var isEnterPressed: Boolean = false
 
     private val KEY_TEXT = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        historyRecycler = binding.historyRecycler
 
         //делаем ViewModel
         searchViewModel.getStateLiveData().observe(this) { stateLiveData ->
-            when (stateLiveData) {
+
+            when (val state = stateLiveData) {
                 is SearchScreenState.DefaultSearch -> defaultSearch()
                 is SearchScreenState.ConnectionError -> connectionError()
                 is SearchScreenState.Loading -> loading()
                 is SearchScreenState.NothingFound -> nothingFound()
-                is SearchScreenState.SearchIsOk -> searchIsOk()
+                is SearchScreenState.SearchIsOk -> {
+                    searchIsOk(state.data)
+                }
+
                 is SearchScreenState.SearchWithHistory -> searchWithHistory()
+                else -> {}
             }
         }
 
@@ -77,21 +83,20 @@ class SearchActivity : ComponentActivity() {
         startSearchByEnterPress()
 
         //поиск
-        trackAdapter = TrackAdapter(searchViewModel.searchResults() as ArrayList<Track>) {
+        trackAdapter = TrackAdapter() {
             if (clickDebounce()) {
                 clickAdapting(it)
             }
         }
 
-        recyclerView = findViewById(R.id.trackRecycler)
+        recyclerView = binding.trackRecycler
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = trackAdapter
 
         //история
-        historyAdapter = TrackAdapter(searchViewModel.provideHistory() as ArrayList<Track>) {
+        historyAdapter = TrackAdapter() {
             if (clickDebounce()) {
                 clickAdapting(it)
-                historyAdapter.notifyDataSetChanged()
             }
         }
 
@@ -131,10 +136,10 @@ class SearchActivity : ComponentActivity() {
     }
 
     private fun clickAdapting(item: Track) {
-        val intent = Intent(this, PlayerActivity::class.java)
-        intent.putExtra("Track", item)
-        this.startActivity(intent)
         searchViewModel.addItem(item)
+        val intent = Intent(this, PlayerActivity::class.java)
+        intent.putExtra("track", item)
+        this.startActivity(intent)
     }
 
     //видимость кнопки удаления введенной строки (крестик)
@@ -142,123 +147,76 @@ class SearchActivity : ComponentActivity() {
         return if (s.isNullOrEmpty()) {
             GONE
         } else {
-            View.VISIBLE
+            VISIBLE
         }
     }
 
     //поиск
-    private fun search(inputEditText: EditText) {
-        searchViewModel.searchRequesting(binding.searchUserText.text.toString())
+    private fun search() {
+        searchViewModel.searchRequesting(searchText)
     }
+
 
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
     }
 
-    private fun defaultSearch() {
-        historyInVisible()
-        recyclerView.visibility = GONE
-        binding.nothingfoundPict.visibility = GONE
-        binding.nothingfoundText.visibility = GONE
-        binding.loadingproblem.visibility = GONE
-        binding.loadingproblemText.visibility = GONE
+    private val searchRunnable = Runnable {
+        search()
+        trackAdapter.notifyDataSetChanged()
     }
-
-    private fun loading() {
-        binding.progressBar.visibility = View.VISIBLE
-        historyInVisible()
-        recyclerView.visibility = GONE
-        binding.nothingfoundPict.visibility = GONE
-        binding.nothingfoundText.visibility = GONE
-        binding.loadingproblem.visibility = GONE
-        binding.loadingproblemText.visibility = GONE
-    }
-
-    private fun searchIsOk() {
-        binding.progressBar.visibility = GONE
-        recyclerView.visibility = View.VISIBLE
-        binding.nothingfoundPict.visibility = GONE
-        binding.nothingfoundText.visibility = GONE
-        binding.loadingproblem.visibility = GONE
-        binding.loadingproblemText.visibility = GONE
-        binding.refreshButton.visibility = GONE
-    }
-
-    private fun nothingFound() {
-        binding.historyTextView.visibility = View.VISIBLE
-        historyRecycler.visibility = View.VISIBLE
-        binding.clearHistoryButton.visibility = View.VISIBLE
-        recyclerView.visibility = GONE
-        binding.nothingfoundPict.visibility = GONE
-        binding.nothingfoundText.visibility = GONE
-        binding.loadingproblem.visibility = GONE
-        binding.loadingproblemText.visibility = GONE
-        binding.refreshButton.visibility = GONE
-    }
-
-    private fun connectionError() {
-        binding.loadingproblem.visibility = View.VISIBLE
-        binding.loadingproblemText.visibility = View.VISIBLE
-        binding.refreshButton.visibility = View.VISIBLE
-        recyclerView.visibility = GONE
-        binding.refreshButton.setOnClickListener { search(binding.searchUserText) }
-        binding.progressBar.visibility = GONE
-        historyInVisible()
-    }
-
-    private fun searchWithHistory() {
-        binding.historyTextView.visibility = View.VISIBLE
-        binding.historyRecycler.visibility = View.VISIBLE
-        recyclerView.visibility = GONE
-        binding.nothingfoundPict.visibility = GONE
-        binding.nothingfoundText.visibility = GONE
-        binding.loadingproblem.visibility = GONE
-        binding.loadingproblemText.visibility = GONE
-    }
-
-    private fun historyInVisible() {
-        binding.historyTextView.visibility = GONE
-        historyRecycler.visibility = GONE
-        binding.clearHistoryButton.visibility = GONE
-    }
-
 
     //если фокус на поле ввода поиска
     fun onEditorFocus() {
         binding.searchUserText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && binding.searchUserText.text.isEmpty() && App.trackHistoryList.isNotEmpty()) {
-                binding.historyTextView.visibility = View.VISIBLE
-                binding.historyRecycler.visibility = View.VISIBLE
+                binding.historyTextView.visibility = VISIBLE
+                binding.historyRecycler.visibility = VISIBLE
             } else {
                 historyInVisible()
             }
         }
     }
-
+//поиски
+    var searchText=""
     // когда меняется текст в поисковой строке
     fun onSearchTextChange() {
         binding.searchUserText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (binding.searchUserText.hasFocus() && p0?.isEmpty() == true && App.trackHistoryList.isNotEmpty()) {
-                    binding.historyTextView.visibility = View.VISIBLE
-                    binding.historyRecycler.visibility = View.VISIBLE
-
+                    binding.historyTextView.visibility = VISIBLE
+                    binding.historyRecycler.visibility = VISIBLE
                 } else {
                     historyInVisible()
                 }
                 if (!binding.searchUserText.text.isNullOrEmpty()) {
-                    recyclerView.visibility = GONE
+                    searchText=binding.searchUserText.text.toString()
                     searchDebounce()
                 }
             }
-
             override fun afterTextChanged(p0: Editable?) {
             }
         })
+    }
+
+    //поиск по нажатию энтер на клавиатуре
+    private fun startSearchByEnterPress() {
+        binding.searchUserText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (binding.searchUserText.text.isNotEmpty()) {
+                    searchText=binding.searchUserText.text.toString()
+                    search()
+                    trackAdapter.notifyDataSetChanged()
+                    isEnterPressed = true
+                    handler.postDelayed({ isEnterPressed = false }, 3000L)
+                }
+                true
+            }
+            false
+        }
     }
 
     //очистить строку ввода
@@ -300,20 +258,80 @@ class SearchActivity : ComponentActivity() {
         binding.searchUserText.addTextChangedListener(simpleTextWatcher)
     }
 
-    //поиск по нажатию энтер на клавиатуре
-    fun startSearchByEnterPress() {
-        binding.searchUserText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (binding.searchUserText.text.isNotEmpty()) {
-                    recyclerView.visibility = GONE
-                    search(binding.searchUserText)
-                    isEnterPressed = true
-                    handler.postDelayed({ isEnterPressed = false }, 3000L)
-                }
-                true
-            }
-            false
-        }
+    //состояния экранов
+    private fun defaultSearch() {
+        historyInVisible()
+        recyclerView.visibility = GONE
+        binding.nothingfoundPict.visibility = GONE
+        binding.nothingfoundText.visibility = GONE
+        binding.loadingproblem.visibility = GONE
+        binding.loadingproblemText.visibility = GONE
+        binding.refreshButton.visibility = GONE
+    }
+
+    private fun loading() {
+        binding.progressBar.visibility = VISIBLE
+        historyInVisible()
+        recyclerView.visibility = GONE
+        binding.nothingfoundPict.visibility = GONE
+        binding.nothingfoundText.visibility = GONE
+        binding.loadingproblem.visibility = GONE
+        binding.loadingproblemText.visibility = GONE
+        binding.refreshButton.visibility = GONE
+
+    }
+
+    private fun searchIsOk(data: List<Track>) {
+        binding.progressBar.visibility = GONE
+        recyclerView.visibility = VISIBLE
+        binding.nothingfoundPict.visibility = GONE
+        binding.nothingfoundText.visibility = GONE
+        binding.loadingproblem.visibility = GONE
+        binding.loadingproblemText.visibility = GONE
+        binding.refreshButton.visibility = GONE
+        trackAdapter.setItems(data)
+        binding.clearHistoryButton.visibility - GONE
+        historyInVisible()
+    }
+
+    private fun nothingFound() {
+        binding.historyTextView.visibility = View.GONE
+        historyRecycler.visibility = View.GONE
+        binding.clearHistoryButton.visibility = VISIBLE
+        recyclerView.visibility = GONE
+        binding.nothingfoundPict.visibility = VISIBLE
+        binding.nothingfoundText.visibility = VISIBLE
+        binding.loadingproblem.visibility = GONE
+        binding.loadingproblemText.visibility = GONE
+        binding.refreshButton.visibility = GONE
+        historyInVisible()
+    }
+
+    private fun connectionError() {
+        binding.loadingproblem.visibility = VISIBLE
+        binding.loadingproblemText.visibility = VISIBLE
+        binding.refreshButton.visibility = VISIBLE
+        recyclerView.visibility = GONE
+        binding.refreshButton.setOnClickListener { search() }
+        binding.progressBar.visibility = GONE
+        historyInVisible()
+    }
+
+    private fun searchWithHistory() {
+        binding.historyTextView.visibility = VISIBLE
+        binding.historyRecycler.visibility = VISIBLE
+        recyclerView.visibility = GONE
+        binding.nothingfoundPict.visibility = GONE
+        binding.nothingfoundText.visibility = GONE
+        binding.refreshButton.visibility = GONE
+        binding.loadingproblem.visibility = GONE
+        binding.loadingproblemText.visibility = GONE
+    }
+
+    private fun historyInVisible() {
+        binding.historyTextView.visibility = GONE
+        historyRecycler.visibility = GONE
+        binding.clearHistoryButton.visibility = GONE
     }
 
 

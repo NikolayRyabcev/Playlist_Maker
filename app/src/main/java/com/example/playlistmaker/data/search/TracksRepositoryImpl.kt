@@ -5,13 +5,18 @@ import com.example.playlistmaker.data.search.request_and_response.TrackResponse
 import com.example.playlistmaker.data.search.request_and_response.TrackSearchRequest
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.models.Track
+import java.lang.Error
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
     override fun searchTracks(expression: String): List<Track> {
-        val response = networkClient.doRequest(TrackSearchRequest(expression))
-        if (response.resultCode == 200) {
+        try {
+            val response = networkClient.doRequest(TrackSearchRequest(expression))
+            if (response.resultCode != 200) {
+                return emptyList()
+            }
             return (response as TrackResponse).results.map {
                 Track(
                     it.trackName,
@@ -26,8 +31,8 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                     it.previewUrl
                 )
             }
-        } else {
-            return emptyList()
+        } catch(error: Error) {
+            throw Exception(error)
         }
     }
 }

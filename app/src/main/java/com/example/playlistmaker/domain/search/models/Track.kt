@@ -1,5 +1,9 @@
 package com.example.playlistmaker.domain.search.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Track(
     val trackName: String, // Название композиции
     val artistName: String, // Имя исполнителя
@@ -11,7 +15,7 @@ data class Track(
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String
-) {
+) : Parcelable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false

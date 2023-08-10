@@ -16,7 +16,6 @@ import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var settingsViewModel: SettingsViewModel
-    private lateinit var themeSwitcher : Switch
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +41,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.simpleSwitch.isChecked = settingsViewModel.getThemeLiveData().value!!
         binding.simpleSwitch.setOnClickListener {
             settingsViewModel.themeSwitch()
-            themeSwitcher.isChecked = settingsViewModel.getThemeLiveData().value!!
+            binding.simpleSwitch.isChecked = settingsViewModel.getThemeLiveData().value!!
         }
 
         //Поделиться

@@ -3,7 +3,7 @@ package com.example.playlistmaker.data.player
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import com.example.playlistmaker.domain.player.PlayerRepository
 import com.example.playlistmaker.domain.player.PlayerState
 import java.text.SimpleDateFormat
 
@@ -31,7 +31,6 @@ class PlayerRepositoryImpl : PlayerRepository {
 
     override fun play() {
         mediaPlayer.start()
-        Log.d("PlayerRepositoryImpl", mediaPlayer.isPlaying.toString())
         playerState = PlayerState.STATE_PLAYING
         mainThreadHandler?.post(
             timing()
@@ -40,7 +39,6 @@ class PlayerRepositoryImpl : PlayerRepository {
 
     override fun pause() {
         mediaPlayer.pause()
-        Log.d("PlayerRepositoryImpl", mediaPlayer.isPlaying.toString())
         playerState = PlayerState.STATE_PAUSED
     }
 

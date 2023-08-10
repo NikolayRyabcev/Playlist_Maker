@@ -4,14 +4,31 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.Creator.Creator
 import com.example.playlistmaker.domain.player.PlayerInteractor
+import com.example.playlistmaker.domain.player.PlayerState
 
 class PlayerViewModel (
-    private val trackId: String,
+    private val trackUrl: String,
     private val playerInteractor: PlayerInteractor,
         ):ViewModel(){
 
-    fun preparePlayer(completion: ()->Unit){
-        playerInteractor.createPlayer(trackId, completion)
+    fun createPlayer(url: String, completion: ()->Unit) {
+        playerInteractor.createPlayer(url, completion)
+    }
+    fun play() {
+        playerInteractor.play()
+    }
+    fun pause() {
+        playerInteractor.pause()
+    }
+    fun destroy() {
+        playerInteractor.destroy()
+    }
+
+    fun getTime(): String {
+        return playerInteractor.getTime()
+    }
+    fun playerStateListener(): PlayerState {
+        return playerInteractor.playerStateListener()
     }
 
     fun playerStateDrawer(){}
