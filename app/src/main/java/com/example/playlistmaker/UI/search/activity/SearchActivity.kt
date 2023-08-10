@@ -164,7 +164,7 @@ class SearchActivity : ComponentActivity() {
 
     private val searchRunnable = Runnable {
         search()
-        trackAdapter.notifyDataSetChanged()
+       // trackAdapter.notifyDataSetChanged()
     }
 
     //если фокус на поле ввода поиска
