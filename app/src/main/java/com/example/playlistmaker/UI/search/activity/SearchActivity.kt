@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -153,13 +154,16 @@ class SearchActivity : ComponentActivity() {
 
     //поиск
     private fun search() {
-        searchViewModel.searchRequesting(searchText)
+        Log.d ("поиск", searchText)
+        searchViewModel.searchRequesting(binding.searchUserText.text.toString())
     }
 
 
     private fun searchDebounce() {
+        Log.d ("поиск debounce before", searchText)
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+        Log.d ("поиск debounse after", searchText)
     }
 
     private val searchRunnable = Runnable {
@@ -194,7 +198,9 @@ class SearchActivity : ComponentActivity() {
                 }
                 if (!binding.searchUserText.text.isNullOrEmpty()) {
                     searchText=binding.searchUserText.text.toString()
+                    Log.d ("поиск by waiting", searchText)
                     searchDebounce()
+                    trackAdapter.notifyDataSetChanged()
                 }
             }
             override fun afterTextChanged(p0: Editable?) {
@@ -208,6 +214,7 @@ class SearchActivity : ComponentActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.searchUserText.text.isNotEmpty()) {
                     searchText=binding.searchUserText.text.toString()
+                    Log.d ("поиск by enter", searchText)
                     search()
                     trackAdapter.notifyDataSetChanged()
                     isEnterPressed = true
