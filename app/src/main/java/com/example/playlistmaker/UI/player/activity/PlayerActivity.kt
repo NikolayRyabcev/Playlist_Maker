@@ -4,20 +4,14 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.playlistmaker.Creator.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.UI.player.view_model.PlayerViewModel
 import com.example.playlistmaker.databinding.PlayerActivityBinding
+import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.search.models.Track
 
 class PlayerActivity : AppCompatActivity() {
