@@ -19,6 +19,7 @@ class TrackAdapter(
         holder.bind(_items[position])
         holder.itemView.setOnClickListener {
             clickListener.onClick(_items[position])
+
         }
 
     }

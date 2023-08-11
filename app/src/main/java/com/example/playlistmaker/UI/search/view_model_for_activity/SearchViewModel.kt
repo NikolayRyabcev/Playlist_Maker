@@ -25,10 +25,14 @@ class SearchViewModel(
 
     //поиск трека
     private val tracksConsumer = object : SearchInteractor.TracksConsumer {
-        override fun consume(tracks: LiveData<List<Track>>) {
-            tracks.observeForever { receivedTracks ->
-                trackResultList = MutableLiveData(receivedTracks)
-            }
+        override fun consume(tracks: List<Track>) {
+                trackResultList.postValue(tracks)
+                stateLiveData.postValue(
+                    if (trackResultList.value.isNullOrEmpty())
+                        SearchScreenState.NothingFound
+                    else
+                        SearchScreenState.SearchIsOk(trackResultList.value!!)
+                )
         }
     }
 
@@ -36,23 +40,11 @@ class SearchViewModel(
     fun searchRequesting(searchExpression: String) {
         stateLiveData.postValue(SearchScreenState.Loading)
         try {
-            trackResultList = searchInteractor.search(searchExpression, tracksConsumer)
-            Log.d("searchRequesting_лог", "${trackResultList.value}")
-            stateLiveData.postValue(
-                if (trackResultList.value.isNullOrEmpty())
-                    SearchScreenState.NothingFound
-                else
-                    SearchScreenState.SearchIsOk(trackResultList.value!!)
-            )
+           searchInteractor.search(searchExpression, tracksConsumer)
         } catch (error: Error) {
             Log.d("SearchViewModel", "searchRequesting error: $error")
             stateLiveData.postValue(SearchScreenState.ConnectionError)
         }
-
-    }
-
-    fun searchResults(): List<Track> {
-        return trackResultList.value?.toMutableList() ?: emptyList()
     }
 
     fun clearTrackList() {
@@ -61,9 +53,17 @@ class SearchViewModel(
 
     //история
     private var trackHistoryList: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
-    fun addItem(item: Track) {}
-    fun clearHistory() {}
+    fun addItem(item: Track) {
+        searchHistoryInteractor.addItem(item)
+    }
+
+    fun clearHistory() {
+        searchHistoryInteractor.clearHistory()
+    }
+
     fun provideHistory(): LiveData<List<Track>> {
+        trackHistoryList.postValue(searchHistoryInteractor.provideHistory())
+        if (trackHistoryList.value.isNullOrEmpty()) trackHistoryList.postValue(emptyList())
         return trackHistoryList
     }
 

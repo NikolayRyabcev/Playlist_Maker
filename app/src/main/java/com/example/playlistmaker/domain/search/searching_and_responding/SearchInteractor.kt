@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.example.playlistmaker.domain.search.models.Track
 
 interface SearchInteractor {
-    fun search (expression:String, consumer: TracksConsumer): MutableLiveData<List<Track>>
+    fun search (expression:String, consumer: TracksConsumer)
     interface TracksConsumer{
-        fun consume(findTracks: LiveData<List<Track>>)
+        fun consume(findTracks: List<Track>)
     }
 }

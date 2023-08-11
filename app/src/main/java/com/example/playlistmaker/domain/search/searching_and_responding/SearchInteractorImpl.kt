@@ -5,18 +5,16 @@ import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.models.Track
 
 class SearchInteractorImpl(private val repository: TracksRepository) : SearchInteractor {
-    val tracksLiveData = MutableLiveData<List<Track>>()
     override fun search(
         expression: String,
         consumer: SearchInteractor.TracksConsumer
-    ): MutableLiveData<List<Track>> {
+    ){
+        var tracksData = emptyList<Track>()
         val t = Thread {
-            tracksLiveData.postValue(repository.searchTracks(expression))
+            tracksData=repository.searchTracks(expression)
         }
         t.start()
-        consumer.consume(tracksLiveData)
-        return tracksLiveData
+        consumer.consume(tracksData)
+
     }
-
-
 }

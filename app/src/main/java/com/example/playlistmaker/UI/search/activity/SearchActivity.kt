@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.App.App
@@ -29,7 +30,7 @@ import com.example.playlistmaker.domain.search.models.Track
 
 const val SEARCH_SHARED_PREFS_KEY = "123"
 
-class SearchActivity : ComponentActivity() {
+class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
 
     // viewModel:
@@ -39,7 +40,7 @@ class SearchActivity : ComponentActivity() {
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
     private lateinit var historyRecycler: RecyclerView
-
+    lateinit var historyList :List<Track>
     lateinit var recyclerView: RecyclerView
 
     private val handler = Handler(Looper.getMainLooper())
@@ -95,6 +96,7 @@ class SearchActivity : ComponentActivity() {
         recyclerView.adapter = trackAdapter
 
         //история
+
         historyAdapter = TrackAdapter() {
             if (clickDebounce()) {
                 clickAdapting(it)
@@ -138,6 +140,7 @@ class SearchActivity : ComponentActivity() {
 
     private fun clickAdapting(item: Track) {
         searchViewModel.addItem(item)
+        historyList= searchViewModel.provideHistory().value!!
         val intent = Intent(this, PlayerActivity::class.java)
         intent.putExtra("track", item)
         this.startActivity(intent)
@@ -190,9 +193,10 @@ class SearchActivity : ComponentActivity() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (binding.searchUserText.hasFocus() && p0?.isEmpty() == true && App.trackHistoryList.isNotEmpty()) {
+                if (binding.searchUserText.hasFocus() && p0?.isEmpty() == true && historyList.isNotEmpty()) {
                     binding.historyTextView.visibility = VISIBLE
                     binding.historyRecycler.visibility = VISIBLE
+                    binding.clearHistoryButton.visibility = VISIBLE
                 } else {
                     historyInVisible()
                 }
@@ -325,6 +329,7 @@ class SearchActivity : ComponentActivity() {
     }
 
     private fun searchWithHistory() {
+        searchViewModel.provideHistory()
         binding.historyTextView.visibility = VISIBLE
         binding.historyRecycler.visibility = VISIBLE
         recyclerView.visibility = GONE
