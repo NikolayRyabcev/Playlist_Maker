@@ -28,7 +28,7 @@ class SearchViewModel(
         override fun consume(tracks: List<Track>) {
                 trackResultList.postValue(tracks)
                 stateLiveData.postValue(
-                    if (trackResultList.value.isNullOrEmpty())
+                    if (tracks.isNullOrEmpty())
                         SearchScreenState.NothingFound
                     else
                         SearchScreenState.SearchIsOk(trackResultList.value!!)

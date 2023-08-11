@@ -175,7 +175,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     //если фокус на поле ввода поиска
-    fun onEditorFocus() {
+    private fun onEditorFocus() {
         binding.searchUserText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && binding.searchUserText.text.isEmpty() && App.trackHistoryList.isNotEmpty()) {
                 binding.historyTextView.visibility = VISIBLE
@@ -188,7 +188,7 @@ class SearchActivity : AppCompatActivity() {
 //поиски
     var searchText=""
     // когда меняется текст в поисковой строке
-    fun onSearchTextChange() {
+    private fun onSearchTextChange() {
         binding.searchUserText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -204,7 +204,7 @@ class SearchActivity : AppCompatActivity() {
                     searchText=binding.searchUserText.text.toString()
                     Log.d ("поиск by waiting", searchText)
                     searchDebounce()
-                    trackAdapter.notifyDataSetChanged()
+
                 }
             }
             override fun afterTextChanged(p0: Editable?) {
@@ -231,7 +231,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     //очистить строку ввода
-    fun onClearIconClick() {
+    private fun onClearIconClick() {
         binding.clearIcon.setOnClickListener {
             binding.searchUserText.setText("")
             val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -252,7 +252,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     //включает видимость кнопки очистки строки ввода, когда есть какой-либо текст
-    fun clearIconVisibilityChanger() {
+    private fun clearIconVisibilityChanger() {
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
@@ -289,6 +289,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblem.visibility = GONE
         binding.loadingproblemText.visibility = GONE
         binding.refreshButton.visibility = GONE
+        trackAdapter.notifyDataSetChanged()
 
     }
 
@@ -306,8 +307,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun nothingFound() {
-        binding.historyTextView.visibility = View.GONE
-        historyRecycler.visibility = View.GONE
+        binding.historyTextView.visibility = GONE
+        historyRecycler.visibility = GONE
         binding.clearHistoryButton.visibility = VISIBLE
         recyclerView.visibility = GONE
         binding.nothingfoundPict.visibility = VISIBLE
