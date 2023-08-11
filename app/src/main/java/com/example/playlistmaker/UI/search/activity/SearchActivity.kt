@@ -106,6 +106,7 @@ class SearchActivity : AppCompatActivity() {
             historyInVisible()
             searchViewModel.clearHistory()
         }
+        historyList= searchViewModel.provideHistory().value!!
     }
 
     //сохраняем текст при повороте экрана
@@ -138,7 +139,7 @@ class SearchActivity : AppCompatActivity() {
     private fun clickAdapting(item: Track) {
         searchViewModel.addItem(item)
         Log.d("История", "Клик по треку!")
-        historyList= searchViewModel.provideHistory().value!!
+
         val intent = Intent(this, PlayerActivity::class.java)
         intent.putExtra("track", item)
         this.startActivity(intent)
@@ -192,9 +193,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (binding.searchUserText.hasFocus() && p0?.isEmpty() == true && historyList.isNotEmpty()) {
-                    binding.historyTextView.visibility = VISIBLE
-                    binding.historyRecycler.visibility = VISIBLE
-                    binding.clearHistoryButton.visibility = VISIBLE
+                    searchViewModel.clearTrackList()
                 } else {
                     historyInVisible()
                 }
