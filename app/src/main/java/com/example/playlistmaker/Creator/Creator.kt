@@ -49,7 +49,7 @@ object Creator {
     }
 
     fun provideSearchHistory():SearchHistory {
-        return SearchHistoryImpl()
+        return SearchHistoryImpl(application)
     }
 
     fun provideSearchHistoryInteractor (): SearchHistoryInteractor {

@@ -40,7 +40,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
     private lateinit var historyRecycler: RecyclerView
-    lateinit var historyList :List<Track>
+    lateinit var historyList: List<Track>
     lateinit var recyclerView: RecyclerView
 
     private val handler = Handler(Looper.getMainLooper())
@@ -66,7 +66,6 @@ class SearchActivity : AppCompatActivity() {
                 is SearchScreenState.SearchIsOk -> {
                     searchIsOk(state.data)
                 }
-
                 is SearchScreenState.SearchWithHistory -> searchWithHistory()
                 else -> {}
             }
@@ -140,6 +139,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clickAdapting(item: Track) {
         searchViewModel.addItem(item)
+        Log.d("История", "click!")
         historyList= searchViewModel.provideHistory().value!!
         val intent = Intent(this, PlayerActivity::class.java)
         intent.putExtra("track", item)
@@ -157,27 +157,27 @@ class SearchActivity : AppCompatActivity() {
 
     //поиск
     private fun search() {
-        Log.d ("поиск", searchText)
+        Log.d("поиск", searchText)
         searchViewModel.searchRequesting(binding.searchUserText.text.toString())
     }
 
 
     private fun searchDebounce() {
-        Log.d ("поиск debounce before", searchText)
+        Log.d("поиск debounce before", searchText)
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
-        Log.d ("поиск debounse after", searchText)
+        Log.d("поиск debounse after", searchText)
     }
 
     private val searchRunnable = Runnable {
         search()
-       // trackAdapter.notifyDataSetChanged()
+        // trackAdapter.notifyDataSetChanged()
     }
 
     //если фокус на поле ввода поиска
     private fun onEditorFocus() {
         binding.searchUserText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && binding.searchUserText.text.isEmpty() && App.trackHistoryList.isNotEmpty()) {
+            if (hasFocus && binding.searchUserText.text.isEmpty() && searchViewModel.provideHistory().value?.isNotEmpty() ?:false) {
                 binding.historyTextView.visibility = VISIBLE
                 binding.historyRecycler.visibility = VISIBLE
             } else {
@@ -185,13 +185,16 @@ class SearchActivity : AppCompatActivity() {
             }
         }
     }
-//поиски
-    var searchText=""
+
+    //поиски
+    var searchText = ""
+
     // когда меняется текст в поисковой строке
     private fun onSearchTextChange() {
         binding.searchUserText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
+
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (binding.searchUserText.hasFocus() && p0?.isEmpty() == true && historyList.isNotEmpty()) {
                     binding.historyTextView.visibility = VISIBLE
@@ -201,12 +204,13 @@ class SearchActivity : AppCompatActivity() {
                     historyInVisible()
                 }
                 if (!binding.searchUserText.text.isNullOrEmpty()) {
-                    searchText=binding.searchUserText.text.toString()
-                    Log.d ("поиск by waiting", searchText)
+                    searchText = binding.searchUserText.text.toString()
+                    Log.d("поиск by waiting", searchText)
                     searchDebounce()
 
                 }
             }
+
             override fun afterTextChanged(p0: Editable?) {
             }
         })
@@ -217,8 +221,8 @@ class SearchActivity : AppCompatActivity() {
         binding.searchUserText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.searchUserText.text.isNotEmpty()) {
-                    searchText=binding.searchUserText.text.toString()
-                    Log.d ("поиск by enter", searchText)
+                    searchText = binding.searchUserText.text.toString()
+                    Log.d("поиск by enter", searchText)
                     search()
                     trackAdapter.notifyDataSetChanged()
                     isEnterPressed = true
@@ -339,6 +343,7 @@ class SearchActivity : AppCompatActivity() {
         binding.refreshButton.visibility = GONE
         binding.loadingproblem.visibility = GONE
         binding.loadingproblemText.visibility = GONE
+        Log.d("История", "показ истории!")
     }
 
     private fun historyInVisible() {
