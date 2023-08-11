@@ -25,6 +25,7 @@ import com.example.playlistmaker.UI.search.view_model_for_activity.SearchViewMod
 import com.example.playlistmaker.UI.search.view_model_for_activity.screen_states.SearchScreenState
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.search.models.Track
+import java.io.IOException
 
 const val SEARCH_SHARED_PREFS_KEY = "123"
 
@@ -64,6 +65,7 @@ class SearchActivity : AppCompatActivity() {
                 is SearchScreenState.SearchIsOk -> {
                     searchIsOk(state.data)
                 }
+
                 is SearchScreenState.SearchWithHistory -> searchWithHistory(state.historyData)
                 else -> {}
             }
@@ -106,7 +108,12 @@ class SearchActivity : AppCompatActivity() {
             historyInVisible()
             searchViewModel.clearHistory()
         }
-        historyList= searchViewModel.provideHistory().value!!
+        historyList = try {
+            val historyValue = searchViewModel.provideHistory().value
+            historyValue ?: emptyList()
+        } catch (e: IOException) {
+            emptyList()
+        }
     }
 
     //сохраняем текст при повороте экрана
@@ -173,7 +180,7 @@ class SearchActivity : AppCompatActivity() {
     //если фокус на поле ввода поиска
     private fun onEditorFocus() {
         binding.searchUserText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && binding.searchUserText.text.isEmpty() && searchViewModel.provideHistory().value?.isNotEmpty() ?:false) {
+            if (hasFocus && binding.searchUserText.text.isEmpty() && searchViewModel.provideHistory().value?.isNotEmpty() ?: false) {
                 binding.historyTextView.visibility = VISIBLE
                 binding.historyRecycler.visibility = VISIBLE
             } else {
@@ -203,6 +210,7 @@ class SearchActivity : AppCompatActivity() {
 
                 }
             }
+
             override fun afterTextChanged(p0: Editable?) {
             }
         })
@@ -246,9 +254,11 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.clearIcon.visibility = clearButtonVisibility(s)
             }
+
             override fun afterTextChanged(s: Editable?) {
                 // empty
             }

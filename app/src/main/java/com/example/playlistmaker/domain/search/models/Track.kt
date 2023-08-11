@@ -5,16 +5,16 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Track(
-    val trackName: String, // Название композиции
-    val artistName: String, // Имя исполнителя
-    val trackTimeMillis: String, // Продолжительность трека
-    val artworkUrl100: String, // Ссылка на изображение обложки
-    val trackId: Long,
-    val collectionName: String,
-    val releaseDate: String,
-    val primaryGenreName: String,
-    val country: String,
-    val previewUrl: String
+    val trackName: String?, // Название композиции
+    val artistName: String?, // Имя исполнителя
+    val trackTimeMillis: String?, // Продолжительность трека
+    val artworkUrl100: String?, // Ссылка на изображение обложки
+    val trackId: Long?,
+    val collectionName: String?,
+    val releaseDate: String?,
+    val primaryGenreName: String?,
+    val country: String?,
+    val previewUrl: String?
 ) : Parcelable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

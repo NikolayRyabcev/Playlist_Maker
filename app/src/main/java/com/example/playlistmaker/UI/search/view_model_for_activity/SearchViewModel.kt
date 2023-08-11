@@ -27,13 +27,12 @@ class SearchViewModel(
     //поиск трека
     private val tracksConsumer = object : SearchInteractor.TracksConsumer {
         override fun consume(tracks: List<Track>) {
-                trackResultList.postValue(tracks)
-                stateLiveData.postValue(
-                    if (tracks.isNullOrEmpty())
-                        SearchScreenState.NothingFound
-                    else
-                        SearchScreenState.SearchIsOk(trackResultList.value!!)
-                )
+            trackResultList.postValue(tracks)
+            stateLiveData.postValue(
+                if (tracks.isNullOrEmpty())
+                    SearchScreenState.NothingFound
+                else SearchScreenState.SearchIsOk(tracks)
+            )
         }
     }
 
@@ -41,12 +40,11 @@ class SearchViewModel(
     fun searchRequesting(searchExpression: String) {
         stateLiveData.postValue(SearchScreenState.Loading)
         try {
-           searchInteractor.search(searchExpression, tracksConsumer)
+            searchInteractor.search(searchExpression, tracksConsumer)
         } catch (error: Error) {
             stateLiveData.postValue(SearchScreenState.ConnectionError)
         }
     }
-
 
 
     //история

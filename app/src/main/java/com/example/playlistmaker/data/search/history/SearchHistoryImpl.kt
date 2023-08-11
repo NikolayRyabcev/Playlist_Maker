@@ -13,10 +13,10 @@ class SearchHistoryImpl(private val datacontext: Context) : SearchHistory {
     private val gson = Gson()
     private var counter = 0
     private var trackHistoryList = ArrayList<Track>()
-    val json = ""
+
     override fun addItem(newHistoryTrack: Track) {
         Log.d("История", "Начато добавление элемента")
-
+        val json = ""
         if (json.isNotEmpty()) {
             Log.d("История", "проверка prefs")
             if (trackHistoryList.isEmpty()) {
@@ -47,16 +47,23 @@ class SearchHistoryImpl(private val datacontext: Context) : SearchHistory {
     }
 
     override fun provideHistory(): List<Track> {
-        if (trackHistoryList.isNullOrEmpty()) {
-            if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
-                val type = object : TypeToken<ArrayList<Track>>() {}.type
-                trackHistoryList = gson.fromJson(json, type)
+        val json = ""
+        if (json.isNotEmpty()) {
+            Log.d("История", "проверка prefs")
+            if (trackHistoryList.isEmpty()) {
+                if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
+                    val type = object : TypeToken<ArrayList<Track>>() {}.type
+                    trackHistoryList = gson.fromJson(json, type)
+                }
             }
+
+        } else {
+            trackHistoryList = ArrayList()
         }
         return trackHistoryList
     }
 
-    private fun saveHistory() {
+    fun saveHistory() {
         var json = ""
         json = gson.toJson(trackHistoryList)
         savedHistory.edit()
