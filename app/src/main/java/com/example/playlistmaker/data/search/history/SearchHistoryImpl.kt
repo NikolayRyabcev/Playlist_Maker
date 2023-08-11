@@ -14,7 +14,7 @@ class SearchHistoryImpl(private val datacontext: Context) : SearchHistory {
     private var counter = 0
     private var trackHistoryList = ArrayList<Track>()
     override fun addItem(newHistoryTrack: Track) {
-        Log.d("История", "add start")
+        Log.d("История", "Начато добавление элемента")
         val json = ""
         if (json.isNotEmpty()) {
             if (trackHistoryList.isEmpty()) {
@@ -35,7 +35,8 @@ class SearchHistoryImpl(private val datacontext: Context) : SearchHistory {
             }
         }
         saveHistory()
-        Log.d("История", "add ready")
+        Log.d("История", "добавление элемента выполнено")
+        Log.d("История", trackHistoryList.toString())
     }
 
     override fun clearHistory() {

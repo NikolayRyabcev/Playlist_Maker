@@ -139,7 +139,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clickAdapting(item: Track) {
         searchViewModel.addItem(item)
-        Log.d("История", "click!")
+        Log.d("История", "Клик по треку!")
         historyList= searchViewModel.provideHistory().value!!
         val intent = Intent(this, PlayerActivity::class.java)
         intent.putExtra("track", item)
@@ -157,16 +157,13 @@ class SearchActivity : AppCompatActivity() {
 
     //поиск
     private fun search() {
-        Log.d("поиск", searchText)
         searchViewModel.searchRequesting(binding.searchUserText.text.toString())
     }
 
 
     private fun searchDebounce() {
-        Log.d("поиск debounce before", searchText)
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
-        Log.d("поиск debounse after", searchText)
     }
 
     private val searchRunnable = Runnable {
@@ -205,12 +202,10 @@ class SearchActivity : AppCompatActivity() {
                 }
                 if (!binding.searchUserText.text.isNullOrEmpty()) {
                     searchText = binding.searchUserText.text.toString()
-                    Log.d("поиск by waiting", searchText)
                     searchDebounce()
 
                 }
             }
-
             override fun afterTextChanged(p0: Editable?) {
             }
         })
@@ -222,7 +217,6 @@ class SearchActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.searchUserText.text.isNotEmpty()) {
                     searchText = binding.searchUserText.text.toString()
-                    Log.d("поиск by enter", searchText)
                     search()
                     trackAdapter.notifyDataSetChanged()
                     isEnterPressed = true
@@ -261,11 +255,9 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // empty
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.clearIcon.visibility = clearButtonVisibility(s)
             }
-
             override fun afterTextChanged(s: Editable?) {
                 // empty
             }
@@ -337,6 +329,7 @@ class SearchActivity : AppCompatActivity() {
         searchViewModel.provideHistory()
         binding.historyTextView.visibility = VISIBLE
         binding.historyRecycler.visibility = VISIBLE
+        binding.clearHistoryButton.visibility = VISIBLE
         recyclerView.visibility = GONE
         binding.nothingfoundPict.visibility = GONE
         binding.nothingfoundText.visibility = GONE

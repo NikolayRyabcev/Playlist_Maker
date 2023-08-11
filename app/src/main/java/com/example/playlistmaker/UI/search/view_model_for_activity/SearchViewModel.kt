@@ -1,5 +1,6 @@
 package com.example.playlistmaker.UI.search.view_model_for_activity
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -42,32 +43,38 @@ class SearchViewModel(
         try {
            searchInteractor.search(searchExpression, tracksConsumer)
         } catch (error: Error) {
-            Log.d("SearchViewModel", "searchRequesting error: $error")
             stateLiveData.postValue(SearchScreenState.ConnectionError)
         }
     }
 
     fun clearTrackList() {
-        trackResultList.value = emptyList<Track>()
-        stateLiveData.postValue(SearchScreenState.SearchWithHistory)
+        trackResultList.value = emptyList()
+
     }
 
     //история
     private var trackHistoryList: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
     fun addItem(item: Track) {
         searchHistoryInteractor.addItem(item)
-        Log.d("История", "add")
+        Log.d("История", "add из вью-модели")
     }
 
     fun clearHistory() {
         searchHistoryInteractor.clearHistory()
-        Log.d("История", "clear")
+        Log.d("История", "очистка истории")
     }
 
+    @SuppressLint("LongLogTag")
     fun provideHistory(): LiveData<List<Track>> {
-        Log.d("История", "provide")
-        trackHistoryList.postValue(searchHistoryInteractor.provideHistory())
-        if (trackHistoryList.value.isNullOrEmpty()) trackHistoryList.postValue(emptyList())
+        Log.d("История", "показ истории во вью-модели")
+        val history = searchHistoryInteractor.provideHistory()
+        trackHistoryList.postValue(history)
+        Log.d("Во вью-модели принята история:", history.toString())
+        if (history.isNullOrEmpty()) {
+            trackHistoryList.postValue(emptyList())
+        }
+        Log.d("Во вью-модели передана история:", trackHistoryList.value.toString())
+
         return trackHistoryList
     }
 
