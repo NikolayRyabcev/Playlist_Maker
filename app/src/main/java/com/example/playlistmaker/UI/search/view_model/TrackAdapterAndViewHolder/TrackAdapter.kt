@@ -33,5 +33,6 @@ class TrackAdapter(
 
     fun setItems(items: List<Track>) {
         _items = items
+        notifyDataSetChanged()
     }
 }

@@ -1,5 +1,6 @@
 package com.example.playlistmaker.UI.search.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,18 +9,15 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.App.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.UI.player.activity.PlayerActivity
 import com.example.playlistmaker.UI.search.view_model.TrackAdapterAndViewHolder.TrackAdapter
@@ -212,6 +210,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     //поиск по нажатию энтер на клавиатуре
+    @SuppressLint("NotifyDataSetChanged")
     private fun startSearchByEnterPress() {
         binding.searchUserText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -269,6 +268,7 @@ class SearchActivity : AppCompatActivity() {
         binding.refreshButton.visibility = GONE
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loading() {
         binding.progressBar.visibility = VISIBLE
         historyInVisible()

@@ -63,7 +63,6 @@ class SearchViewModel(
 
     @SuppressLint("LongLogTag")
     fun provideHistory(): LiveData<List<Track>> {
-        Log.d("История", "показ истории во вью-модели")
         val history = searchHistoryInteractor.provideHistory()
         trackHistoryList.postValue(history)
         Log.d("Во вью-модели принята история:", history.toString())
@@ -71,13 +70,12 @@ class SearchViewModel(
             trackHistoryList.postValue(emptyList())
         }
         Log.d("Во вью-модели передана история:", trackHistoryList.value.toString())
-
         return trackHistoryList
     }
 
     fun clearTrackList() {
         trackResultList.value = emptyList()
-        stateLiveData.postValue(SearchScreenState.SearchWithHistory(trackHistoryList))
+        stateLiveData.postValue(trackHistoryList.value?.let { SearchScreenState.SearchWithHistory(it) })
     }
 
 
