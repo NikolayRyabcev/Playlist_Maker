@@ -239,13 +239,6 @@ class SearchActivity : AppCompatActivity() {
             ) // скрыть клавиатуру
             binding.searchUserText.clearFocus()
             searchViewModel.clearTrackList()
-            binding.progressBar.visibility = GONE
-            recyclerView.visibility = GONE
-            binding.nothingfoundPict.visibility = GONE
-            binding.nothingfoundText.visibility = GONE
-            binding.loadingproblem.visibility = GONE
-            binding.loadingproblemText.visibility = GONE
-            binding.refreshButton.visibility = GONE
         }
     }
 

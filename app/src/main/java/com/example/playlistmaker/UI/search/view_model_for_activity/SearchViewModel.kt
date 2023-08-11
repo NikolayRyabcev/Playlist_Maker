@@ -47,10 +47,7 @@ class SearchViewModel(
         }
     }
 
-    fun clearTrackList() {
-        trackResultList.value = emptyList()
 
-    }
 
     //история
     private var trackHistoryList: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
@@ -76,6 +73,11 @@ class SearchViewModel(
         Log.d("Во вью-модели передана история:", trackHistoryList.value.toString())
 
         return trackHistoryList
+    }
+
+    fun clearTrackList() {
+        trackResultList.value = emptyList()
+        stateLiveData.postValue(SearchScreenState.SearchWithHistory(trackHistoryList))
     }
 
 
