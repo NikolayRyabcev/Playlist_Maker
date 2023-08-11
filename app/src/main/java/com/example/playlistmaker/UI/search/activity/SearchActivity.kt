@@ -66,7 +66,7 @@ class SearchActivity : AppCompatActivity() {
                 is SearchScreenState.SearchIsOk -> {
                     searchIsOk(state.data)
                 }
-                is SearchScreenState.SearchWithHistory -> searchWithHistory()
+                is SearchScreenState.SearchWithHistory -> searchWithHistory(state.historyData)
                 else -> {}
             }
         }
@@ -325,7 +325,7 @@ class SearchActivity : AppCompatActivity() {
         historyInVisible()
     }
 
-    private fun searchWithHistory() {
+    private fun searchWithHistory(historyData: List<Track>) {
         searchViewModel.provideHistory()
         binding.historyTextView.visibility = VISIBLE
         binding.historyRecycler.visibility = VISIBLE
@@ -336,6 +336,7 @@ class SearchActivity : AppCompatActivity() {
         binding.refreshButton.visibility = GONE
         binding.loadingproblem.visibility = GONE
         binding.loadingproblemText.visibility = GONE
+        trackAdapter.setItems(historyData)
         Log.d("История", "показ истории!")
     }
 
