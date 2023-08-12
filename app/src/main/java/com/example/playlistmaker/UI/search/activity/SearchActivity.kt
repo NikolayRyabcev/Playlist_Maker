@@ -200,7 +200,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (binding.searchUserText.hasFocus() && p0?.isEmpty() == true && historyList.isNotEmpty()) {
-                    searchViewModel.clearTrackList()
+                    searchViewModel.openHistory()
                 } else {
                     historyInVisible()
                 }
@@ -339,6 +339,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblem.visibility = GONE
         binding.loadingproblemText.visibility = GONE
         trackAdapter.setItems(historyData)
+        trackAdapter.notifyDataSetChanged()
         Log.d("История", "показ истории!")
     }
 

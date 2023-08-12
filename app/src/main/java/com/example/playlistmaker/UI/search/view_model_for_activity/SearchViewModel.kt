@@ -77,6 +77,7 @@ class SearchViewModel(
     }
 
 
+
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
