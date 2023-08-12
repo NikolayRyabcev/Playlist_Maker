@@ -27,7 +27,7 @@ import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.search.models.Track
 import java.io.IOException
 
-const val SEARCH_SHARED_PREFS_KEY = "123"
+
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
@@ -111,9 +111,11 @@ class SearchActivity : AppCompatActivity() {
         historyList = try {
             val historyValue = searchViewModel.provideHistory().value
             historyValue ?: emptyList()
+
         } catch (e: IOException) {
             emptyList()
         }
+        Log.d ("historyList", historyList.toString())
     }
 
     //сохраняем текст при повороте экрана
@@ -181,8 +183,10 @@ class SearchActivity : AppCompatActivity() {
     private fun onEditorFocus() {
         binding.searchUserText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && binding.searchUserText.text.isEmpty() && searchViewModel.provideHistory().value?.isNotEmpty() ?: false) {
-                binding.historyTextView.visibility = VISIBLE
+                /*binding.historyTextView.visibility = VISIBLE
                 binding.historyRecycler.visibility = VISIBLE
+                binding.clearHistoryButton.visibility= VISIBLE*/
+                searchViewModel.clearTrackList()
             } else {
                 historyInVisible()
             }

@@ -2,11 +2,11 @@ package com.example.playlistmaker.data.search.history
 
 import android.content.Context
 import android.util.Log
-import com.example.playlistmaker.UI.search.activity.SEARCH_SHARED_PREFS_KEY
 import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+const val SEARCH_SHARED_PREFS_KEY = "123"
 class SearchHistoryImpl(private val datacontext: Context) : SearchHistory {
     private val savedHistory =
         datacontext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, Context.MODE_PRIVATE)
@@ -15,10 +15,8 @@ class SearchHistoryImpl(private val datacontext: Context) : SearchHistory {
     private var trackHistoryList = ArrayList<Track>()
 
     override fun addItem(newHistoryTrack: Track) {
-        Log.d("История", "Начато добавление элемента")
         val json = ""
         if (json.isNotEmpty()) {
-            Log.d("История", "проверка prefs")
             if (trackHistoryList.isEmpty()) {
                 if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
                     val type = object : TypeToken<ArrayList<Track>>() {}.type
@@ -37,8 +35,6 @@ class SearchHistoryImpl(private val datacontext: Context) : SearchHistory {
             }
         }
         saveHistory()
-        Log.d("История", "добавление элемента выполнено")
-        Log.d("История", trackHistoryList.toString())
     }
 
     override fun clearHistory() {
@@ -47,23 +43,25 @@ class SearchHistoryImpl(private val datacontext: Context) : SearchHistory {
     }
 
     override fun provideHistory(): List<Track> {
-        val json = ""
-        if (json.isNotEmpty()) {
-            Log.d("История", "проверка prefs")
-            if (trackHistoryList.isEmpty()) {
-                if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
-                    val type = object : TypeToken<ArrayList<Track>>() {}.type
-                    trackHistoryList = gson.fromJson(json, type)
+        val json = savedHistory.getString(SEARCH_SHARED_PREFS_KEY, "")
+        if (json != null) {
+            if (json.isNotEmpty()) {
+                if (trackHistoryList.isEmpty()) {
+                    if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
+                        val type = object : TypeToken<ArrayList<Track>>() {}.type
+                        trackHistoryList = gson.fromJson(json, type)
+                    }
                 }
+                Log.d ("historyListdata", trackHistoryList.toString())
+            } else {
+                trackHistoryList = ArrayList()
+                Log.d ("historyListdata", "empty")
             }
-
-        } else {
-            trackHistoryList = ArrayList()
         }
         return trackHistoryList
     }
 
-    fun saveHistory() {
+    private fun saveHistory() {
         var json = ""
         json = gson.toJson(trackHistoryList)
         savedHistory.edit()

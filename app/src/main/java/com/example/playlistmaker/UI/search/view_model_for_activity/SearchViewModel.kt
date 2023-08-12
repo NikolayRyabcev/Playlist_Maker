@@ -48,7 +48,11 @@ class SearchViewModel(
 
 
     //история
-    private var trackHistoryList: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
+    private var trackHistoryList: MutableLiveData<List<Track>> =
+        MutableLiveData<List<Track>>().apply {
+            value = emptyList()
+        }
+
     fun addItem(item: Track) {
         searchHistoryInteractor.addItem(item)
         Log.d("История", "add из вью-модели")
@@ -63,11 +67,10 @@ class SearchViewModel(
     fun provideHistory(): LiveData<List<Track>> {
         val history = searchHistoryInteractor.provideHistory()
         trackHistoryList.postValue(history)
-        Log.d("Во вью-модели принята история:", history.toString())
         if (history.isNullOrEmpty()) {
             trackHistoryList.postValue(emptyList())
         }
-        Log.d("Во вью-модели передана история:", trackHistoryList.value.toString())
+        Log.d("historyListmodel", trackHistoryList.value.toString())
         return trackHistoryList
     }
 
@@ -75,7 +78,6 @@ class SearchViewModel(
         trackResultList.value = emptyList()
         stateLiveData.postValue(trackHistoryList.value?.let { SearchScreenState.SearchWithHistory(it) })
     }
-
 
 
     companion object {

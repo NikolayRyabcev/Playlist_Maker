@@ -20,7 +20,7 @@ class SearchHistoryInteractorImpl(private val historyRepository: SearchHistory) 
 
     @SuppressLint("LongLogTag")
     override fun provideHistory(): List<Track>? {
-        Log.d("В интеракторе передана история:", historyRepository.provideHistory().toString())
+        Log.d ("historyList Int", historyRepository.provideHistory().toString())
         return historyRepository.provideHistory()
     }
 }
