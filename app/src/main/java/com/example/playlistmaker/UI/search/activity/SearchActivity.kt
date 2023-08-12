@@ -200,7 +200,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (binding.searchUserText.hasFocus() && p0?.isEmpty() == true && historyList.isNotEmpty()) {
-                    searchViewModel.openHistory()
+                    searchViewModel.clearTrackList()
                 } else {
                     historyInVisible()
                 }
