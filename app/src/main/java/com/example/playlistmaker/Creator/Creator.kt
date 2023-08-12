@@ -6,7 +6,7 @@ import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerRepository
 import com.example.playlistmaker.data.search.request_and_response.RetrofitNetworkClient
 import com.example.playlistmaker.data.search.TracksRepositoryImpl
-import com.example.playlistmaker.data.search.history.SearchHistory
+import com.example.playlistmaker.domain.search.history.SearchHistory
 import com.example.playlistmaker.data.search.history.SearchHistoryImpl
 import com.example.playlistmaker.data.settings.ThemeSettingsImpl
 import com.example.playlistmaker.domain.sharing.ExternalNavigator
@@ -48,7 +48,7 @@ object Creator {
         return TracksRepositoryImpl(RetrofitNetworkClient())
     }
 
-    fun provideSearchHistory():SearchHistory {
+    fun provideSearchHistory(): SearchHistory {
         return SearchHistoryImpl(application)
     }
 

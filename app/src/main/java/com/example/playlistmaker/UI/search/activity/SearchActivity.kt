@@ -28,7 +28,6 @@ import com.example.playlistmaker.domain.search.models.Track
 import java.io.IOException
 
 
-
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
 
@@ -62,10 +61,7 @@ class SearchActivity : AppCompatActivity() {
                 is SearchScreenState.ConnectionError -> connectionError()
                 is SearchScreenState.Loading -> loading()
                 is SearchScreenState.NothingFound -> nothingFound()
-                is SearchScreenState.SearchIsOk -> {
-                    searchIsOk(state.data)
-                }
-
+                is SearchScreenState.SearchIsOk -> searchIsOk(state.data)
                 is SearchScreenState.SearchWithHistory -> searchWithHistory(state.historyData)
                 else -> {}
             }
@@ -115,7 +111,7 @@ class SearchActivity : AppCompatActivity() {
         } catch (e: IOException) {
             emptyList()
         }
-        Log.d ("historyList", historyList.toString())
+        Log.d("historyListActivity", historyList.toString())
     }
 
     //сохраняем текст при повороте экрана
@@ -183,9 +179,6 @@ class SearchActivity : AppCompatActivity() {
     private fun onEditorFocus() {
         binding.searchUserText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && binding.searchUserText.text.isEmpty() && searchViewModel.provideHistory().value?.isNotEmpty() ?: false) {
-                /*binding.historyTextView.visibility = VISIBLE
-                binding.historyRecycler.visibility = VISIBLE
-                binding.clearHistoryButton.visibility= VISIBLE*/
                 searchViewModel.clearTrackList()
             } else {
                 historyInVisible()
@@ -332,7 +325,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchWithHistory(historyData: List<Track>) {
-        searchViewModel.provideHistory()
+        Log.d("historyListprovide", historyData.toString())
+        historyAdapter.setItems(historyData)
+        historyAdapter.notifyDataSetChanged()
+        binding.trackRecycler.visibility=GONE
         binding.historyTextView.visibility = VISIBLE
         binding.historyRecycler.visibility = VISIBLE
         binding.clearHistoryButton.visibility = VISIBLE
@@ -342,9 +338,7 @@ class SearchActivity : AppCompatActivity() {
         binding.refreshButton.visibility = GONE
         binding.loadingproblem.visibility = GONE
         binding.loadingproblemText.visibility = GONE
-        trackAdapter.setItems(historyData)
-        trackAdapter.notifyDataSetChanged()
-        Log.d("История", "показ истории!")
+        binding.progressBar.visibility = GONE
     }
 
     private fun historyInVisible() {

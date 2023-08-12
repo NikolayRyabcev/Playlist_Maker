@@ -2,6 +2,7 @@ package com.example.playlistmaker.data.search.history
 
 import android.content.Context
 import android.util.Log
+import com.example.playlistmaker.domain.search.history.SearchHistory
 import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

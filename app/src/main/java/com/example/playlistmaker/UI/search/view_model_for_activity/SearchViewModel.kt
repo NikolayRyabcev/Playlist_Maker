@@ -55,28 +55,24 @@ class SearchViewModel(
 
     fun addItem(item: Track) {
         searchHistoryInteractor.addItem(item)
-        Log.d("История", "add из вью-модели")
-    }
+     }
 
     fun clearHistory() {
         searchHistoryInteractor.clearHistory()
-        Log.d("История", "очистка истории")
     }
 
-    @SuppressLint("LongLogTag")
     fun provideHistory(): LiveData<List<Track>> {
         val history = searchHistoryInteractor.provideHistory()
-        trackHistoryList.postValue(history)
+        trackHistoryList.value=history
         if (history.isNullOrEmpty()) {
             trackHistoryList.postValue(emptyList())
         }
-        Log.d("historyListmodel", trackHistoryList.value.toString())
         return trackHistoryList
     }
 
     fun clearTrackList() {
         trackResultList.value = emptyList()
-        stateLiveData.postValue(trackHistoryList.value?.let { SearchScreenState.SearchWithHistory(it) })
+        stateLiveData.value= trackHistoryList.value?.let { SearchScreenState.SearchWithHistory(it) }
     }
 
 
