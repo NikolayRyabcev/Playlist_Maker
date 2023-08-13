@@ -1,4 +1,4 @@
-package com.example.playlistmaker.UI.search.activity
+package com.example.playlistmaker.ui.search.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -19,10 +19,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.UI.player.activity.PlayerActivity
-import com.example.playlistmaker.UI.search.view_model.TrackAdapterAndViewHolder.TrackAdapter
-import com.example.playlistmaker.UI.search.view_model_for_activity.SearchViewModel
-import com.example.playlistmaker.UI.search.view_model_for_activity.screen_states.SearchScreenState
+import com.example.playlistmaker.ui.player.activity.PlayerActivity
+import com.example.playlistmaker.ui.search.adapter.TrackAdapter
+import com.example.playlistmaker.ui.search.view_model_for_activity.SearchViewModel
+import com.example.playlistmaker.ui.search.view_model_for_activity.screen_states.SearchScreenState
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.search.models.Track
 import java.io.IOException
@@ -38,8 +38,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
     private lateinit var historyRecycler: RecyclerView
-    lateinit var historyList: List<Track>
-    lateinit var recyclerView: RecyclerView
+    private lateinit var historyList: List<Track>
+    private lateinit var recyclerView: RecyclerView
 
     private val handler = Handler(Looper.getMainLooper())
 

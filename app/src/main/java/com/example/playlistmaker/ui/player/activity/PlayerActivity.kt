@@ -1,4 +1,4 @@
-package com.example.playlistmaker.UI.player.activity
+package com.example.playlistmaker.ui.player.activity
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
-import com.example.playlistmaker.UI.player.view_model.PlayerViewModel
+import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.search.models.Track
@@ -17,10 +17,10 @@ import com.example.playlistmaker.domain.search.models.Track
 class PlayerActivity : AppCompatActivity() {
 
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
-    lateinit var playerState: PlayerState
-    lateinit var viewModel: PlayerViewModel
+    private lateinit var playerState: PlayerState
+    private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: PlayerActivityBinding
-    var url=""
+    private var url=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,12 +80,6 @@ class PlayerActivity : AppCompatActivity() {
 
     }
 
-    /*override fun onResume() {
-        super.onResume()
-        viewModel.createPlayer(url) {
-            preparePlayer()
-        }
-    }*/
     override fun onPause (){
         super.onPause()
         viewModel.pause()

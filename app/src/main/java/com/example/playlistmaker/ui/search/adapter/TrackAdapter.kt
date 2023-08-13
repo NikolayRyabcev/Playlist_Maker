@@ -1,4 +1,4 @@
-package com.example.playlistmaker.UI.search.view_model.TrackAdapterAndViewHolder
+package com.example.playlistmaker.ui.search.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

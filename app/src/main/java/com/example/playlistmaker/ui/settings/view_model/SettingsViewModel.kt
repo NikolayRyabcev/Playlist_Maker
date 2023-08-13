@@ -1,4 +1,4 @@
-package com.example.playlistmaker.UI.settings.view_model
+package com.example.playlistmaker.ui.settings.view_model
 
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate

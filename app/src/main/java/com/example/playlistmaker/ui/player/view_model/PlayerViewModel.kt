@@ -1,4 +1,4 @@
-package com.example.playlistmaker.UI.player.view_model
+package com.example.playlistmaker.ui.player.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -31,7 +31,6 @@ class PlayerViewModel (
         return playerInteractor.playerStateListener()
     }
 
-    fun playerStateDrawer(){}
     companion object {
         fun getViewModelFactory(trackId: String): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {

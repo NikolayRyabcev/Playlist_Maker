@@ -27,10 +27,6 @@ class App : Application() {
         }
     }
     companion object {
-        /*lateinit var savedHistory: SharedPreferences
-        fun getTrackSharedPreferences(): SharedPreferences {
-            return savedHistory
-        }*/
         lateinit var instance: App
             private set
     }

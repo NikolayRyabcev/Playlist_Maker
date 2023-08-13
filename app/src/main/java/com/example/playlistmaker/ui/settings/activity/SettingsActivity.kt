@@ -1,17 +1,10 @@
-package com.example.playlistmaker.UI.settings.activity
+package com.example.playlistmaker.ui.settings.activity
 
 
 import android.os.Bundle
-import android.util.Log
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.R
-import com.example.playlistmaker.UI.settings.view_model.SettingsViewModel
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
