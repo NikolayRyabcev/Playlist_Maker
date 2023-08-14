@@ -12,25 +12,17 @@ const val THEME_KEY = "theme"
 class ThemeSettingsImpl(private val application: App) : ThemeSettings {
     private var appTheme: Boolean = false
     private lateinit var themeSharedPrefs: SharedPreferences
-    override fun lookAtTheme () :Boolean {
+    override fun lookAtTheme(): Boolean {
         themeSharedPrefs = application.getSharedPreferences(THEME_KEY, MODE_PRIVATE)
-        if (themeSharedPrefs.contains(THEME_KEY)) {
-            appTheme = themeSharedPrefs.getBoolean(THEME_KEY, isLightThemeEnabled())
-            val getting = if (appTheme) "day" else "night"
-            Log.d("Тема", "SP contains $getting")
-        } else {
-            appTheme= isLightThemeEnabled()
-            val editor = themeSharedPrefs.edit()
-            editor.putBoolean(THEME_KEY, appTheme)
-            editor.apply()
-            val getting = if (appTheme) "day" else "night"
-            Log.d("Тема", "SP put $getting")
-        }
+        appTheme = themeSharedPrefs.getBoolean(THEME_KEY, !isDarkThemeEnabled())
+
         val getting = if (appTheme) "day" else "night"
-        Log.d("Тема", "Repository look $getting")
+        Log.d("ТемаСП", "SP contains $getting")
+
         return appTheme
     }
-    private fun isLightThemeEnabled(): Boolean {
+
+    private fun isDarkThemeEnabled(): Boolean {
         val applicationContext = App.instance.applicationContext
         val currentMode =
             applicationContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK

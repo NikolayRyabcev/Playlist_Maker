@@ -11,15 +11,11 @@ class SettingsInteractorImpl (private var themeSettings: ThemeSettings):Settings
 
     override fun getThemeSettings(): Boolean {
         currentTheme=themeSettings.lookAtTheme ()
-        val getting = if (currentTheme) "day" else "night"
-        Log.d("Тема", "Interactor get $getting")
         return currentTheme
     }
 
     override fun updateThemeSettings(): Boolean {
         currentTheme=themeSettings.appThemeSwitch ()
-        val getting = if (currentTheme) "day" else "night"
-        Log.d("Тема", "Interactor update $getting")
         return currentTheme
     }
 }
