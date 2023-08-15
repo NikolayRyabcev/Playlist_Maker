@@ -29,7 +29,7 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //вью-модель
-        viewModel=ViewModelProvider(this,PlayerViewModel.getViewModelFactory(""))[PlayerViewModel::class.java]
+        viewModel=ViewModelProvider(this,PlayerViewModel.getViewModelFactory())[PlayerViewModel::class.java]
 
         binding.playButton.isEnabled = false
 
@@ -127,7 +127,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun updateButton(): Runnable {
         val updatedButton = Runnable {
             playerStateDrawer()
-            mainThreadHandler?.postDelayed(updateButton(), DELAY_MILLIS_Activity)
+            mainThreadHandler?.postDelayed(updateButton(), PLAYER_BUTTON_PRESSING_DELAY)
         }
         return updatedButton
     }
@@ -135,12 +135,12 @@ class PlayerActivity : AppCompatActivity() {
     private fun updateTimer(): Runnable {
         val updatedTimer = Runnable {
             binding.trackTimer.text = viewModel.getTime()
-            mainThreadHandler?.postDelayed(updateTimer(), DELAY_MILLIS_Activity)
+            mainThreadHandler?.postDelayed(updateTimer(), PLAYER_BUTTON_PRESSING_DELAY)
         }
         return updatedTimer
     }
 
     companion object {
-        const val DELAY_MILLIS_Activity = 100L
+        const val PLAYER_BUTTON_PRESSING_DELAY = 100L
     }
 }

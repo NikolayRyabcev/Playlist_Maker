@@ -1,7 +1,7 @@
 package com.example.playlistmaker.domain.settings
 
 interface SettingsInteractor {
-    fun getThemeSettings ():Boolean
+    fun isAppThemeDark ():Boolean
 
-    fun updateThemeSettings(): Boolean
+    fun changeThemeSettings(): Boolean
 }

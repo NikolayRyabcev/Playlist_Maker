@@ -15,10 +15,6 @@ class ThemeSettingsImpl(private val application: App) : ThemeSettings {
     override fun lookAtTheme(): Boolean {
         themeSharedPrefs = application.getSharedPreferences(THEME_KEY, MODE_PRIVATE)
         appTheme = themeSharedPrefs.getBoolean(THEME_KEY, !isDarkThemeEnabled())
-
-        val getting = if (appTheme) "day" else "night"
-        Log.d("ТемаСП", "SP contains $getting")
-
         return appTheme
     }
 
@@ -34,10 +30,6 @@ class ThemeSettingsImpl(private val application: App) : ThemeSettings {
         val editor = themeSharedPrefs.edit()
         editor.putBoolean(THEME_KEY, appTheme)
         editor.apply()
-        var getting = if (appTheme) "day" else "night"
-        Log.d("Тема", "SP put $getting")
-        getting = if (appTheme) "day" else "night"
-        Log.d("Тема", "Repository switch $getting")
         return appTheme
     }
 }

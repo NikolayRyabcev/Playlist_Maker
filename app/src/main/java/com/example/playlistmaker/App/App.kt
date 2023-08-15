@@ -15,7 +15,7 @@ class App : Application() {
 
         //выставляем тему экрана
         val settingsInteractor = Creator.provideSettingsIneractor()
-        appTheme = settingsInteractor.getThemeSettings()
+        appTheme = settingsInteractor.isAppThemeDark()
         makeTheme(appTheme)
     }
 

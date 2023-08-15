@@ -1,21 +1,22 @@
 package com.example.playlistmaker.domain.settings
 
-import android.util.Log
 import com.example.playlistmaker.Creator.Creator
 
 class SettingsInteractorImpl (private var themeSettings: ThemeSettings):SettingsInteractor {
     init {
         themeSettings=Creator.provideThemeSettings()
     }
-    var currentTheme = true
+    var isDarkTheme = true
 
-    override fun getThemeSettings(): Boolean {
-        currentTheme=themeSettings.lookAtTheme ()
-        return currentTheme
+    //получение информации о включении темной темы
+    override fun isAppThemeDark(): Boolean {
+        isDarkTheme=themeSettings.lookAtTheme ()
+        return isDarkTheme
     }
 
-    override fun updateThemeSettings(): Boolean {
-        currentTheme=themeSettings.appThemeSwitch ()
-        return currentTheme
+    //функция смены темы:светлая/темная
+    override fun changeThemeSettings(): Boolean {
+        isDarkTheme=themeSettings.appThemeSwitch ()
+        return isDarkTheme
     }
 }

@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.settings.activity
 
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -34,14 +35,9 @@ class SettingsActivity : AppCompatActivity() {
 
         // обновление темы
         binding.simpleSwitch.isChecked = !(settingsViewModel.getThemeLiveData().value!!)
-        var logger: String
-        if (binding.simpleSwitch.isChecked) logger="true" else logger="false"
-        Log.d("Темная", logger)
         binding.simpleSwitch.setOnClickListener {
             settingsViewModel.themeSwitch()
             binding.simpleSwitch.isChecked = !(settingsViewModel.getThemeLiveData().value!!)
-            if (binding.simpleSwitch.isChecked) logger="true" else logger="false"
-            Log.d("Темная", logger)
         }
 
         //Поделиться

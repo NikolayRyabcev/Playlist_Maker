@@ -6,8 +6,7 @@ import com.example.playlistmaker.Creator.Creator
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
 
-class PlayerViewModel (
-    private val trackUrl: String,
+class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
         ):ViewModel(){
 
@@ -27,18 +26,18 @@ class PlayerViewModel (
     fun getTime(): String {
         return playerInteractor.getTime()
     }
+
     fun playerStateListener(): PlayerState {
         return playerInteractor.playerStateListener()
     }
 
     companion object {
-        fun getViewModelFactory(trackId: String): ViewModelProvider.Factory =
+        fun getViewModelFactory(): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 // 1
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return PlayerViewModel(
-                        trackId,
                         Creator.providePlayerInteractor()
                     ) as T
                 }
