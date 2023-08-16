@@ -1,6 +1,6 @@
 package com.example.playlistmaker.data.search.history
 
-import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.example.playlistmaker.domain.search.history.SearchHistory
 import com.example.playlistmaker.domain.search.models.Track
@@ -8,10 +8,14 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 const val SEARCH_SHARED_PREFS_KEY = "123"
-class SearchHistoryImpl(private val datacontext: Context) : SearchHistory {
-    private val savedHistory =
-        datacontext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, Context.MODE_PRIVATE)
-    private val gson = Gson()
+
+class SearchHistoryImpl(
+    //private val datacontext: Context,
+    private val savedHistory: SharedPreferences,
+    private val gson: Gson
+) : SearchHistory {
+    //private val savedHistory =datacontext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, Context.MODE_PRIVATE)
+
     private var counter = 0
     private var trackHistoryList = ArrayList<Track>()
 
@@ -53,10 +57,10 @@ class SearchHistoryImpl(private val datacontext: Context) : SearchHistory {
                         trackHistoryList = gson.fromJson(json, type)
                     }
                 }
-                Log.d ("historyListdata", trackHistoryList.toString())
+                Log.d("historyListdata", trackHistoryList.toString())
             } else {
                 trackHistoryList = ArrayList()
-                Log.d ("historyListdata", "empty")
+                Log.d("historyListdata", "empty")
             }
         }
         return trackHistoryList
