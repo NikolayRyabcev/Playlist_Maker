@@ -53,7 +53,7 @@ class SearchViewModel(
 
     fun addItem(item: Track) {
         searchHistoryInteractor.addItem(item)
-     }
+    }
 
     fun clearHistory() {
         searchHistoryInteractor.clearHistory()
@@ -61,7 +61,7 @@ class SearchViewModel(
 
     fun provideHistory(): LiveData<List<Track>> {
         val history = searchHistoryInteractor.provideHistory()
-        trackHistoryList.value=history
+        trackHistoryList.value = searchHistoryInteractor.provideHistory()
         if (history.isNullOrEmpty()) {
             trackHistoryList.postValue(emptyList())
         }
@@ -70,20 +70,9 @@ class SearchViewModel(
 
     fun clearTrackList() {
         trackResultList.value = emptyList()
-        stateLiveData.value= trackHistoryList.value?.let { SearchScreenState.SearchWithHistory(it) }
+        stateLiveData.value =
+            trackHistoryList.value?.let { SearchScreenState.SearchWithHistory(it) }
     }
 
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(
-                        Creator.provideSearchInteractor(),
-                        Creator.provideSearchHistoryInteractor(),
-                    ) as T
-                }
-            }
-    }
 }

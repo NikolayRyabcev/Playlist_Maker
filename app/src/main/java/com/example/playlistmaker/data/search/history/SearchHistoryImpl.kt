@@ -10,11 +10,10 @@ import com.google.gson.reflect.TypeToken
 const val SEARCH_SHARED_PREFS_KEY = "123"
 
 class SearchHistoryImpl(
-    //private val datacontext: Context,
     private val savedHistory: SharedPreferences,
     private val gson: Gson
 ) : SearchHistory {
-    //private val savedHistory =datacontext.getSharedPreferences(SEARCH_SHARED_PREFS_KEY, Context.MODE_PRIVATE)
+
 
     private var counter = 0
     private var trackHistoryList = ArrayList<Track>()

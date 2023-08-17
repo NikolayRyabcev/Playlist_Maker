@@ -32,7 +32,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
 
     // viewModel:
-    private val searchViewModel by viewModels<SearchViewModel> { SearchViewModel.getViewModelFactory() }
+    private val searchViewModel by viewModels<SearchViewModel>()
     private var isClickAllowed = true
 
     private lateinit var trackAdapter: TrackAdapter

@@ -38,7 +38,7 @@ object Creator {
     fun providePlayerRepository(): PlayerRepository {
         return PlayerRepositoryImpl()
     }
-
+/*
     //search
     fun provideSearchInteractor(): SearchInteractor {
         return SearchInteractorImpl(provideTracksRepository())
@@ -55,7 +55,7 @@ object Creator {
     fun provideSearchHistoryInteractor (): SearchHistoryInteractor {
         return SearchHistoryInteractorImpl(provideSearchHistory())
     }
-
+*/
 
     //settings
     fun provideSettingsIneractor(): SettingsInteractor {

@@ -4,16 +4,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitNetworkClient (private val iTunesService:iTunesSearchAPI) : NetworkClient {
-    //private val iTunesBaseURL = "https://itunes.apple.com"
-
-    /*private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesBaseURL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()*/
-
-    //private val iTunesService = retrofit.create(iTunesSearchAPI::class.java)
-
-
     override fun doRequest(dto: Any): Response {
         return if (dto is TrackSearchRequest) {
             val resp = iTunesService.search(dto.expression).execute()

@@ -3,6 +3,12 @@ package com.example.playlistmaker.App
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.Creator.Creator
+import com.example.playlistmaker.di.SearchModule.dataModule
+import com.example.playlistmaker.di.SearchModule.searchInteractorModule
+import com.example.playlistmaker.di.SearchModule.searchViewModelModule
+import com.example.playlistmaker.di.SearchModule.trackRepositoryModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 
 class App : Application() {
@@ -10,6 +16,10 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        startKoin {
+            androidContext(this@App)
+            modules(dataModule, searchInteractorModule, searchViewModelModule, trackRepositoryModule)
+        }
         instance = this
         Creator.init(this)
 
