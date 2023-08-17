@@ -1,8 +1,5 @@
 package com.example.playlistmaker.data.search.request_and_response
 
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
 class RetrofitNetworkClient (private val iTunesService:iTunesSearchAPI) : NetworkClient {
     override fun doRequest(dto: Any): Response {
         return if (dto is TrackSearchRequest) {

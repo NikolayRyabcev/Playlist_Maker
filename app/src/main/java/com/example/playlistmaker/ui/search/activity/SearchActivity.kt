@@ -25,6 +25,7 @@ import com.example.playlistmaker.ui.search.view_model_for_activity.SearchViewMod
 import com.example.playlistmaker.ui.search.view_model_for_activity.screen_states.SearchScreenState
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.search.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 
 
@@ -32,7 +33,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
 
     // viewModel:
-    private val searchViewModel by viewModels<SearchViewModel>()
+    private val searchViewModel by viewModel<SearchViewModel>()
     private var isClickAllowed = true
 
     private lateinit var trackAdapter: TrackAdapter

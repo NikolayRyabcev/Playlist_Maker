@@ -3,13 +3,10 @@ package com.example.playlistmaker.ui.search.view_model_for_activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.Creator.Creator
-import com.example.playlistmaker.ui.search.view_model_for_activity.screen_states.SearchScreenState
 import com.example.playlistmaker.domain.search.history.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.domain.search.searching_and_responding.SearchInteractor
-import java.lang.Error
+import com.example.playlistmaker.ui.search.view_model_for_activity.screen_states.SearchScreenState
 
 class SearchViewModel(
     private var searchInteractor: SearchInteractor,
