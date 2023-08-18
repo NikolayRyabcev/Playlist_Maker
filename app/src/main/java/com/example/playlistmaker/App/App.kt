@@ -3,6 +3,7 @@ package com.example.playlistmaker.App
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.Creator.Creator
+import com.example.playlistmaker.di.PlayerModule.playerModule
 import com.example.playlistmaker.di.SearchModule.dataModule
 import com.example.playlistmaker.di.SearchModule.searchInteractorModule
 import com.example.playlistmaker.di.SearchModule.searchViewModelModule
@@ -18,7 +19,7 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(dataModule, searchInteractorModule, searchViewModelModule, trackRepositoryModule)
+            modules(dataModule, searchInteractorModule, searchViewModelModule, trackRepositoryModule, playerModule)
         }
         instance = this
         Creator.init(this)

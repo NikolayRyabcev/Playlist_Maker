@@ -30,14 +30,14 @@ object Creator {
         this.application = application
     }
 
-    //player
+ /*   //player
     fun providePlayerInteractor(): PlayerInteractor {
         return PlayerInteractorImpl()
     }
 
     fun providePlayerRepository(): PlayerRepository {
         return PlayerRepositoryImpl()
-    }
+    }*/
 /*
     //search
     fun provideSearchInteractor(): SearchInteractor {
