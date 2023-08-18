@@ -40,7 +40,7 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
         binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
-        binding.trackTimer.text = track?.trackTimeMillis ?: "00:00"
+        binding.time.text = track?.trackTimeMillis ?: "00:00"
         binding.album.text = track?.collectionName?: "Unknown Album"
         binding.year.text = (track?.releaseDate ?: "Year").take(4)
         binding.genre.text = track?.primaryGenreName ?: "Unknown Genre"
