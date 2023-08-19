@@ -8,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.ui.search.view_model_for_activity.SearchViewModel
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var settingsViewModel: SettingsViewModel
+    private val settingsViewModel by viewModel<SettingsViewModel>()
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,10 +22,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //делаем viewmodel
-        settingsViewModel = ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
+
 
         //кнопка назад
         binding.backButtonArrow.setOnClickListener {

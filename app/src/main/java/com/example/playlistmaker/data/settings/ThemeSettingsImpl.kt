@@ -9,9 +9,12 @@ import com.example.playlistmaker.domain.settings.ThemeSettings
 
 const val THEME_KEY = "theme"
 
-class ThemeSettingsImpl(private val application: App) : ThemeSettings {
+class ThemeSettingsImpl(
+    private val application: App,
+    private var themeSharedPrefs: SharedPreferences
+) : ThemeSettings {
     private var appTheme: Boolean = false
-    private lateinit var themeSharedPrefs: SharedPreferences
+
     override fun lookAtTheme(): Boolean {
         themeSharedPrefs = application.getSharedPreferences(THEME_KEY, MODE_PRIVATE)
         appTheme = themeSharedPrefs.getBoolean(THEME_KEY, !isDarkThemeEnabled())

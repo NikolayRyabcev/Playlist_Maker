@@ -9,8 +9,6 @@ import com.example.playlistmaker.domain.sharing.ExternalNavigator
 
 class ExternalNavigatorImpl(private val application: App): ExternalNavigator {
 
-    //val app = App()
-
     override fun shareLink(shareAppLink: String) {
 
         val intentSend = Intent(Intent.ACTION_SEND)

@@ -8,6 +8,7 @@ import com.example.playlistmaker.di.SearchModule.dataModule
 import com.example.playlistmaker.di.SearchModule.searchInteractorModule
 import com.example.playlistmaker.di.SearchModule.searchViewModelModule
 import com.example.playlistmaker.di.SearchModule.trackRepositoryModule
+import com.example.playlistmaker.di.SettingsSharingModule.settingsSharingModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -19,7 +20,14 @@ class App : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
-            modules(dataModule, searchInteractorModule, searchViewModelModule, trackRepositoryModule, playerModule)
+            modules(
+                dataModule,
+                searchInteractorModule,
+                searchViewModelModule,
+                trackRepositoryModule,
+                playerModule,
+                settingsSharingModule
+            )
         }
         instance = this
         Creator.init(this)
@@ -37,6 +45,7 @@ class App : Application() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
     }
+
     companion object {
         lateinit var instance: App
             private set
