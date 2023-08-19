@@ -10,10 +10,11 @@ import com.example.playlistmaker.di.SearchModule.trackRepositoryModule
 import com.example.playlistmaker.di.SettingsSharingModule.settingsSharingModule
 import com.example.playlistmaker.domain.settings.SettingsInteractor
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
 
 
-class App (private val settingsInteractor: SettingsInteractor): Application() {
+class App : Application(), KoinComponent {
     private var appTheme: Boolean = false
 
     override fun onCreate() {
@@ -26,9 +27,12 @@ class App (private val settingsInteractor: SettingsInteractor): Application() {
                 searchViewModelModule,
                 trackRepositoryModule,
                 playerModule,
-                settingsSharingModule
+                settingsSharingModule,
+
             )
+
         }
+        val settingsInteractor = getKoin().get<SettingsInteractor>()
         instance = this
 
         //выставляем тему экрана
