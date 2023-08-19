@@ -2,18 +2,18 @@ package com.example.playlistmaker.App
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.Creator.Creator
 import com.example.playlistmaker.di.PlayerModule.playerModule
 import com.example.playlistmaker.di.SearchModule.dataModule
 import com.example.playlistmaker.di.SearchModule.searchInteractorModule
 import com.example.playlistmaker.di.SearchModule.searchViewModelModule
 import com.example.playlistmaker.di.SearchModule.trackRepositoryModule
 import com.example.playlistmaker.di.SettingsSharingModule.settingsSharingModule
+import com.example.playlistmaker.domain.settings.SettingsInteractor
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 
-class App : Application() {
+class App (private val settingsInteractor: SettingsInteractor): Application() {
     private var appTheme: Boolean = false
 
     override fun onCreate() {
@@ -30,10 +30,8 @@ class App : Application() {
             )
         }
         instance = this
-        Creator.init(this)
 
         //выставляем тему экрана
-        val settingsInteractor = Creator.provideSettingsIneractor()
         appTheme = settingsInteractor.isAppThemeDark()
         makeTheme(appTheme)
     }
