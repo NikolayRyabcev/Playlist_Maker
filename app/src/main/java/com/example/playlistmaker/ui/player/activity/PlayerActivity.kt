@@ -139,6 +139,6 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val PLAYER_BUTTON_PRESSING_DELAY = 60L
+        const val PLAYER_BUTTON_PRESSING_DELAY = 100L
     }
 }
