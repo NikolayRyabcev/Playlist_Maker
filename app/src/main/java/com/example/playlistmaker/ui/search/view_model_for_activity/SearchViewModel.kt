@@ -21,17 +21,23 @@ class SearchViewModel(
 
     //поиск трека
     private val tracksConsumer = object : SearchInteractor.TracksConsumer {
-        override fun consume(tracks: List<Track>) {
+        override fun consume(tracks: List<Track>?, errorMessage:String?) {
+            if (tracks==null) {
+                when (errorMessage) {
+                        "Проверьте подключение к интернету" -> stateLiveData.postValue(SearchScreenState.ConnectionError)
+                        "Ошибка сервера" ->stateLiveData.postValue(SearchScreenState.NothingFound)
+                }
+            } else {
             trackResultList.postValue(tracks)
             stateLiveData.postValue(
                 if (tracks.isNullOrEmpty())
                     SearchScreenState.NothingFound
                 else SearchScreenState.SearchIsOk(tracks)
-            )
+            )}
         }
     }
 
-    private var trackResultList: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
+    private var trackResultList: MutableLiveData<List<Track>?> = MutableLiveData<List<Track>?>()
     fun searchRequesting(searchExpression: String) {
         stateLiveData.postValue(SearchScreenState.Loading)
         try {

@@ -6,7 +6,10 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
 
-class RetrofitNetworkClient(private val iTunesService: iTunesSearchAPI, private val context: Context) :
+class RetrofitNetworkClient(
+    private val iTunesService: iTunesSearchAPI,
+    private val context: Context
+) :
     NetworkClient {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun doRequest(dto: Any): Response {

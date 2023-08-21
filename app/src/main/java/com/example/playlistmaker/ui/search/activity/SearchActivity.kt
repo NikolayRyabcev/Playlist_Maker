@@ -240,7 +240,7 @@ class SearchActivity : AppCompatActivity() {
                 binding.searchUserText.windowToken,
                 0
             ) // скрыть клавиатуру
-            binding.searchUserText.clearFocus()
+            //binding.searchUserText.clearFocus()
             searchViewModel.clearTrackList()
         }
     }
@@ -324,11 +324,12 @@ class SearchActivity : AppCompatActivity() {
         historyInVisible()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun searchWithHistory(historyData: List<Track>) {
         Log.d("historyListprovide", historyData.toString())
         historyAdapter.setItems(historyData)
         historyAdapter.notifyDataSetChanged()
-        binding.trackRecycler.visibility=GONE
+        binding.trackRecycler.visibility = GONE
         binding.historyTextView.visibility = VISIBLE
         binding.historyRecycler.visibility = VISIBLE
         binding.clearHistoryButton.visibility = VISIBLE

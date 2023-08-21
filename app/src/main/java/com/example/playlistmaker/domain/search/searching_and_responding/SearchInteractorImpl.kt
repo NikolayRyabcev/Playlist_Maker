@@ -1,18 +1,20 @@
 package com.example.playlistmaker.domain.search.searching_and_responding
 
+import com.example.playlistmaker.data.search.request_and_response.Resource
 import com.example.playlistmaker.domain.search.TracksRepository
-import com.example.playlistmaker.domain.search.models.Track
+import java.util.concurrent.Executors
 
 class SearchInteractorImpl(private val repository: TracksRepository) : SearchInteractor {
+    private val executor = Executors.newCachedThreadPool()
     override fun search(
         expression: String,
         consumer: SearchInteractor.TracksConsumer
-    ){
-        var tracksData: List<Track>
-        val t = Thread {
-            tracksData=repository.searchTracks(expression)
-            consumer.consume(tracksData)
+    ) {
+        executor.execute {
+            when (val tracksData=repository.searchTracks(expression))  {
+                    is Resource.Success -> { consumer.consume(tracksData.data, null) }
+                    is Resource.Error -> { consumer.consume(null, tracksData.message) }
+                }
         }
-        t.start()
     }
 }
