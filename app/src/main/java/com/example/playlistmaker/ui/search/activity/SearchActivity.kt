@@ -112,7 +112,6 @@ class SearchActivity : AppCompatActivity() {
         } catch (e: IOException) {
             emptyList()
         }
-        Log.d("historyListActivity", historyList.toString())
     }
 
     //сохраняем текст при повороте экрана
@@ -182,7 +181,7 @@ class SearchActivity : AppCompatActivity() {
             if (hasFocus && binding.searchUserText.text.isEmpty() && searchViewModel.provideHistory().value?.isNotEmpty() ?: false) {
                 searchViewModel.clearTrackList()
             } else {
-                historyInVisible()
+                //historyInVisible()     Должно решить вопрос с пустой историей
             }
         }
     }
