@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 
 class RetrofitNetworkClient(
@@ -14,6 +15,7 @@ class RetrofitNetworkClient(
     @RequiresApi(Build.VERSION_CODES.M)
     override fun doRequest(dto: Any): Response {
         if (!isConnected()) {
+            Log.d ("Интернет", "not connected")
             return Response().apply { resultCode = -1 }
         }
         return if (dto is TrackSearchRequest) {

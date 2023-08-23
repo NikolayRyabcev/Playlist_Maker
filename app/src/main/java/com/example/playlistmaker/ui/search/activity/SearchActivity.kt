@@ -285,7 +285,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblemText.visibility = GONE
         binding.refreshButton.visibility = GONE
         trackAdapter.notifyDataSetChanged()
-
+        binding.searchBlock.visibility=GONE
     }
 
     private fun searchIsOk(data: List<Track>) {
@@ -299,6 +299,7 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.setItems(data)
         binding.clearHistoryButton.visibility - GONE
         historyInVisible()
+        binding.searchBlock.visibility=VISIBLE
     }
 
     private fun nothingFound() {
@@ -312,6 +313,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblemText.visibility = GONE
         binding.refreshButton.visibility = GONE
         historyInVisible()
+        binding.searchBlock.visibility=VISIBLE
     }
 
     private fun connectionError() {
@@ -322,6 +324,7 @@ class SearchActivity : AppCompatActivity() {
         binding.refreshButton.setOnClickListener { search() }
         binding.progressBar.visibility = GONE
         historyInVisible()
+        binding.searchBlock.visibility=VISIBLE
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -340,6 +343,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblem.visibility = GONE
         binding.loadingproblemText.visibility = GONE
         binding.progressBar.visibility = GONE
+        binding.searchBlock.visibility=GONE
     }
 
     private fun historyInVisible() {
