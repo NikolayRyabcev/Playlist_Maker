@@ -4,6 +4,7 @@ import com.example.playlistmaker.data.search.request_and_response.NetworkClient
 import com.example.playlistmaker.data.search.request_and_response.Resource
 import com.example.playlistmaker.data.search.request_and_response.TrackResponse
 import com.example.playlistmaker.data.search.request_and_response.TrackSearchRequest
+import com.example.playlistmaker.domain.search.ErrorType
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.models.Track
 import java.text.SimpleDateFormat
@@ -16,7 +17,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
             val response = networkClient.doRequest(TrackSearchRequest(expression))
             return when (response.resultCode) {
                 -1 -> {
-                    Resource.Error("Проверьте подключение к интернету")
+                    Resource.Error(ErrorType.CONNECTION_ERROR)
                 }
                 200 -> {
                     Resource.Success((response as TrackResponse).results.map {
@@ -34,7 +35,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                         )
                 })}
                 else -> {
-                        Resource.Error("Ошибка сервера")
+                        Resource.Error(ErrorType.SERVER_ERROR)
                     }
                 }
             }

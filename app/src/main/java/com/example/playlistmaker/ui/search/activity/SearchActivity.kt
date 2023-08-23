@@ -143,10 +143,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clickAdapting(item: Track) {
         searchViewModel.addItem(item)
-        Log.d("История", "Клик по треку!")
-
         val intent = Intent(this, PlayerActivity::class.java)
-        intent.putExtra("track", item)
         this.startActivity(intent)
     }
 
@@ -166,8 +163,10 @@ class SearchActivity : AppCompatActivity() {
 
 
     private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+        if (isEnterPressed) {
+            handler.removeCallbacks(searchRunnable)
+            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+        }
     }
 
     private val searchRunnable = Runnable {
@@ -285,7 +284,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblemText.visibility = GONE
         binding.refreshButton.visibility = GONE
         trackAdapter.notifyDataSetChanged()
-        binding.searchBlock.visibility=GONE
+        binding.searchBlock.visibility = GONE
     }
 
     private fun searchIsOk(data: List<Track>) {
@@ -299,7 +298,7 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.setItems(data)
         binding.clearHistoryButton.visibility - GONE
         historyInVisible()
-        binding.searchBlock.visibility=VISIBLE
+        binding.searchBlock.visibility = VISIBLE
     }
 
     private fun nothingFound() {
@@ -313,7 +312,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblemText.visibility = GONE
         binding.refreshButton.visibility = GONE
         historyInVisible()
-        binding.searchBlock.visibility=VISIBLE
+        binding.searchBlock.visibility = VISIBLE
     }
 
     private fun connectionError() {
@@ -324,12 +323,11 @@ class SearchActivity : AppCompatActivity() {
         binding.refreshButton.setOnClickListener { search() }
         binding.progressBar.visibility = GONE
         historyInVisible()
-        binding.searchBlock.visibility=VISIBLE
+        binding.searchBlock.visibility = VISIBLE
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun searchWithHistory(historyData: List<Track>) {
-        Log.d("historyListprovide", historyData.toString())
         historyAdapter.setItems(historyData)
         historyAdapter.notifyDataSetChanged()
         binding.trackRecycler.visibility = GONE
@@ -343,7 +341,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblem.visibility = GONE
         binding.loadingproblemText.visibility = GONE
         binding.progressBar.visibility = GONE
-        binding.searchBlock.visibility=GONE
+        binding.searchBlock.visibility = GONE
     }
 
     private fun historyInVisible() {

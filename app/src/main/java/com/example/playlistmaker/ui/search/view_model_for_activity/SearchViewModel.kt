@@ -3,6 +3,7 @@ package com.example.playlistmaker.ui.search.view_model_for_activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.playlistmaker.domain.search.ErrorType
 import com.example.playlistmaker.domain.search.history.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.domain.search.searching_and_responding.SearchInteractor
@@ -21,19 +22,20 @@ class SearchViewModel(
 
     //поиск трека
     private val tracksConsumer = object : SearchInteractor.TracksConsumer {
-        override fun consume(tracks: List<Track>?, errorMessage:String?) {
-            if (tracks==null) {
-                when (errorMessage) {
-                        "Проверьте подключение к интернету" -> stateLiveData.postValue(SearchScreenState.ConnectionError)
-                        "Ошибка сервера" ->stateLiveData.postValue(SearchScreenState.NothingFound)
+        override fun consume(tracks: List<Track>?, errorMessage: ErrorType?) {
+            when (errorMessage) {
+                ErrorType.CONNECTION_ERROR -> stateLiveData.postValue(SearchScreenState.ConnectionError)
+                ErrorType.SERVER_ERROR -> stateLiveData.postValue(SearchScreenState.NothingFound)
+
+                else -> {
+                    trackResultList.postValue(tracks)
+                    stateLiveData.postValue(
+                        if (tracks.isNullOrEmpty())
+                            SearchScreenState.NothingFound
+                        else SearchScreenState.SearchIsOk(tracks)
+                    )
                 }
-            } else {
-            trackResultList.postValue(tracks)
-            stateLiveData.postValue(
-                if (tracks.isNullOrEmpty())
-                    SearchScreenState.NothingFound
-                else SearchScreenState.SearchIsOk(tracks)
-            )}
+            }
         }
     }
 
