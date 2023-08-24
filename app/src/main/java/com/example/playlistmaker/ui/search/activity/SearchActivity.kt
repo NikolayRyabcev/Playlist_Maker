@@ -144,6 +144,7 @@ class SearchActivity : AppCompatActivity() {
     private fun clickAdapting(item: Track) {
         searchViewModel.addItem(item)
         val intent = Intent(this, PlayerActivity::class.java)
+        intent.putExtra("track", item)
         this.startActivity(intent)
     }
 
