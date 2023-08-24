@@ -149,6 +149,7 @@
             android:text="@string/_00_00"
             android:textColor="?attr/colorOnSecondary"
             android:textSize="14sp"
+            app:layout_goneMarginTop="142.33dp"
             app:layout_constraintEnd_toStartOf="@+id/favourites"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/playlistAddButton"
