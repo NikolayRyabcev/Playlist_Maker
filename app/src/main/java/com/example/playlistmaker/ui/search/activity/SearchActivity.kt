@@ -163,10 +163,10 @@ class SearchActivity : AppCompatActivity() {
 
 
     private fun searchDebounce() {
-        if (isEnterPressed) {
+
             handler.removeCallbacks(searchRunnable)
             handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
-        }
+
     }
 
     private val searchRunnable = Runnable {
@@ -202,7 +202,7 @@ class SearchActivity : AppCompatActivity() {
                 }
                 if (!binding.searchUserText.text.isNullOrEmpty()) {
                     searchText = binding.searchUserText.text.toString()
-                    searchDebounce()
+                    if (isEnterPressed) {searchDebounce()}
 
                 }
             }
