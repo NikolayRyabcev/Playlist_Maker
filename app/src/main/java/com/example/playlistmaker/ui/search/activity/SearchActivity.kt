@@ -203,7 +203,7 @@ class SearchActivity : AppCompatActivity() {
                 }
                 if (!binding.searchUserText.text.isNullOrEmpty()) {
                     searchText = binding.searchUserText.text.toString()
-                    if (isEnterPressed) {searchDebounce()}
+                    if (!isEnterPressed) {searchDebounce()}
 
                 }
             }

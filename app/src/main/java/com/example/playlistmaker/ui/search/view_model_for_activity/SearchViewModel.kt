@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.search.view_model_for_activity
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -75,8 +76,10 @@ class SearchViewModel(
 
     fun clearTrackList() {
         trackResultList.value = emptyList()
+        trackHistoryList= provideHistory() as MutableLiveData<List<Track>>
         stateLiveData.value =
             trackHistoryList.value?.let { SearchScreenState.SearchWithHistory(it) }
+        Log.d("История", trackHistoryList.value.toString())
     }
 
 

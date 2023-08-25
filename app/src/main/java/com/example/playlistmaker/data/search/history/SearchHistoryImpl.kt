@@ -19,12 +19,14 @@ class SearchHistoryImpl(
     private var trackHistoryList = ArrayList<Track>()
 
     override fun addItem(newHistoryTrack: Track) {
-        val json = ""
-        if (json.isNotEmpty()) {
-            if (trackHistoryList.isEmpty()) {
-                if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
-                    val type = object : TypeToken<ArrayList<Track>>() {}.type
-                    trackHistoryList = gson.fromJson(json, type)
+        val json = savedHistory.getString(SEARCH_SHARED_PREFS_KEY, "")
+        if (json != null) {
+            if (json.isNotEmpty()) {
+                if (trackHistoryList.isEmpty()) {
+                    if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
+                        val type = object : TypeToken<ArrayList<Track>>() {}.type
+                        trackHistoryList = gson.fromJson(json, type)
+                    }
                 }
             }
         }
