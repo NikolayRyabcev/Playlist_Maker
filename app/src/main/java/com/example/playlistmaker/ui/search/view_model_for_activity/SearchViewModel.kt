@@ -76,7 +76,7 @@ class SearchViewModel(
 
     fun clearTrackList() {
         trackResultList.value = emptyList()
-        trackHistoryList= provideHistory() as MutableLiveData<List<Track>>
+        trackHistoryList.value = searchHistoryInteractor.provideHistory()
         stateLiveData.value =
             trackHistoryList.value?.let { SearchScreenState.SearchWithHistory(it) }
         Log.d("История", trackHistoryList.value.toString())

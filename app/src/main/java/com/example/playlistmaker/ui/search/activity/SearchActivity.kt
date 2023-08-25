@@ -159,14 +159,14 @@ class SearchActivity : AppCompatActivity() {
 
     //поиск
     private fun search() {
-        searchViewModel.searchRequesting(binding.searchUserText.text.toString())
+        if (!isEnterPressed) searchViewModel.searchRequesting(binding.searchUserText.text.toString())
     }
 
 
     private fun searchDebounce() {
 
-            handler.removeCallbacks(searchRunnable)
-            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
 
     }
 
@@ -203,7 +203,9 @@ class SearchActivity : AppCompatActivity() {
                 }
                 if (!binding.searchUserText.text.isNullOrEmpty()) {
                     searchText = binding.searchUserText.text.toString()
-                    if (!isEnterPressed) {searchDebounce()}
+                    if (!isEnterPressed) {
+                        searchDebounce()
+                    }
 
                 }
             }
@@ -240,7 +242,7 @@ class SearchActivity : AppCompatActivity() {
                 binding.searchUserText.windowToken,
                 0
             ) // скрыть клавиатуру
-            //binding.searchUserText.clearFocus()
+            binding.searchUserText.clearFocus()
             searchViewModel.clearTrackList()
         }
     }
@@ -332,9 +334,11 @@ class SearchActivity : AppCompatActivity() {
         historyAdapter.setItems(historyData)
         historyAdapter.notifyDataSetChanged()
         binding.trackRecycler.visibility = GONE
-        binding.historyTextView.visibility = VISIBLE
-        binding.historyRecycler.visibility = VISIBLE
-        binding.clearHistoryButton.visibility = VISIBLE
+        if (!historyData.isNullOrEmpty()) {
+            binding.historyTextView.visibility = VISIBLE
+            binding.historyRecycler.visibility = VISIBLE
+            binding.clearHistoryButton.visibility = VISIBLE
+        }
         recyclerView.visibility = GONE
         binding.nothingfoundPict.visibility = GONE
         binding.nothingfoundText.visibility = GONE

@@ -17,7 +17,7 @@
         <item name="colorAccent">@color/back1</item>
         <item name="colorContainer">@color/back1</item>
         <item name="colorError">@color/white</item>
-        <item name="colorOnBackground">#40ffffff</item>
+        <item name="colorOnBackground">#ffffff</item>
         <item name="colorErrorContainer">#fff</item>
     </style>
 </resources>

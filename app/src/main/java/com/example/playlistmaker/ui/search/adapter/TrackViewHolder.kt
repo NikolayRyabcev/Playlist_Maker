@@ -14,6 +14,7 @@ class TrackViewHolder(private val binding:TrackLayoutBinding) : RecyclerView.Vie
         binding.trackName.text = item.trackName
         binding.groupName.text = item.artistName
         binding.trackTime.text = item.trackTimeMillis
+
         Glide.with(itemView)
             .load(item.artworkUrl100)
             .placeholder(R.drawable.musicalbum)
