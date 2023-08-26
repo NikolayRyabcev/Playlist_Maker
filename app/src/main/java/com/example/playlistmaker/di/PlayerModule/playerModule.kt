@@ -8,12 +8,15 @@ import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val playerModule= module {
-    factory <PlayerRepository>{
+val playerModule = module {
+
+    factory<PlayerRepository> {
         PlayerRepositoryImpl()
     }
-    factory <PlayerInteractor> {
+
+    factory<PlayerInteractor> {
         PlayerInteractorImpl(get())
     }
-    viewModel { PlayerViewModel(get(),) }
+
+    viewModel { PlayerViewModel(get()) }
 }

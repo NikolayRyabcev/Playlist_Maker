@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.search.searching_and_responding
 
-import com.example.playlistmaker.data.search.request_and_response.Resource
+import com.example.playlistmaker.data.search.requestAndResponse.Resource
 import com.example.playlistmaker.domain.search.TracksRepository
 import java.util.concurrent.Executors
 

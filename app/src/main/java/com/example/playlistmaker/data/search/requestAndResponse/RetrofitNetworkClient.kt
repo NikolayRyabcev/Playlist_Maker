@@ -1,10 +1,9 @@
-package com.example.playlistmaker.data.search.request_and_response
+package com.example.playlistmaker.data.search.requestAndResponse
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 
 class RetrofitNetworkClient(

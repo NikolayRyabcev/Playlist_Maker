@@ -1,14 +1,10 @@
 package com.example.playlistmaker.ui.settings.activity
 
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.ui.search.view_model_for_activity.SearchViewModel
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

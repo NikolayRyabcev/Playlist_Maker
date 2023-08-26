@@ -13,17 +13,22 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val settingsSharingModule = module {
-    single < ThemeSettings> {
+
+    single<ThemeSettings> {
         ThemeSettingsImpl(get(), get())
     }
-    single < ExternalNavigator> {
+
+    single<ExternalNavigator> {
         ExternalNavigatorImpl(get())
     }
+
     single<SettingsInteractor> {
         SettingsInteractorImpl(get())
     }
-    single <SharingInteractor> {
+
+    single<SharingInteractor> {
         SharingInteractorImpl(get())
     }
+
     viewModel { SettingsViewModel(get(), get()) }
 }

@@ -1,9 +1,9 @@
 package com.example.playlistmaker.data.search
 
-import com.example.playlistmaker.data.search.request_and_response.NetworkClient
-import com.example.playlistmaker.data.search.request_and_response.Resource
-import com.example.playlistmaker.data.search.request_and_response.TrackResponse
-import com.example.playlistmaker.data.search.request_and_response.TrackSearchRequest
+import com.example.playlistmaker.data.search.requestAndResponse.NetworkClient
+import com.example.playlistmaker.data.search.requestAndResponse.Resource
+import com.example.playlistmaker.data.search.requestAndResponse.TrackResponse
+import com.example.playlistmaker.data.search.requestAndResponse.TrackSearchRequest
 import com.example.playlistmaker.domain.search.ErrorType
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.models.Track

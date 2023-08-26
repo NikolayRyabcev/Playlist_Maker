@@ -1,6 +1,6 @@
 package com.example.playlistmaker.di.SearchModule
 
-import com.example.playlistmaker.ui.search.view_model_for_activity.SearchViewModel
+import com.example.playlistmaker.ui.search.viewModelForActivity.SearchViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

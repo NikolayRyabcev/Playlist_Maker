@@ -1,7 +1,5 @@
 package com.example.playlistmaker.domain.player
 
-import com.example.playlistmaker.Creator.Creator
-
 class PlayerInteractorImpl (private val repository:PlayerRepository): PlayerInteractor {
 
     override fun play() {

@@ -88,12 +88,13 @@
             android:id="@+id/playlistAddButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="54dp"
             android:background="@drawable/round_button"
             android:backgroundTint="#401A1B22"
             android:src="@drawable/playlistadd"
+            app:layout_goneMarginTop="142.33dp"
             app:layout_constraintStart_toStartOf="@+id/leftGuide"
-            app:layout_constraintTop_toBottomOf="@id/playerArtistName"
+            app:layout_constraintTop_toTopOf="@id/playButton"
+            app:layout_constraintBottom_toBottomOf="@id/playButton"
             app:tint="#fff" />
 
         <!--Кнопка плэй/пауза-->
@@ -130,12 +131,12 @@
             android:id="@+id/favourites"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="54dp"
             android:background="@drawable/round_button"
             android:backgroundTint="#401A1B22"
             android:src="@drawable/favourites"
             app:layout_constraintEnd_toStartOf="@+id/rightGuide"
-            app:layout_constraintTop_toBottomOf="@id/playerArtistName"
+            app:layout_constraintTop_toTopOf="@id/playButton"
+            app:layout_constraintBottom_toBottomOf="@id/playButton"
             app:tint="#fff" />
 
         <!-- Продолжительность трека -->

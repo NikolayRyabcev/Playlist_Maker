@@ -2,9 +2,9 @@ package com.example.playlistmaker.di.SearchModule
 
 import android.content.Context
 import com.example.playlistmaker.data.search.history.SEARCH_SHARED_PREFS_KEY
-import com.example.playlistmaker.data.search.request_and_response.NetworkClient
-import com.example.playlistmaker.data.search.request_and_response.RetrofitNetworkClient
-import com.example.playlistmaker.data.search.request_and_response.iTunesSearchAPI
+import com.example.playlistmaker.data.search.requestAndResponse.NetworkClient
+import com.example.playlistmaker.data.search.requestAndResponse.RetrofitNetworkClient
+import com.example.playlistmaker.data.search.requestAndResponse.iTunesSearchAPI
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
