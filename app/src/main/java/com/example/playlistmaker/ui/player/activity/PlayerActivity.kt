@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player.activity
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
@@ -21,12 +22,12 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var playerState: PlayerState
     val playerViewModel by viewModel<PlayerViewModel>()
     private lateinit var binding: PlayerActivityBinding
-    private var url=""
+    private var url = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        binding=PlayerActivityBinding.inflate(layoutInflater)
+        binding = PlayerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.playButton.isEnabled = false
@@ -41,7 +42,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
         binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
         binding.time.text = track?.trackTimeMillis ?: "00:00"
-        binding.album.text = track?.collectionName?: "Unknown Album"
+        binding.album.text = track?.collectionName ?: "Unknown Album"
         binding.year.text = (track?.releaseDate ?: "Year").take(4)
         binding.genre.text = track?.primaryGenreName ?: "Unknown Genre"
         binding.country.text = track?.country ?: "Unknown Country"
@@ -64,7 +65,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.playButton.setOnClickListener {
-            playerViewModel.play()
+            if (playerState == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
         }
         binding.pauseButton.setOnClickListener {
             playerViewModel.pause()
@@ -78,7 +79,7 @@ class PlayerActivity : AppCompatActivity() {
 
     }
 
-    override fun onPause (){
+    override fun onPause() {
         super.onPause()
         playerViewModel.pause()
     }
@@ -94,30 +95,31 @@ class PlayerActivity : AppCompatActivity() {
         binding.pauseButton.visibility = View.GONE
     }
 
+    @SuppressLint("ResourceType")
     fun playerStateDrawer() {
         playerState = playerViewModel.playerStateListener()
         when (playerState) {
             PlayerState.STATE_DEFAULT -> {
-                binding.playButton.visibility = View.VISIBLE
+                binding.playButton.setImageResource(R.drawable.play)
                 binding.playButton.alpha = 0.5f
-                binding.pauseButton.visibility = View.GONE
+               // binding.pauseButton.visibility = View.GONE
             }
 
             PlayerState.STATE_PREPARED -> {
-                binding.playButton.visibility = View.VISIBLE
+                binding.playButton.setImageResource(R.drawable.play)
                 binding.playButton.alpha = 1f
-                binding.pauseButton.visibility = View.GONE
+                //binding.pauseButton.visibility = View.GONE
             }
 
             PlayerState.STATE_PAUSED -> {
-                binding.playButton.visibility = View.VISIBLE
+                binding.playButton.setImageResource(R.drawable.play)
                 binding.playButton.alpha = 1f
-                binding.pauseButton.visibility = View.GONE
+                //binding.pauseButton.visibility = View.GONE
             }
 
             PlayerState.STATE_PLAYING -> {
-                binding.pauseButton.visibility = View.VISIBLE
-                binding.playButton.visibility = View.GONE
+                binding.playButton.setImageResource(R.drawable.pause)
+                //binding.playButton.visibility = View.GONE
             }
         }
     }
