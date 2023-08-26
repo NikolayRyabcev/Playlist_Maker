@@ -15,11 +15,11 @@ class TrackViewHolder(private val binding:TrackLayoutBinding) : RecyclerView.Vie
         binding.groupName.text = item.artistName
         binding.trackTime.text = item.trackTimeMillis
 
+        val radius = itemView.resources.getDimensionPixelSize(R.dimen.trackCornerRadius)
         Glide.with(itemView)
             .load(item.artworkUrl100)
             .placeholder(R.drawable.musicalbum)
-            .transform(RoundedCorners(2))
+            .transform(RoundedCorners(radius))
             .into(binding.trackImage)
     }
-
 }

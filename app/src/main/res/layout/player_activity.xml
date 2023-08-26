@@ -83,18 +83,18 @@
             app:layout_constraintTop_toBottomOf="@id/playerTrackName" />
 
         <!--Кнопка добавить в плэйлист-->
+
         <ImageButton
             android:id="@+id/playlistAddButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="62dp"
+            android:layout_marginTop="54dp"
             android:background="@drawable/round_button"
-            android:backgroundTint="?attr/colorOnSecondary"
-            android:alpha="0.25"
+            android:backgroundTint="#401A1B22"
             android:src="@drawable/playlistadd"
             app:layout_constraintStart_toStartOf="@+id/leftGuide"
             app:layout_constraintTop_toBottomOf="@id/playerArtistName"
-            app:tint="#ffffff" />
+            app:tint="#fff" />
 
         <!--Кнопка плэй/пауза-->
         <ImageButton
@@ -130,10 +130,9 @@
             android:id="@+id/favourites"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="62dp"
+            android:layout_marginTop="54dp"
             android:background="@drawable/round_button"
-            android:backgroundTint="?attr/colorOnSecondary"
-            android:alpha="0.25"
+            android:backgroundTint="#401A1B22"
             android:src="@drawable/favourites"
             app:layout_constraintEnd_toStartOf="@+id/rightGuide"
             app:layout_constraintTop_toBottomOf="@id/playerArtistName"
