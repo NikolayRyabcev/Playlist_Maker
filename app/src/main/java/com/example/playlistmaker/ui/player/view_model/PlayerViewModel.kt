@@ -1,8 +1,6 @@
 package com.example.playlistmaker.ui.player.view_model
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.Creator.Creator
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
 
@@ -31,16 +29,4 @@ class PlayerViewModel(
         return playerInteractor.playerStateListener()
     }
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                // 1
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return PlayerViewModel(
-                        Creator.providePlayerInteractor()
-                    ) as T
-                }
-            }
-    }
 }

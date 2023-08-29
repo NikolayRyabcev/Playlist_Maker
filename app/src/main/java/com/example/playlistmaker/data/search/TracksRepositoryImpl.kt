@@ -1,37 +1,45 @@
 package com.example.playlistmaker.data.search
 
-import com.example.playlistmaker.data.search.request_and_response.NetworkClient
-import com.example.playlistmaker.data.search.request_and_response.TrackResponse
-import com.example.playlistmaker.data.search.request_and_response.TrackSearchRequest
+import com.example.playlistmaker.data.search.requestAndResponse.NetworkClient
+import com.example.playlistmaker.data.search.requestAndResponse.Resource
+import com.example.playlistmaker.data.search.requestAndResponse.TrackResponse
+import com.example.playlistmaker.data.search.requestAndResponse.TrackSearchRequest
+import com.example.playlistmaker.domain.search.ErrorType
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.models.Track
-import java.lang.Error
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
-    override fun searchTracks(expression: String): List<Track> {
+    override fun searchTracks(expression: String): Resource<List<Track>> {
+
         try {
             val response = networkClient.doRequest(TrackSearchRequest(expression))
-            if (response.resultCode != 200) {
-                return emptyList()
+            return when (response.resultCode) {
+                -1 -> {
+                    Resource.Error(ErrorType.CONNECTION_ERROR)
+                }
+                200 -> {
+                    Resource.Success((response as TrackResponse).results.map {
+                        Track(
+                            it.trackName,
+                            it.artistName,
+                            SimpleDateFormat("mm:ss", Locale.getDefault()).format(it.trackTimeMillis),
+                            it.artworkUrl100,
+                            it.trackId,
+                            it.collectionName,
+                            it.releaseDate,
+                            it.primaryGenreName,
+                            it.country,
+                            it.previewUrl
+                        )
+                })}
+                else -> {
+                        Resource.Error(ErrorType.SERVER_ERROR)
+                    }
+                }
             }
-            return (response as TrackResponse).results.map {
-                Track(
-                    it.trackName,
-                    it.artistName,
-                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(it.trackTimeMillis),
-                    it.artworkUrl100,
-                    it.trackId,
-                    it.collectionName,
-                    it.releaseDate,
-                    it.primaryGenreName,
-                    it.country,
-                    it.previewUrl
-                )
-            }
-        } catch(error: Error) {
+        catch(error: Error) {
             throw Exception(error)
         }
     }

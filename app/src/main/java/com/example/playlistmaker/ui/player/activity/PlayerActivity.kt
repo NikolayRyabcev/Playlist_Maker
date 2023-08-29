@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player.activity
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
@@ -13,23 +14,21 @@ import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.search.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
 
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
     private lateinit var playerState: PlayerState
-    private lateinit var viewModel: PlayerViewModel
+    val playerViewModel by viewModel<PlayerViewModel>()
     private lateinit var binding: PlayerActivityBinding
-    private var url=""
+    private var url = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        binding=PlayerActivityBinding.inflate(layoutInflater)
+        binding = PlayerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        //вью-модель
-        viewModel=ViewModelProvider(this,PlayerViewModel.getViewModelFactory())[PlayerViewModel::class.java]
 
         binding.playButton.isEnabled = false
 
@@ -42,8 +41,8 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
         binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
-        binding.trackTimer.text = track?.trackTimeMillis ?: "00:00"
-        binding.album.text = track?.collectionName?: "Unknown Album"
+        binding.time.text = track?.trackTimeMillis ?: "00:00"
+        binding.album.text = track?.collectionName ?: "Unknown Album"
         binding.year.text = (track?.releaseDate ?: "Year").take(4)
         binding.genre.text = track?.primaryGenreName ?: "Unknown Genre"
         binding.country.text = track?.country ?: "Unknown Country"
@@ -61,15 +60,15 @@ class PlayerActivity : AppCompatActivity() {
         url = track?.previewUrl ?: return
 
 
-        viewModel.createPlayer(url) {
+        playerViewModel.createPlayer(url) {
             preparePlayer()
         }
 
         binding.playButton.setOnClickListener {
-            viewModel.play()
+            if (playerState == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
         }
         binding.pauseButton.setOnClickListener {
-            viewModel.pause()
+            playerViewModel.pause()
         }
         mainThreadHandler?.post(
             updateButton()
@@ -80,14 +79,14 @@ class PlayerActivity : AppCompatActivity() {
 
     }
 
-    override fun onPause (){
+    override fun onPause() {
         super.onPause()
-        viewModel.pause()
+        playerViewModel.pause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.destroy()
+        playerViewModel.destroy()
     }
 
     fun preparePlayer() {
@@ -96,30 +95,31 @@ class PlayerActivity : AppCompatActivity() {
         binding.pauseButton.visibility = View.GONE
     }
 
+    @SuppressLint("ResourceType")
     fun playerStateDrawer() {
-        playerState = viewModel.playerStateListener()
+        playerState = playerViewModel.playerStateListener()
         when (playerState) {
             PlayerState.STATE_DEFAULT -> {
-                binding.playButton.visibility = View.VISIBLE
+                binding.playButton.setImageResource(R.drawable.play)
                 binding.playButton.alpha = 0.5f
-                binding.pauseButton.visibility = View.GONE
+               // binding.pauseButton.visibility = View.GONE
             }
 
             PlayerState.STATE_PREPARED -> {
-                binding.playButton.visibility = View.VISIBLE
+                binding.playButton.setImageResource(R.drawable.play)
                 binding.playButton.alpha = 1f
-                binding.pauseButton.visibility = View.GONE
+                //binding.pauseButton.visibility = View.GONE
             }
 
             PlayerState.STATE_PAUSED -> {
-                binding.playButton.visibility = View.VISIBLE
+                binding.playButton.setImageResource(R.drawable.play)
                 binding.playButton.alpha = 1f
-                binding.pauseButton.visibility = View.GONE
+                //binding.pauseButton.visibility = View.GONE
             }
 
             PlayerState.STATE_PLAYING -> {
-                binding.pauseButton.visibility = View.VISIBLE
-                binding.playButton.visibility = View.GONE
+                binding.playButton.setImageResource(R.drawable.pause)
+                //binding.playButton.visibility = View.GONE
             }
         }
     }
@@ -134,7 +134,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun updateTimer(): Runnable {
         val updatedTimer = Runnable {
-            binding.trackTimer.text = viewModel.getTime()
+            binding.trackTimer.text = playerViewModel.getTime()
             mainThreadHandler?.postDelayed(updateTimer(), PLAYER_BUTTON_PRESSING_DELAY)
         }
         return updatedTimer

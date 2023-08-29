@@ -50,6 +50,7 @@
             android:thumbTint="?attr/colorContainer"
             android:trackTint="?attr/colorAccent"
             android:checked="false"
+            android:layout_marginEnd="12dp"
             tools:ignore="TouchTargetSizeCheck" />
 
     </FrameLayout>

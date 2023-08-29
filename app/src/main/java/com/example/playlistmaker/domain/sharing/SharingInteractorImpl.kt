@@ -1,14 +1,9 @@
 package com.example.playlistmaker.domain.sharing
 
 
-import com.example.playlistmaker.Creator.Creator
-
 class SharingInteractorImpl(
     private var externalNavigator: ExternalNavigator,
 ) :SharingInteractor {
-    init {
-         externalNavigator = Creator.provideExternalNavigator()
-    }
 
     override fun shareApp() {
         externalNavigator.shareLink(getShareAppLink())

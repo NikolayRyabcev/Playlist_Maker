@@ -8,23 +8,22 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.ui.search.adapter.TrackAdapter
-import com.example.playlistmaker.ui.search.view_model_for_activity.SearchViewModel
-import com.example.playlistmaker.ui.search.view_model_for_activity.screen_states.SearchScreenState
+import com.example.playlistmaker.ui.search.viewModelForActivity.SearchViewModel
+import com.example.playlistmaker.ui.search.viewModelForActivity.screen_states.SearchScreenState
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.search.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 
 
@@ -32,7 +31,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
 
     // viewModel:
-    private val searchViewModel by viewModels<SearchViewModel> { SearchViewModel.getViewModelFactory() }
+    private val searchViewModel by viewModel<SearchViewModel>()
     private var isClickAllowed = true
 
     private lateinit var trackAdapter: TrackAdapter
@@ -111,7 +110,6 @@ class SearchActivity : AppCompatActivity() {
         } catch (e: IOException) {
             emptyList()
         }
-        Log.d("historyListActivity", historyList.toString())
     }
 
     //сохраняем текст при повороте экрана
@@ -143,8 +141,6 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clickAdapting(item: Track) {
         searchViewModel.addItem(item)
-        Log.d("История", "Клик по треку!")
-
         val intent = Intent(this, PlayerActivity::class.java)
         intent.putExtra("track", item)
         this.startActivity(intent)
@@ -161,13 +157,15 @@ class SearchActivity : AppCompatActivity() {
 
     //поиск
     private fun search() {
-        searchViewModel.searchRequesting(binding.searchUserText.text.toString())
+        if (!isEnterPressed) searchViewModel.searchRequesting(binding.searchUserText.text.toString())
     }
 
 
     private fun searchDebounce() {
+
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+
     }
 
     private val searchRunnable = Runnable {
@@ -181,7 +179,7 @@ class SearchActivity : AppCompatActivity() {
             if (hasFocus && binding.searchUserText.text.isEmpty() && searchViewModel.provideHistory().value?.isNotEmpty() ?: false) {
                 searchViewModel.clearTrackList()
             } else {
-                historyInVisible()
+                //historyInVisible()     Должно решить вопрос с пустой историей
             }
         }
     }
@@ -203,7 +201,9 @@ class SearchActivity : AppCompatActivity() {
                 }
                 if (!binding.searchUserText.text.isNullOrEmpty()) {
                     searchText = binding.searchUserText.text.toString()
-                    searchDebounce()
+                    if (!isEnterPressed) {
+                        searchDebounce()
+                    }
 
                 }
             }
@@ -285,7 +285,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblemText.visibility = GONE
         binding.refreshButton.visibility = GONE
         trackAdapter.notifyDataSetChanged()
-
+        binding.searchBlock.visibility = GONE
     }
 
     private fun searchIsOk(data: List<Track>) {
@@ -299,6 +299,7 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.setItems(data)
         binding.clearHistoryButton.visibility - GONE
         historyInVisible()
+        binding.searchBlock.visibility = VISIBLE
     }
 
     private fun nothingFound() {
@@ -312,6 +313,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblemText.visibility = GONE
         binding.refreshButton.visibility = GONE
         historyInVisible()
+        binding.searchBlock.visibility = VISIBLE
     }
 
     private fun connectionError() {
@@ -322,16 +324,19 @@ class SearchActivity : AppCompatActivity() {
         binding.refreshButton.setOnClickListener { search() }
         binding.progressBar.visibility = GONE
         historyInVisible()
+        binding.searchBlock.visibility = VISIBLE
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun searchWithHistory(historyData: List<Track>) {
-        Log.d("historyListprovide", historyData.toString())
         historyAdapter.setItems(historyData)
         historyAdapter.notifyDataSetChanged()
-        binding.trackRecycler.visibility=GONE
-        binding.historyTextView.visibility = VISIBLE
-        binding.historyRecycler.visibility = VISIBLE
-        binding.clearHistoryButton.visibility = VISIBLE
+        binding.trackRecycler.visibility = GONE
+        if (!historyData.isNullOrEmpty()) {
+            binding.historyTextView.visibility = VISIBLE
+            binding.historyRecycler.visibility = VISIBLE
+            binding.clearHistoryButton.visibility = VISIBLE
+        }
         recyclerView.visibility = GONE
         binding.nothingfoundPict.visibility = GONE
         binding.nothingfoundText.visibility = GONE
@@ -339,6 +344,7 @@ class SearchActivity : AppCompatActivity() {
         binding.loadingproblem.visibility = GONE
         binding.loadingproblemText.visibility = GONE
         binding.progressBar.visibility = GONE
+        binding.searchBlock.visibility = GONE
     }
 
     private fun historyInVisible() {

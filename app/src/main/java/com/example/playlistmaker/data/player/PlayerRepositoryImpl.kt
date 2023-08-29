@@ -71,6 +71,6 @@ class PlayerRepositoryImpl : PlayerRepository {
     }
 
     companion object {
-        const val DELAY_MILLIS = 100L
+        const val DELAY_MILLIS = 50L
     }
 }

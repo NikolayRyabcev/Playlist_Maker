@@ -1,15 +1,14 @@
-package com.example.playlistmaker.ui.search.view_model_for_activity
+package com.example.playlistmaker.ui.search.viewModelForActivity
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.Creator.Creator
-import com.example.playlistmaker.ui.search.view_model_for_activity.screen_states.SearchScreenState
+import com.example.playlistmaker.domain.search.ErrorType
 import com.example.playlistmaker.domain.search.history.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.domain.search.searching_and_responding.SearchInteractor
-import java.lang.Error
+import com.example.playlistmaker.ui.search.viewModelForActivity.screen_states.SearchScreenState
 
 class SearchViewModel(
     private var searchInteractor: SearchInteractor,
@@ -24,17 +23,24 @@ class SearchViewModel(
 
     //поиск трека
     private val tracksConsumer = object : SearchInteractor.TracksConsumer {
-        override fun consume(tracks: List<Track>) {
-            trackResultList.postValue(tracks)
-            stateLiveData.postValue(
-                if (tracks.isNullOrEmpty())
-                    SearchScreenState.NothingFound
-                else SearchScreenState.SearchIsOk(tracks)
-            )
+        override fun consume(tracks: List<Track>?, errorMessage: ErrorType?) {
+            when (errorMessage) {
+                ErrorType.CONNECTION_ERROR -> stateLiveData.postValue(SearchScreenState.ConnectionError)
+                ErrorType.SERVER_ERROR -> stateLiveData.postValue(SearchScreenState.NothingFound)
+
+                else -> {
+                    trackResultList.postValue(tracks)
+                    stateLiveData.postValue(
+                        if (tracks.isNullOrEmpty())
+                            SearchScreenState.NothingFound
+                        else SearchScreenState.SearchIsOk(tracks)
+                    )
+                }
+            }
         }
     }
 
-    private var trackResultList: MutableLiveData<List<Track>> = MutableLiveData<List<Track>>()
+    private var trackResultList: MutableLiveData<List<Track>?> = MutableLiveData<List<Track>?>()
     fun searchRequesting(searchExpression: String) {
         stateLiveData.postValue(SearchScreenState.Loading)
         try {
@@ -53,7 +59,7 @@ class SearchViewModel(
 
     fun addItem(item: Track) {
         searchHistoryInteractor.addItem(item)
-     }
+    }
 
     fun clearHistory() {
         searchHistoryInteractor.clearHistory()
@@ -61,7 +67,7 @@ class SearchViewModel(
 
     fun provideHistory(): LiveData<List<Track>> {
         val history = searchHistoryInteractor.provideHistory()
-        trackHistoryList.value=history
+        trackHistoryList.value = searchHistoryInteractor.provideHistory()
         if (history.isNullOrEmpty()) {
             trackHistoryList.postValue(emptyList())
         }
@@ -70,20 +76,11 @@ class SearchViewModel(
 
     fun clearTrackList() {
         trackResultList.value = emptyList()
-        stateLiveData.value= trackHistoryList.value?.let { SearchScreenState.SearchWithHistory(it) }
+        trackHistoryList.value = searchHistoryInteractor.provideHistory()
+        stateLiveData.value =
+            trackHistoryList.value?.let { SearchScreenState.SearchWithHistory(it) }
+        Log.d("История", trackHistoryList.value.toString())
     }
 
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(
-                        Creator.provideSearchInteractor(),
-                        Creator.provideSearchHistoryInteractor(),
-                    ) as T
-                }
-            }
-    }
 }
