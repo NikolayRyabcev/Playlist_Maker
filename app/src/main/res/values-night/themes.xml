@@ -19,5 +19,6 @@
         <item name="colorError">@color/white</item>
         <item name="colorOnBackground">#ffffff</item>
         <item name="colorErrorContainer">#fff</item>
+        <item name="colorOnTertiary">#fff</item>
     </style>
 </resources>
