@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentFavouritesBinding
 
-class favouritesFragment : Fragment(){
+class FavouritesFragment : Fragment(){
     private var nullableFavouritesBinding : FragmentFavouritesBinding? = null
     private val favouritesBinding = nullableFavouritesBinding!!
 
@@ -15,7 +15,7 @@ class favouritesFragment : Fragment(){
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         nullableFavouritesBinding=FragmentFavouritesBinding.inflate(inflater, container,false)
     return favouritesBinding.root
     }
