@@ -11,7 +11,7 @@ class MediaLibraryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_media_library)
         if (savedInstanceState==null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.favouriteTracks, FavouritesFragment)
+                .add(R.id.favouriteTracks, FavouritesFragment())
                 .commit()
         }
     }
