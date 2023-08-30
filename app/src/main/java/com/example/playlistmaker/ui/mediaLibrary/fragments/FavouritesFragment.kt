@@ -20,4 +20,5 @@ class FavouritesFragment : Fragment(){
         nullableFavouritesBinding=FragmentFavouritesBinding.inflate(inflater, container,false)
     return favouritesBinding.root
     }
+
 }
