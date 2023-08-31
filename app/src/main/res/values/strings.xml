@@ -34,6 +34,7 @@
     <string name="UnknownTrack">Unknown Track</string>
     <string name="emptyMedia">Ваша медиатека пуста</string>
     <string name="noplaylist">Вы не создали \n ни одного плейлиста</string>
+    <string name="MediaLibrary">Медиатека</string>
 
 
 </resources>

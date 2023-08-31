@@ -10,8 +10,7 @@ import com.example.playlistmaker.databinding.FragmentFavouritesBinding
 
 class FavouritesFragment : Fragment(){
     private var nullableFavouritesBinding : FragmentFavouritesBinding? = null
-    private val favouritesBinding = nullableFavouritesBinding!!
-
+    private val favouritesBinding get() = nullableFavouritesBinding!!
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -20,5 +19,4 @@ class FavouritesFragment : Fragment(){
         nullableFavouritesBinding=FragmentFavouritesBinding.inflate(inflater, container,false)
     return favouritesBinding.root
     }
-
 }
