@@ -3,7 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <Button
+        android:id="@+id/refreshButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="?attr/colorError"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/newPlaylist"
+        android:textAllCaps="false"
+        android:textColor="?attr/colorSecondary"
+        android:textSize="14sp"
+        app:cornerRadius="54dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <ImageView
         android:id="@+id/emptyPlaylist"
         android:layout_width="wrap_content"
