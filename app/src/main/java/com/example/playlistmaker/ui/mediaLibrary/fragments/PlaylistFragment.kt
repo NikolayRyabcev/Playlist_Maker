@@ -8,8 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 
 class PlaylistFragment : Fragment(){
-    private var nullablePlaylistBinding : FragmentPlaylistsBinding? = null
-    private val playlistBinding = nullablePlaylistBinding!!
+    private lateinit var nullablePlaylistBinding : FragmentPlaylistsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -17,6 +16,6 @@ class PlaylistFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View {
         nullablePlaylistBinding= FragmentPlaylistsBinding.inflate(inflater, container,false)
-        return playlistBinding.root
+        return nullablePlaylistBinding.root
     }
 }

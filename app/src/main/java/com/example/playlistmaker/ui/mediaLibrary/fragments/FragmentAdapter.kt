@@ -12,4 +12,5 @@ class FragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     override fun createFragment(position: Int): Fragment {
         return if (position == 0) FavouritesFragment() else PlaylistFragment()
     }
+
 }
