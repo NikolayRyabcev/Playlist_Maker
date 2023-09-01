@@ -14,9 +14,9 @@
             android:id="@+id/backButtonArrow"
             android:layout_width="@dimen/iconSize"
             android:layout_height="@dimen/iconSize"
-            android:layout_marginTop="2dp"
-            android:layout_marginStart="16dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
             android:paddingStart="4dp"
             android:src="@drawable/arrow"
             app:tint="?attr/colorOnSecondary" />
@@ -31,13 +31,22 @@
             android:textColor="?attr/colorOnSecondary"
             android:textSize="@dimen/text1" />
     </FrameLayout>
-<!-- сюда полоску с навигацией по фрагментам -->
+    <!-- сюда полоску с навигацией по фрагментам -->
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:tabTextColor="@color/black" />
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="48dp" />
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal" />
+
     <androidx.fragment.app.FragmentContainerView
 
         xmlns:tools="http://schemas.android.com/tools"
