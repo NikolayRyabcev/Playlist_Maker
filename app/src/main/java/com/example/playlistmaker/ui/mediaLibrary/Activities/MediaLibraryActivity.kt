@@ -2,10 +2,7 @@ package com.example.playlistmaker.ui.mediaLibrary.Activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.PagerAdapter
-import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaLibraryBinding
-import com.example.playlistmaker.ui.mediaLibrary.fragments.FavouritesFragment
 import com.example.playlistmaker.ui.mediaLibrary.fragments.FragmentAdapter
 import com.example.playlistmaker.ui.mediaLibrary.fragments.SelectPage
 import com.google.android.material.tabs.TabLayout
