@@ -24,7 +24,6 @@ class PlaylistFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance() = FavouritesFragment()
-
+        fun newInstance() = PlaylistFragment()
     }
 }
