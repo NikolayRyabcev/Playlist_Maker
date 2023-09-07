@@ -32,6 +32,10 @@
     <string name="tracktime">Длительность</string>
     <string name="url">URL</string>
     <string name="UnknownTrack">Unknown Track</string>
+    <string name="emptyMedia">Ваша медиатека пуста</string>
+    <string name="noplaylist">Вы не создали \n ни одного плейлиста</string>
+    <string name="MediaLibrary">Медиатека</string>
+    <string name="newPlaylist">Новый плейлист</string>
 
 
 </resources>

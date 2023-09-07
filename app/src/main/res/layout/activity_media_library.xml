@@ -1,9 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.mediaLibrary.Activities.MediaLibraryActivity">
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/settingsTopString14dp">
+
+        <ImageView
+            android:id="@+id/backButtonArrow"
+            android:layout_width="@dimen/iconSize"
+            android:layout_height="@dimen/iconSize"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:paddingStart="4dp"
+            android:src="@drawable/arrow"
+            app:tint="?attr/colorOnSecondary" />
+
+        <TextView
+            style="@style/SettingsText"
+            android:layout_marginStart="52dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/MediaLibrary"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="@dimen/text1" />
+    </FrameLayout>
+    <!-- сюда полоску с навигацией по фрагментам -->
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="?attr/colorSecondary"
+        android:textAllCaps="false"
+        app:tabIndicatorColor="?attr/colorOnSecondary"
+        app:tabTextAppearance="@style/TabLayoutTextAppearance"
+        app:tabTextColor="?attr/colorOnSecondary" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" />
+
+
+</LinearLayout>
