@@ -20,7 +20,6 @@ class FavouritesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("onCreateView", "FavouritesFragment")
         nullableFavouritesBinding = FragmentFavouritesBinding.inflate(inflater, container, false)
         return nullableFavouritesBinding.root
     }
