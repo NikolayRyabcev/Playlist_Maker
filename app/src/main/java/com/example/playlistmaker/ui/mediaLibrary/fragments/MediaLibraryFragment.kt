@@ -20,7 +20,13 @@ class MediaLibraryFragment : Fragment(), SelectPage{
     ): View? {
         super.onCreate(savedInstanceState)
         binding = FragmentMediaLibraryBinding.inflate(layoutInflater)
-        val adapter = FragmentAdapter(supportFragmentManager, lifecycle)
+
+    return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val adapter = FragmentAdapter(fragmentManager = childFragmentManager, lifecycle)
         binding.pager.adapter = adapter
 
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
@@ -43,9 +49,7 @@ class MediaLibraryFragment : Fragment(), SelectPage{
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             }
         )
-    return binding.root
     }
-
 
     override fun NavigateTo(page: Int) {
         binding.pager.currentItem = page

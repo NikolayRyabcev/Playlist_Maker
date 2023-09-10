@@ -2,14 +2,14 @@ package com.example.playlistmaker.ui.mediaLibrary.Activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.databinding.ActivityMediaLibraryBinding
+
 import com.example.playlistmaker.ui.mediaLibrary.fragments.FragmentAdapter
 import com.example.playlistmaker.ui.mediaLibrary.fragments.SelectPage
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MediaLibraryActivity : AppCompatActivity(), SelectPage {
-
+class MediaLibraryActivity{} /*: AppCompatActivity(), SelectPage {
+/*
     private lateinit var binding: ActivityMediaLibraryBinding
     private lateinit var tabMediator: TabLayoutMediator
 
@@ -56,4 +56,4 @@ class MediaLibraryActivity : AppCompatActivity(), SelectPage {
         super.onDestroy()
         tabMediator.detach()
     }
-}
+}*/
