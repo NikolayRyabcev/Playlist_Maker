@@ -6,6 +6,8 @@ import androidx.fragment.app.commit
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityRootBinding
 import com.example.playlistmaker.ui.mediaLibrary.fragments.MediaLibraryFragment
+import com.example.playlistmaker.ui.search.fragments.SearchFragment
+import com.example.playlistmaker.ui.settings.fragments.SettingsFragment
 
 class RootActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRootBinding
@@ -14,10 +16,16 @@ class RootActivity : AppCompatActivity() {
         binding = ActivityRootBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //MediaLibrary
-        if (savedInstanceState==null) {
-            supportFragmentManager.commit{
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
                 this.add(R.id.rootContainer, MediaLibraryFragment())
+            }
+            supportFragmentManager.commit {
+                this.add(R.id.rootContainer, SearchFragment())
+            }
+            supportFragmentManager.commit {
+                this.add(R.id.rootContainer, SettingsFragment())
             }
         }
     }

@@ -124,9 +124,12 @@ class SearchFragment : Fragment() {
         outState.putString(KEY_TEXT, inputEditText.text.toString())
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedInstanceState.getString(KEY_TEXT, "")
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (savedInstanceState != null) {
+            val savedText = savedInstanceState.getString(KEY_TEXT, "")
+            binding.searchUserText.setText(savedText)
+        }
     }
 
     //включаем кликдебаунсер
@@ -240,7 +243,8 @@ class SearchFragment : Fragment() {
     private fun onClearIconClick() {
         binding.clearIcon.setOnClickListener {
             binding.searchUserText.setText("")
-            val keyboard = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val keyboard =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             keyboard.hideSoftInputFromWindow(
                 binding.searchUserText.windowToken,
                 0

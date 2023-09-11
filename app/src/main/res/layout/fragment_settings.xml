@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    android:paddingStart="@dimen/settingsLeftMargin16dp">
+    android:paddingStart="@dimen/settingsLeftMargin16dp"
+    tools:context="com.example.playlistmaker.ui.settings.fragments.SettingsFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
