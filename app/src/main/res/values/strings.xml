@@ -41,6 +41,7 @@
     <string name="searchText">Поиск</string>
     <string name="medialib">Медиатека</string>
     <string name="settingsButton">Настройки</string>
+    <string name="picture">Картинка</string>
 
 
 </resources>
