@@ -19,8 +19,13 @@ class RootActivity : AppCompatActivity() {
         binding = ActivityRootBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.rootContainer) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        if (savedInstanceState == null) {
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.setupWithNavController(navController)
+
+        /*if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 this.add(R.id.rootContainer, MediaLibraryFragment())
             }
@@ -30,11 +35,7 @@ class RootActivity : AppCompatActivity() {
             supportFragmentManager.commit {
                 this.add(R.id.rootContainer, SettingsFragment())
             }
-        }
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.rootContainer) as NavHostFragment
-        val navController = navHostFragment.navController
+        }*/
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView.setupWithNavController(navController)
     }
 }

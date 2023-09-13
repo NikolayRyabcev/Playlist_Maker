@@ -9,7 +9,7 @@ import com.example.playlistmaker.databinding.FragmentMediaLibraryBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class MediaLibraryFragment : Fragment(), SelectPage{
+class MediaLibraryFragment : Fragment(), SelectPage {
     private lateinit var binding: FragmentMediaLibraryBinding
     private lateinit var tabMediator: TabLayoutMediator
 
@@ -43,16 +43,15 @@ class MediaLibraryFragment : Fragment(), SelectPage{
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             }
         )
-    return binding.root
+        return binding.root
     }
-
 
     override fun NavigateTo(page: Int) {
         binding.pager.currentItem = page
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         tabMediator.detach()
     }
 }
