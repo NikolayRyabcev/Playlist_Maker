@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.search.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -48,6 +49,8 @@ class SearchFragment : Fragment() {
 
     private var isEnterPressed: Boolean = false
 
+    private lateinit var activity: Activity
+    private lateinit var bottomNavigator: BottomNavigationView
     private val KEY_TEXT = ""
 
     override fun onCreateView(
@@ -61,6 +64,8 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        activity = requireActivity()
+        bottomNavigator = activity.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         historyRecycler = binding.historyRecycler
 
         //делаем ViewModel
@@ -171,10 +176,8 @@ class SearchFragment : Fragment() {
 
 
     private fun searchDebounce() {
-
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
-
     }
 
     private val searchRunnable = Runnable {
@@ -184,14 +187,16 @@ class SearchFragment : Fragment() {
 
     //если фокус на поле ввода поиска
     private fun onEditorFocus() {
-        val activity = requireActivity()
-        val bottomNavigator = activity.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         binding.searchUserText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && binding.searchUserText.text.isEmpty() && searchViewModel.provideHistory().value?.isNotEmpty() ?: false) {
-                searchViewModel.clearTrackList()
-                bottomNavigator.visibility=GONE
-            } else {
-                bottomNavigator.visibility= VISIBLE
+            run {
+                if (hasFocus && binding.searchUserText.text.isEmpty() && searchViewModel.provideHistory().value?.isNotEmpty() ?: false) {
+                    searchViewModel.clearTrackList()
+
+                } else {
+
+                }
+                if (hasFocus) bottomNavigator.visibility = GONE else bottomNavigator.visibility =
+                    VISIBLE
             }
         }
     }
@@ -232,6 +237,7 @@ class SearchFragment : Fragment() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.searchUserText.text.isNotEmpty()) {
                     searchText = binding.searchUserText.text.toString()
+                    bottomNavigator.visibility = VISIBLE
                     search()
                     trackAdapter.notifyDataSetChanged()
                     isEnterPressed = true
