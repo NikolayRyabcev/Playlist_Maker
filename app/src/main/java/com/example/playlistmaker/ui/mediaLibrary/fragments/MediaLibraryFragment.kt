@@ -20,8 +20,8 @@ class MediaLibraryFragment : Fragment(), SelectPage {
     ): View? {
         super.onCreate(savedInstanceState)
         binding = FragmentMediaLibraryBinding.inflate(layoutInflater)
-        val adapter = FragmentAdapter(childFragmentManager, lifecycle)
-        binding.pager.adapter = adapter
+
+        binding.pager.adapter = FragmentAdapter(this)
 
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             when (position) {
