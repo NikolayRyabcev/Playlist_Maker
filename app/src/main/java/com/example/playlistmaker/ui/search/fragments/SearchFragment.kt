@@ -27,6 +27,7 @@ import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.ui.search.adapter.TrackAdapter
 import com.example.playlistmaker.ui.search.viewModelForActivity.SearchViewModel
 import com.example.playlistmaker.ui.search.viewModelForActivity.screen_states.SearchScreenState
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 
@@ -183,11 +184,14 @@ class SearchFragment : Fragment() {
 
     //если фокус на поле ввода поиска
     private fun onEditorFocus() {
+        val activity = requireActivity()
+        val bottomNavigator = activity.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         binding.searchUserText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && binding.searchUserText.text.isEmpty() && searchViewModel.provideHistory().value?.isNotEmpty() ?: false) {
                 searchViewModel.clearTrackList()
+                bottomNavigator.visibility=GONE
             } else {
-                //historyInVisible()     Должно решить вопрос с пустой историей
+                bottomNavigator.visibility= VISIBLE
             }
         }
     }
