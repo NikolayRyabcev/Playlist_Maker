@@ -195,8 +195,8 @@ class SearchFragment : Fragment() {
                 } else {
 
                 }
-                if (hasFocus) bottomNavigator.visibility = GONE else bottomNavigator.visibility =
-                    VISIBLE
+                //if (hasFocus) bottomNavigator.visibility = GONE else bottomNavigator.visibility =
+                //    VISIBLE
             }
         }
     }
@@ -370,6 +370,11 @@ class SearchFragment : Fragment() {
         binding.historyTextView.visibility = GONE
         historyRecycler.visibility = GONE
         binding.clearHistoryButton.visibility = GONE
+    }
+
+    override fun onStop() {
+        super.onStop()
+
     }
 
 
