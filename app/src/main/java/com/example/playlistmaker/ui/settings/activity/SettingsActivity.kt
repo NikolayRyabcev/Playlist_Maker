@@ -18,11 +18,6 @@ class SettingsActivity : AppCompatActivity() {
 
         //делаем viewmodel
 
-
-        //кнопка назад
-        binding.backButtonArrow.setOnClickListener {
-            settingsViewModel.onBackClick()
-        }
         settingsViewModel.getOnBackLiveData()
             .observe(this) { onBackLiveData -> onBackClick(onBackLiveData) }
 

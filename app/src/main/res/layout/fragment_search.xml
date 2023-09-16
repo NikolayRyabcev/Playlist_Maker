@@ -14,15 +14,6 @@
         android:layout_marginTop="@dimen/settingsTopString14dp"
         android:paddingStart="@dimen/settingsLeftMargin16dp">
 
-        <ImageView
-            android:id="@+id/backButtonArrow"
-            android:layout_width="@dimen/arrowSize"
-            android:layout_height="@dimen/arrowSize"
-            android:layout_gravity="center_vertical"
-            android:paddingStart="@dimen/arrowPadding"
-            android:src="@drawable/arrow"
-            app:tint="?attr/colorOnSecondary" />
-
         <TextView
             style="@style/SettingsText"
             android:layout_marginStart="@dimen/searchTextPadding"
