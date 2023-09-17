@@ -87,7 +87,7 @@ class PlayerActivity : AppCompatActivity() {
         playerViewModel.destroy()
     }
 
-    fun preparePlayer() {
+    private fun preparePlayer() {
         binding.playButton.isEnabled = true
         binding.playButton.visibility = View.VISIBLE
         binding.pauseButton.visibility = View.GONE

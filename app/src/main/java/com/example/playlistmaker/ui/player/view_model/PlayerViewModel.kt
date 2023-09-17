@@ -15,12 +15,11 @@ class PlayerViewModel(
     var playerState: PlayerState = playerInteractor.playerStateListener()
     var stateLiveData =MutableLiveData(playerState)
     fun getStateLiveData() {
-        Log.d ("playerState", playerState.toString())
+       // Log.d ("playerState", playerState.toString())
         stateLiveData.postValue(playerState)
     }
     fun createPlayer(url: String, completion: () -> Unit) {
         playerInteractor.createPlayer(url, completion)
-
     }
 
     fun play() {
