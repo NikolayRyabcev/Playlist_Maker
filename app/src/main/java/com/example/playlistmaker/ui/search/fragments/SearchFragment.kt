@@ -16,8 +16,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,19 +63,19 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity = requireActivity()
-        bottomNavigator = activity.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigator = activity.findViewById(R.id.bottomNavigationView)
         historyRecycler = binding.historyRecycler
 
         //делаем ViewModel
         searchViewModel.getStateLiveData().observe(viewLifecycleOwner) { stateLiveData ->
 
-            when (val state = stateLiveData) {
+            when (stateLiveData) {
                 is SearchScreenState.DefaultSearch -> defaultSearch()
                 is SearchScreenState.ConnectionError -> connectionError()
                 is SearchScreenState.Loading -> loading()
                 is SearchScreenState.NothingFound -> nothingFound()
-                is SearchScreenState.SearchIsOk -> searchIsOk(state.data)
-                is SearchScreenState.SearchWithHistory -> searchWithHistory(state.historyData)
+                is SearchScreenState.SearchIsOk -> searchIsOk(stateLiveData.data)
+                is SearchScreenState.SearchWithHistory -> searchWithHistory(stateLiveData.historyData)
                 else -> {}
             }
         }

@@ -15,7 +15,7 @@
 
         <TextView
             style="@style/SettingsText"
-            android:layout_marginStart="52dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="0dp"
             android:fontFamily="@font/ys_display_medium"
