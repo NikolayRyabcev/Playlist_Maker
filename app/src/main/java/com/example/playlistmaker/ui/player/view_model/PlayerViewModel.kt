@@ -18,8 +18,14 @@ class PlayerViewModel(
        // Log.d ("playerState", playerState.toString())
         stateLiveData.postValue(playerState)
     }
+    fun onStateChangedListener (){
+        playerInteractor.playerStateListener()
+    }
     fun createPlayer(url: String, completion: () -> Unit) {
-        playerInteractor.createPlayer(url, completion)
+        playerInteractor.createPlayer(url) {
+            completion
+            stateLiveData.postValue(playerInteractor.playerStateListener())
+        }
     }
 
     fun play() {
