@@ -68,7 +68,6 @@ class SearchFragment : Fragment() {
 
         //делаем ViewModel
         searchViewModel.getStateLiveData().observe(viewLifecycleOwner) { stateLiveData ->
-
             when (stateLiveData) {
                 is SearchScreenState.DefaultSearch -> defaultSearch()
                 is SearchScreenState.ConnectionError -> connectionError()

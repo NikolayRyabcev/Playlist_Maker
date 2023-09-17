@@ -13,8 +13,6 @@ class PlayerRepositoryImpl : PlayerRepository {
     var timePlayed = "00:00"
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
 
-
-
     override fun preparePlayer(url: String, completion: () -> Unit) {
         if (playerState != PlayerState.STATE_DEFAULT) return
         mediaPlayer.reset()
