@@ -7,14 +7,12 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.ui.search.viewModelForActivity.screen_states.SearchScreenState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
@@ -59,12 +57,10 @@ class PlayerActivity : AppCompatActivity() {
         }
         url = track?.previewUrl ?: return
 
-        playerViewModel.createPlayer(url) {
-            preparePlayer()
-        }
+        playerViewModel.createPlayer(url)
 
         binding.playButton.setOnClickListener {
-            if (playerViewModel.playerState == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
+            if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
         }
         binding.pauseButton.setOnClickListener {
             playerViewModel.pause()

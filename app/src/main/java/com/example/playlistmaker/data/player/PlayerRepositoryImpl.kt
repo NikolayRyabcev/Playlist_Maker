@@ -6,6 +6,7 @@ import android.os.Looper
 import android.util.Log
 import com.example.playlistmaker.domain.player.PlayerRepository
 import com.example.playlistmaker.domain.player.PlayerState
+import com.example.playlistmaker.domain.player.PlayerStateListener
 import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl : PlayerRepository {
@@ -13,19 +14,21 @@ class PlayerRepositoryImpl : PlayerRepository {
     private var playerState = PlayerState.STATE_DEFAULT
     var timePlayed = "00:00"
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
+    private lateinit var listener :PlayerStateListener
 
-    override fun preparePlayer(url: String, completion: () -> Unit) {
+    override fun preparePlayer(url: String) {
         if (playerState != PlayerState.STATE_DEFAULT) return
         mediaPlayer.reset()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playerState = PlayerState.STATE_PREPARED
-            completion()
+
         }
         mediaPlayer.setOnCompletionListener {
             playerState = PlayerState.STATE_PREPARED
         }
+        listener.onStateChanged(playerState)
         Log.d ("playerState", playerState.toString())
     }
 
@@ -35,16 +38,19 @@ class PlayerRepositoryImpl : PlayerRepository {
         mainThreadHandler?.post(
             timing()
         )
+        listener.onStateChanged(playerState)
     }
 
     override fun pause() {
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
+        listener.onStateChanged(playerState)
     }
 
     override fun destroy() {
         mediaPlayer.release()
         playerState = PlayerState.STATE_DEFAULT
+        listener.onStateChanged(playerState)
     }
 
     private fun timing(): Runnable {

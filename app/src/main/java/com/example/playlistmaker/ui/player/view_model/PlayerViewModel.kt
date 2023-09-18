@@ -1,12 +1,10 @@
 package com.example.playlistmaker.ui.player.view_model
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.ui.search.viewModelForActivity.screen_states.SearchScreenState
+import com.example.playlistmaker.domain.player.PlayerStateListener
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
@@ -21,11 +19,13 @@ class PlayerViewModel(
     fun onStateChangedListener (){
         playerInteractor.playerStateListener()
     }
-    fun createPlayer(url: String, completion: () -> Unit) {
-        playerInteractor.createPlayer(url) {
-            completion
-            stateLiveData.postValue(playerInteractor.playerStateListener())
-        }
+    fun createPlayer(url: String) {
+        playerInteractor.createPlayer(url,listener = object : PlayerStateListener {
+            override fun onStateChanged(state: PlayerState) {
+                stateLiveData.postValue(playerState)
+            }
+
+        })
     }
 
     fun play() {
