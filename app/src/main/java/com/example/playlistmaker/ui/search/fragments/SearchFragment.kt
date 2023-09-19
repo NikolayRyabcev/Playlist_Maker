@@ -40,7 +40,6 @@ class SearchFragment : Fragment() {
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
     private lateinit var historyRecycler: RecyclerView
-    private lateinit var historyList: List<Track>
     private lateinit var recyclerView: RecyclerView
 
     private val handler = Handler(Looper.getMainLooper())
@@ -110,13 +109,6 @@ class SearchFragment : Fragment() {
         binding.clearHistoryButton.setOnClickListener {
             historyInVisible()
             searchViewModel.clearHistory()
-        }
-        historyList = try {
-            val historyValue = searchViewModel.provideHistory().value
-            historyValue ?: emptyList()
-
-        } catch (e: IOException) {
-            emptyList()
         }
     }
 
@@ -208,7 +200,7 @@ class SearchFragment : Fragment() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (binding.searchUserText.hasFocus() && p0?.isEmpty() == true && historyList.isNotEmpty()) {
+                if (binding.searchUserText.hasFocus() && p0?.isEmpty() == true && searchViewModel.provideHistory().value?.isNotEmpty() ?: false) {
                     searchViewModel.clearTrackList()
                 } else {
                     historyInVisible()

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
     tools:context="com.example.playlistmaker.ui.search.fragments.SearchFragment">
@@ -145,7 +145,7 @@
                     android:textAllCaps="false"
                     android:textColor="?attr/colorSecondary"
                     android:textSize="14sp"
-                    app:cornerRadius="54dp"/>
+                    app:cornerRadius="54dp" />
 
             </FrameLayout>
 
@@ -153,6 +153,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="56dp"
                 android:orientation="vertical">
 
 
@@ -160,10 +161,10 @@
                     android:id="@+id/historyTextView"
                     style="@style/SettingsText"
                     android:layout_width="wrap_content"
-                    android:fontFamily="@font/ys_display_medium"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="34dp"
+                    android:fontFamily="@font/ys_display_medium"
                     android:gravity="center_horizontal"
                     android:text="@string/youSearchedText"
                     android:textAlignment="center"
@@ -184,13 +185,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="24dp"
-                    app:cornerRadius="54dp"
                     android:backgroundTint="?attr/colorError"
                     android:fontFamily="@font/ys_display_medium"
                     android:text="@string/clearHistoryButton"
                     android:textAllCaps="false"
                     android:textColor="?attr/colorSecondary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:cornerRadius="54dp" />
 
             </LinearLayout>
 
