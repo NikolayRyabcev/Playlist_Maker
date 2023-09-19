@@ -16,20 +16,25 @@ class PlayerRepositoryImpl : PlayerRepository {
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
     private lateinit var listener :PlayerStateListener
 
-    override fun preparePlayer(url: String) {
+    override fun preparePlayer(url: String, listener: PlayerStateListener) {
+        this.listener = listener
         if (playerState != PlayerState.STATE_DEFAULT) return
+        listener.onStateChanged(playerState)
         mediaPlayer.reset()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playerState = PlayerState.STATE_PREPARED
-
+            listener.onStateChanged(playerState)
+            Log.d ("playerStateRep", playerState.toString())
         }
         mediaPlayer.setOnCompletionListener {
             playerState = PlayerState.STATE_PREPARED
+            listener.onStateChanged(playerState)
+
         }
-        listener.onStateChanged(playerState)
-        Log.d ("playerState", playerState.toString())
+
+        //Log.d ("playerStateRep", playerState.toString())
     }
 
     override fun play() {
@@ -39,18 +44,21 @@ class PlayerRepositoryImpl : PlayerRepository {
             timing()
         )
         listener.onStateChanged(playerState)
+        Log.d ("playerStateRep", playerState.toString())
     }
 
     override fun pause() {
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
         listener.onStateChanged(playerState)
+        Log.d ("playerStateRep", playerState.toString())
     }
 
     override fun destroy() {
         mediaPlayer.release()
         playerState = PlayerState.STATE_DEFAULT
         listener.onStateChanged(playerState)
+        Log.d ("playerStateRep", playerState.toString())
     }
 
     private fun timing(): Runnable {

@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -91,29 +92,36 @@ class PlayerActivity : AppCompatActivity() {
 
     @SuppressLint("ResourceType")
     fun playerStateDrawer() {
-        playerViewModel.getStateLiveData()
+
         playerViewModel.stateLiveData.observe(this) {
             when (playerViewModel.stateLiveData.value) {
                 PlayerState.STATE_DEFAULT -> {
                     binding.playButton.setImageResource(R.drawable.play)
                     binding.playButton.alpha = 0.5f
+
                 }
 
                 PlayerState.STATE_PREPARED -> {
+                    preparePlayer()
                     binding.playButton.setImageResource(R.drawable.play)
                     binding.playButton.alpha = 1f
+
                 }
 
                 PlayerState.STATE_PAUSED -> {
                     binding.playButton.setImageResource(R.drawable.play)
                     binding.playButton.alpha = 1f
+
                 }
 
                 PlayerState.STATE_PLAYING -> {
                     binding.playButton.setImageResource(R.drawable.pause)
+
                 }
 
-                else -> {}
+                else -> {
+
+                }
             }
         }
     }

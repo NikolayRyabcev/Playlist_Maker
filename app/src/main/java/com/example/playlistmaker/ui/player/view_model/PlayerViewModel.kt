@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player.view_model
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.player.PlayerInteractor
@@ -10,26 +11,22 @@ class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
 ) : ViewModel() {
 
-    var playerState: PlayerState = playerInteractor.playerStateListener()
-    var stateLiveData =MutableLiveData(playerState)
-    fun getStateLiveData() {
-       // Log.d ("playerState", playerState.toString())
-        stateLiveData.postValue(playerState)
-    }
-    fun onStateChangedListener (){
-        playerInteractor.playerStateListener()
-    }
+    var stateLiveData =MutableLiveData<PlayerState>()
+
     fun createPlayer(url: String) {
         playerInteractor.createPlayer(url,listener = object : PlayerStateListener {
             override fun onStateChanged(state: PlayerState) {
-                stateLiveData.postValue(playerState)
+                stateLiveData.postValue(state)
+                Log.d ("playerStateModel", stateLiveData.value.toString())
             }
 
         })
+        Log.d ("playerStateModel", stateLiveData.value.toString())
     }
 
     fun play() {
         playerInteractor.play()
+        Log.d ("playerStateModel", stateLiveData.value.toString())
     }
 
     fun pause() {

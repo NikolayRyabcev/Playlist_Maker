@@ -7,7 +7,7 @@ interface PlayerRepository {
     fun play()
     fun pause()
     fun destroy()
-    fun preparePlayer(url: String)
+    fun preparePlayer(url: String, listener: PlayerStateListener)
     fun timeTransfer() :String
     fun playerStateReporter() : PlayerState
 }
