@@ -11,8 +11,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/settingsTopString14dp"
-        android:paddingStart="@dimen/settingsLeftMargin16dp">
+        android:layout_marginTop="@dimen/settingsTopString14dp">
 
         <TextView
             style="@style/SettingsText"
