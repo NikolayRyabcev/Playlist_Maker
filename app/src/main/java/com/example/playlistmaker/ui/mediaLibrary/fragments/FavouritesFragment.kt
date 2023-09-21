@@ -14,7 +14,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FavouritesFragment : Fragment() {
     //видимо, вью-модель понадобится в следующем спринте
     private val favouritesViewModel by viewModel<FavouritesViewModel>()
-
     private lateinit var nullableFavouritesBinding : FragmentFavouritesBinding
 
     override fun onCreateView(
