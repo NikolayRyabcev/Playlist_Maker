@@ -14,7 +14,7 @@ class PlayerRepositoryImpl : PlayerRepository {
     private var playerState = PlayerState.STATE_DEFAULT
     var timePlayed = "00:00"
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
-    private lateinit var listener :PlayerStateListener
+    private lateinit var listener: PlayerStateListener
 
     override fun preparePlayer(url: String, listener: PlayerStateListener) {
         this.listener = listener

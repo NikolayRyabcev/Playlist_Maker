@@ -17,7 +17,7 @@ class MediaLibraryFragment : Fragment(), SelectPage {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreate(savedInstanceState)
         binding = FragmentMediaLibraryBinding.inflate(layoutInflater)
 

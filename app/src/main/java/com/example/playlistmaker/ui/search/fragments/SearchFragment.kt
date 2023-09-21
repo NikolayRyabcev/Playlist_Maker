@@ -39,14 +39,11 @@ class SearchFragment : Fragment() {
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
-    private lateinit var historyRecycler: RecyclerView
-    private lateinit var recyclerView: RecyclerView
 
     private val handler = Handler(Looper.getMainLooper())
 
     private var isEnterPressed: Boolean = false
 
-    private lateinit var activity: Activity
     private lateinit var bottomNavigator: BottomNavigationView
     private val KEY_TEXT = ""
 
@@ -61,9 +58,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity = requireActivity()
-        bottomNavigator = activity.findViewById(R.id.bottomNavigationView)
-        historyRecycler = binding.historyRecycler
+        bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
 
         //делаем ViewModel
         searchViewModel.getStateLiveData().observe(viewLifecycleOwner) { stateLiveData ->
@@ -92,9 +87,8 @@ class SearchFragment : Fragment() {
             }
         }
 
-        recyclerView = binding.trackRecycler
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = trackAdapter
+        binding.trackRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.trackRecycler.adapter = trackAdapter
 
         //история
 
@@ -104,8 +98,8 @@ class SearchFragment : Fragment() {
             }
         }
 
-        historyRecycler.layoutManager = LinearLayoutManager(requireContext())
-        historyRecycler.adapter = historyAdapter
+        binding.historyRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.historyRecycler.adapter = historyAdapter
         binding.clearHistoryButton.setOnClickListener {
             historyInVisible()
             searchViewModel.clearHistory()
@@ -274,7 +268,7 @@ class SearchFragment : Fragment() {
     //состояния экранов
     private fun defaultSearch() {
         historyInVisible()
-        recyclerView.visibility = GONE
+        binding.trackRecycler.visibility = GONE
         binding.nothingfoundPict.visibility = GONE
         binding.nothingfoundText.visibility = GONE
         binding.loadingproblem.visibility = GONE
@@ -286,7 +280,7 @@ class SearchFragment : Fragment() {
     private fun loading() {
         binding.progressBar.visibility = VISIBLE
         historyInVisible()
-        recyclerView.visibility = GONE
+        binding.trackRecycler.visibility = GONE
         binding.nothingfoundPict.visibility = GONE
         binding.nothingfoundText.visibility = GONE
         binding.loadingproblem.visibility = GONE
@@ -298,7 +292,7 @@ class SearchFragment : Fragment() {
 
     private fun searchIsOk(data: List<Track>) {
         binding.progressBar.visibility = GONE
-        recyclerView.visibility = VISIBLE
+        binding.trackRecycler.visibility = VISIBLE
         binding.nothingfoundPict.visibility = GONE
         binding.nothingfoundText.visibility = GONE
         binding.loadingproblem.visibility = GONE
@@ -312,9 +306,9 @@ class SearchFragment : Fragment() {
 
     private fun nothingFound() {
         binding.historyTextView.visibility = GONE
-        historyRecycler.visibility = GONE
+        binding.historyRecycler.visibility = GONE
         binding.clearHistoryButton.visibility = VISIBLE
-        recyclerView.visibility = GONE
+        binding.trackRecycler.visibility = GONE
         binding.nothingfoundPict.visibility = VISIBLE
         binding.nothingfoundText.visibility = VISIBLE
         binding.loadingproblem.visibility = GONE
@@ -328,7 +322,7 @@ class SearchFragment : Fragment() {
         binding.loadingproblem.visibility = VISIBLE
         binding.loadingproblemText.visibility = VISIBLE
         binding.refreshButton.visibility = VISIBLE
-        recyclerView.visibility = GONE
+        binding.trackRecycler.visibility = GONE
         binding.refreshButton.setOnClickListener { search() }
         binding.progressBar.visibility = GONE
         historyInVisible()
@@ -345,7 +339,7 @@ class SearchFragment : Fragment() {
             binding.historyRecycler.visibility = VISIBLE
             binding.clearHistoryButton.visibility = VISIBLE
         }
-        recyclerView.visibility = GONE
+        binding.trackRecycler.visibility = GONE
         binding.nothingfoundPict.visibility = GONE
         binding.nothingfoundText.visibility = GONE
         binding.refreshButton.visibility = GONE
@@ -357,13 +351,8 @@ class SearchFragment : Fragment() {
 
     private fun historyInVisible() {
         binding.historyTextView.visibility = GONE
-        historyRecycler.visibility = GONE
+        binding.historyRecycler.visibility = GONE
         binding.clearHistoryButton.visibility = GONE
-    }
-
-    override fun onStop() {
-        super.onStop()
-
     }
 
 
