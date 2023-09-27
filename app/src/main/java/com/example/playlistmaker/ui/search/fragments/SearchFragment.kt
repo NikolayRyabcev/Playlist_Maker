@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
@@ -27,6 +28,9 @@ import com.example.playlistmaker.ui.search.adapter.TrackAdapter
 import com.example.playlistmaker.ui.search.viewModelForActivity.SearchViewModel
 import com.example.playlistmaker.ui.search.viewModelForActivity.screen_states.SearchScreenState
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 
@@ -46,6 +50,11 @@ class SearchFragment : Fragment() {
 
     private lateinit var bottomNavigator: BottomNavigationView
     private val KEY_TEXT = ""
+
+    //переменные для введения корутин:
+    private var latestSearchText: String? = null
+
+    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -157,10 +166,16 @@ class SearchFragment : Fragment() {
         if (!isEnterPressed) searchViewModel.searchRequesting(binding.searchUserText.text.toString())
     }
 
+    // с корутиной
+    private fun searchDebounce(changedText:String) {
+        if (latestSearchText == changedText) return
+        latestSearchText = changedText
 
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+        searchJob?.cancel()
+        searchJob = lifecycleScope.launch{
+            delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
+            search()
+        }
     }
 
     private val searchRunnable = Runnable {
@@ -202,7 +217,7 @@ class SearchFragment : Fragment() {
                 if (!binding.searchUserText.text.isNullOrEmpty()) {
                     searchText = binding.searchUserText.text.toString()
                     if (!isEnterPressed) {
-                        searchDebounce()
+                        searchDebounce(searchText)
                     }
 
                 }
@@ -221,7 +236,7 @@ class SearchFragment : Fragment() {
                 if (binding.searchUserText.text.isNotEmpty()) {
                     searchText = binding.searchUserText.text.toString()
                     bottomNavigator.visibility = VISIBLE
-                    search()
+                    searchDebounce(searchText)
                     trackAdapter.notifyDataSetChanged()
                     isEnterPressed = true
                     handler.postDelayed({ isEnterPressed = false }, 3000L)
