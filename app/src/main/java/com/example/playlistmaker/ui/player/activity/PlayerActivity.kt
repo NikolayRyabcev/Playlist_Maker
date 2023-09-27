@@ -5,9 +5,9 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
@@ -19,8 +19,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PlayerActivity : AppCompatActivity() {
 
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
-    private lateinit var playerState: PlayerState
-    val playerViewModel by viewModel<PlayerViewModel>()
+    private val playerViewModel by viewModel<PlayerViewModel>()
     private lateinit var binding: PlayerActivityBinding
     private var url = ""
 
@@ -32,7 +31,7 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playButton.isEnabled = false
 
-        playerState = PlayerState.STATE_PAUSED
+
         mainThreadHandler = Handler(Looper.getMainLooper())
         binding.playerBackButtonArrow.setOnClickListener {
             finish()
@@ -59,13 +58,10 @@ class PlayerActivity : AppCompatActivity() {
         }
         url = track?.previewUrl ?: return
 
-
-        playerViewModel.createPlayer(url) {
-            preparePlayer()
-        }
+        playerViewModel.createPlayer(url)
 
         binding.playButton.setOnClickListener {
-            if (playerState == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
+            if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
         }
         binding.pauseButton.setOnClickListener {
             playerViewModel.pause()
@@ -76,7 +72,6 @@ class PlayerActivity : AppCompatActivity() {
         mainThreadHandler?.post(
             updateTimer()
         )
-
     }
 
     override fun onPause() {
@@ -89,7 +84,7 @@ class PlayerActivity : AppCompatActivity() {
         playerViewModel.destroy()
     }
 
-    fun preparePlayer() {
+    private fun preparePlayer() {
         binding.playButton.isEnabled = true
         binding.playButton.visibility = View.VISIBLE
         binding.pauseButton.visibility = View.GONE
@@ -97,29 +92,36 @@ class PlayerActivity : AppCompatActivity() {
 
     @SuppressLint("ResourceType")
     fun playerStateDrawer() {
-        playerState = playerViewModel.playerStateListener()
-        when (playerState) {
-            PlayerState.STATE_DEFAULT -> {
-                binding.playButton.setImageResource(R.drawable.play)
-                binding.playButton.alpha = 0.5f
-               // binding.pauseButton.visibility = View.GONE
-            }
 
-            PlayerState.STATE_PREPARED -> {
-                binding.playButton.setImageResource(R.drawable.play)
-                binding.playButton.alpha = 1f
-                //binding.pauseButton.visibility = View.GONE
-            }
+        playerViewModel.stateLiveData.observe(this) {
+            when (playerViewModel.stateLiveData.value) {
+                PlayerState.STATE_DEFAULT -> {
+                    binding.playButton.setImageResource(R.drawable.play)
+                    binding.playButton.alpha = 0.5f
 
-            PlayerState.STATE_PAUSED -> {
-                binding.playButton.setImageResource(R.drawable.play)
-                binding.playButton.alpha = 1f
-                //binding.pauseButton.visibility = View.GONE
-            }
+                }
 
-            PlayerState.STATE_PLAYING -> {
-                binding.playButton.setImageResource(R.drawable.pause)
-                //binding.playButton.visibility = View.GONE
+                PlayerState.STATE_PREPARED -> {
+                    preparePlayer()
+                    binding.playButton.setImageResource(R.drawable.play)
+                    binding.playButton.alpha = 1f
+
+                }
+
+                PlayerState.STATE_PAUSED -> {
+                    binding.playButton.setImageResource(R.drawable.play)
+                    binding.playButton.alpha = 1f
+
+                }
+
+                PlayerState.STATE_PLAYING -> {
+                    binding.playButton.setImageResource(R.drawable.pause)
+
+                }
+
+                else -> {
+
+                }
             }
         }
     }
@@ -139,6 +141,7 @@ class PlayerActivity : AppCompatActivity() {
         }
         return updatedTimer
     }
+
 
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 100L

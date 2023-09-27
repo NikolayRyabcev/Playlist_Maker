@@ -3,8 +3,10 @@ package com.example.playlistmaker.data.player
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import com.example.playlistmaker.domain.player.PlayerRepository
 import com.example.playlistmaker.domain.player.PlayerState
+import com.example.playlistmaker.domain.player.PlayerStateListener
 import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl : PlayerRepository {
@@ -12,21 +14,27 @@ class PlayerRepositoryImpl : PlayerRepository {
     private var playerState = PlayerState.STATE_DEFAULT
     var timePlayed = "00:00"
     private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
+    private lateinit var listener: PlayerStateListener
 
-
-
-    override fun preparePlayer(url: String, completion: () -> Unit) {
+    override fun preparePlayer(url: String, listener: PlayerStateListener) {
+        this.listener = listener
         if (playerState != PlayerState.STATE_DEFAULT) return
+        listener.onStateChanged(playerState)
         mediaPlayer.reset()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playerState = PlayerState.STATE_PREPARED
-            completion()
+            listener.onStateChanged(playerState)
+            Log.d ("playerStateRep", playerState.toString())
         }
         mediaPlayer.setOnCompletionListener {
             playerState = PlayerState.STATE_PREPARED
+            listener.onStateChanged(playerState)
+
         }
+
+        //Log.d ("playerStateRep", playerState.toString())
     }
 
     override fun play() {
@@ -35,19 +43,26 @@ class PlayerRepositoryImpl : PlayerRepository {
         mainThreadHandler?.post(
             timing()
         )
+        listener.onStateChanged(playerState)
+        Log.d ("playerStateRep", playerState.toString())
     }
 
     override fun pause() {
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
+        listener.onStateChanged(playerState)
+        Log.d ("playerStateRep", playerState.toString())
     }
 
     override fun destroy() {
         mediaPlayer.release()
         playerState = PlayerState.STATE_DEFAULT
+        listener.onStateChanged(playerState)
+        Log.d ("playerStateRep", playerState.toString())
     }
 
     private fun timing(): Runnable {
+
         return object : Runnable {
             override fun run() {
                 if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
