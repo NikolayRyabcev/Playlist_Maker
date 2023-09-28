@@ -7,24 +7,30 @@ import com.example.playlistmaker.data.search.requestAndResponse.TrackSearchReque
 import com.example.playlistmaker.domain.search.ErrorType
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.search.models.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
-    override fun searchTracks(expression: String): Resource<List<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
 
         try {
             val response = networkClient.doRequest(TrackSearchRequest(expression))
-            return when (response.resultCode) {
+            when (response.resultCode) {
                 -1 -> {
-                    Resource.Error(ErrorType.CONNECTION_ERROR)
+                    emit(Resource.Error(ErrorType.CONNECTION_ERROR))
                 }
+
                 200 -> {
-                    Resource.Success((response as TrackResponse).results.map {
+                    emit(Resource.Success((response as TrackResponse).results.map {
                         Track(
                             it.trackName,
                             it.artistName,
-                            SimpleDateFormat("mm:ss", Locale.getDefault()).format(it.trackTimeMillis),
+                            SimpleDateFormat(
+                                "mm:ss",
+                                Locale.getDefault()
+                            ).format(it.trackTimeMillis),
                             it.artworkUrl100,
                             it.trackId,
                             it.collectionName,
@@ -33,13 +39,14 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                             it.country,
                             it.previewUrl
                         )
-                })}
+                    }))
+                }
+
                 else -> {
-                        Resource.Error(ErrorType.SERVER_ERROR)
-                    }
+                    emit(Resource.Error(ErrorType.SERVER_ERROR))
                 }
             }
-        catch(error: Error) {
+        } catch (error: Error) {
             throw Exception(error)
         }
     }

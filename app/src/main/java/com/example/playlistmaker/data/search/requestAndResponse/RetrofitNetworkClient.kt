@@ -5,6 +5,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RetrofitNetworkClient(
     private val iTunesService: iTunesSearchAPI,
@@ -13,24 +15,21 @@ class RetrofitNetworkClient(
     NetworkClient {
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
-        return if (dto is TrackSearchRequest) {
-            val resp = try {
-                iTunesService.search(dto.expression).execute()
-            } catch(ex:Exception) {
-                null
-            }
-            val body = resp?.body() ?: Response()
-            body.apply {
-                if (resp != null) {
-                    resultCode = resp.code()
+        return withContext(Dispatchers.IO) {
+            if (dto is TrackSearchRequest) {
+                try {
+                    val resp = iTunesService.search(dto.expression)
+                    resp.apply { resultCode = 200 }
+                } catch (e: Throwable) {
+                    Response().apply { resultCode = 500 }
                 }
+            } else {
+                Response().apply { resultCode = 400 }
             }
-        } else {
-            Response().apply { resultCode = 400 }
         }
     }
 
