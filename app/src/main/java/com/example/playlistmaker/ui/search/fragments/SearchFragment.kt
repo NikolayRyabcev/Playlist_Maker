@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -52,6 +53,7 @@ class SearchFragment : Fragment() {
     private var latestSearchText: String? = null
 
     private var searchJob: Job? = null
+    var searchText = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -164,20 +166,16 @@ class SearchFragment : Fragment() {
     }
 
     // с корутиной
-    private fun searchDebounce(changedText:String) {
+    private fun searchDebounce() {
+        val changedText=binding.searchUserText.text.toString()
         if (latestSearchText == changedText) return
         latestSearchText = changedText
-
+        Log.d("searching", "search")
         searchJob?.cancel()
-        searchJob = lifecycleScope.launch{
+        searchJob = lifecycleScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
             search()
         }
-    }
-
-    private val searchRunnable = Runnable {
-        search()
-        // trackAdapter.notifyDataSetChanged()
     }
 
     //если фокус на поле ввода поиска
@@ -197,7 +195,7 @@ class SearchFragment : Fragment() {
     }
 
     //поиски
-    var searchText = ""
+
 
     // когда меняется текст в поисковой строке
     private fun onSearchTextChange() {
@@ -211,13 +209,7 @@ class SearchFragment : Fragment() {
                 } else {
                     historyInVisible()
                 }
-                if (!binding.searchUserText.text.isNullOrEmpty()) {
-                    searchText = binding.searchUserText.text.toString()
-                    if (!isEnterPressed) {
-                        searchDebounce(searchText)
-                    }
-
-                }
+                if (!binding.searchUserText.text.isNullOrEmpty()) searchDebounce()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -231,12 +223,12 @@ class SearchFragment : Fragment() {
         binding.searchUserText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.searchUserText.text.isNotEmpty()) {
-                    searchText = binding.searchUserText.text.toString()
                     bottomNavigator.visibility = VISIBLE
-                    searchDebounce(searchText)
+                    search()
                     trackAdapter.notifyDataSetChanged()
                     isEnterPressed = true
                     handler.postDelayed({ isEnterPressed = false }, 3000L)
+                    Log.d("searching", "press")
                 }
                 true
             }
