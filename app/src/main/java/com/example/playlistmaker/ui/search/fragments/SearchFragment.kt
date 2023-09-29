@@ -27,6 +27,7 @@ import com.example.playlistmaker.ui.search.adapter.TrackAdapter
 import com.example.playlistmaker.ui.search.viewModel.SearchViewModel
 import com.example.playlistmaker.ui.search.viewModel.screen_states.SearchScreenState
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -43,8 +44,6 @@ class SearchFragment : Fragment() {
     private lateinit var historyAdapter: TrackAdapter
 
     private val handler = Handler(Looper.getMainLooper())
-
-    private var isEnterPressed: Boolean = false
 
     private lateinit var bottomNavigator: BottomNavigationView
     private val KEY_TEXT = ""
@@ -90,7 +89,7 @@ class SearchFragment : Fragment() {
 
         //поиск
         trackAdapter = TrackAdapter() {
-            if (clickDebounce()) {
+            if (isClickAllowed) {
                 clickAdapting(it)
             }
         }
@@ -101,7 +100,7 @@ class SearchFragment : Fragment() {
         //история
 
         historyAdapter = TrackAdapter() {
-            if (clickDebounce()) {
+            if (isClickAllowed) {
                 clickAdapting(it)
             }
         }
@@ -112,6 +111,7 @@ class SearchFragment : Fragment() {
             historyInVisible()
             searchViewModel.clearHistory()
         }
+        clickDebounceManager()
     }
 
     //сохраняем текст при повороте экрана
@@ -129,19 +129,24 @@ class SearchFragment : Fragment() {
         }
     }
 
-    //включаем кликдебаунсер
+    //восстанавливаем кликдебаунсер
     override fun onResume() {
         super.onResume()
         isClickAllowed = true
     }
 
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
+    //включаем кликдебаунсер
+    private fun clickDebounceManager() {
+        GlobalScope.launch { clickDebouncer() }
+    }
+
+    private suspend fun clickDebouncer() {
+        isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            delay(CLICK_DEBOUNCE_DELAY)
+            isClickAllowed = true
         }
-        return current
     }
 
     private fun clickAdapting(item: Track) {
@@ -162,12 +167,12 @@ class SearchFragment : Fragment() {
 
     //поиск
     private fun search() {
-        if (!isEnterPressed) searchViewModel.searchRequesting(binding.searchUserText.text.toString())
+        searchViewModel.searchRequesting(binding.searchUserText.text.toString())
     }
 
     // с корутиной
     private fun searchDebounce() {
-        val changedText=binding.searchUserText.text.toString()
+        val changedText = binding.searchUserText.text.toString()
         if (latestSearchText == changedText) return
         latestSearchText = changedText
         Log.d("searching", "search")
@@ -224,10 +229,8 @@ class SearchFragment : Fragment() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 if (binding.searchUserText.text.isNotEmpty()) {
                     bottomNavigator.visibility = VISIBLE
-                    search()
+                    searchDebounce()
                     trackAdapter.notifyDataSetChanged()
-                    isEnterPressed = true
-                    handler.postDelayed({ isEnterPressed = false }, 3000L)
                     Log.d("searching", "press")
                 }
                 true
