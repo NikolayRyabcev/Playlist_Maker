@@ -8,12 +8,15 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.search.models.Track
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
@@ -69,9 +72,7 @@ class PlayerActivity : AppCompatActivity() {
         mainThreadHandler?.post(
             updateButton()
         )
-        mainThreadHandler?.post(
-            updateTimer()
-        )
+        updateTimer()
     }
 
     override fun onPause() {
@@ -134,16 +135,16 @@ class PlayerActivity : AppCompatActivity() {
         return updatedButton
     }
 
-    private fun updateTimer(): Runnable {
-        val updatedTimer = Runnable {
-            binding.trackTimer.text = playerViewModel.getTime()
-            mainThreadHandler?.postDelayed(updateTimer(), PLAYER_BUTTON_PRESSING_DELAY)
+    private fun updateTimer() {
+        lifecycleScope.launch {
+            delay(PLAYER_BUTTON_PRESSING_DELAY)
+            binding.trackTimer.text = playerViewModel.timer
+
         }
-        return updatedTimer
     }
 
 
     companion object {
-        const val PLAYER_BUTTON_PRESSING_DELAY = 100L
+        const val PLAYER_BUTTON_PRESSING_DELAY = 300L
     }
 }

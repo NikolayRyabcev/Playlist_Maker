@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.player
 
+import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
@@ -11,13 +12,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
-    var timePlayed = "00:00"
+    private var timePlayed = "00:00"
     private lateinit var listener: PlayerStateListener
     private var playerJob: Job? = null
     private val playerScope = CoroutineScope(Job() + Dispatchers.Main)
@@ -33,20 +36,18 @@ class PlayerRepositoryImpl : PlayerRepository {
             playerState = PlayerState.STATE_PREPARED
             listener.onStateChanged(playerState)
             Log.d("playerStateRep", playerState.toString())
+            timing()
+            playerJob?.start()
         }
         mediaPlayer.setOnCompletionListener {
             playerState = PlayerState.STATE_PREPARED
             listener.onStateChanged(playerState)
         }
-
-        //Log.d ("playerStateRep", playerState.toString())
     }
 
     override fun play() {
         mediaPlayer.start()
         playerState = PlayerState.STATE_PLAYING
-
-        timing()
 
         listener.onStateChanged(playerState)
         Log.d("playerStateRep", playerState.toString())
@@ -56,7 +57,7 @@ class PlayerRepositoryImpl : PlayerRepository {
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
         listener.onStateChanged(playerState)
-        playerJob?.cancel()
+
         Log.d("playerStateRep", playerState.toString())
     }
 
@@ -64,23 +65,23 @@ class PlayerRepositoryImpl : PlayerRepository {
         mediaPlayer.release()
         playerState = PlayerState.STATE_DEFAULT
         listener.onStateChanged(playerState)
+        playerJob?.cancel()
         Log.d("playerStateRep", playerState.toString())
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun timing() {
-        playerJob = playerScope.launch {
-            if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
-                delay(DELAY_MILLIS)
-                val sdf = SimpleDateFormat("mm:ss")
-                timePlayed = sdf.format(mediaPlayer.currentPosition)
-            } else {
-                timePlayed = "00:00"
-            }
+        if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
+            val sdf = SimpleDateFormat("mm:ss")
+            timePlayed = sdf.format(mediaPlayer.currentPosition)
+        } else {
+            timePlayed = "00:00"
         }
     }
 
-    override fun timeTransfer(): String {
-        return timePlayed
+    override fun timeTransfer(): Flow<String> = flow {
+        timePlayed
+        Log.d("время в репозитории", timePlayed)
     }
 
     override fun playerStateReporter(): PlayerState {
