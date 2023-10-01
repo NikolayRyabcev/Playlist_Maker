@@ -1,8 +1,10 @@
 package com.example.playlistmaker.domain.player
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface PlayerInteractor {
+    val time : StateFlow<String>
     fun play()
     fun pause()
     fun destroy()

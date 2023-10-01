@@ -13,6 +13,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -20,7 +23,8 @@ import java.text.SimpleDateFormat
 class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
-    private var timePlayed = "00:00"
+    private var timePlayed =  MutableStateFlow("00:00")
+    private val time : StateFlow<String> = timePlayed.asStateFlow()
     private lateinit var listener: PlayerStateListener
     private var playerJob: Job? = null
     private val playerScope = CoroutineScope(Job() + Dispatchers.Main)
@@ -73,15 +77,15 @@ class PlayerRepositoryImpl : PlayerRepository {
     private fun timing() {
         if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
             val sdf = SimpleDateFormat("mm:ss")
-            timePlayed = sdf.format(mediaPlayer.currentPosition)
+            timePlayed.value = sdf.format(mediaPlayer.currentPosition)
         } else {
-            timePlayed = "00:00"
+            timePlayed.value = "00:00"
         }
     }
 
     override fun timeTransfer(): Flow<String> = flow {
         timePlayed
-        Log.d("время в репозитории", timePlayed)
+        Log.d("время в репозитории", timePlayed.value)
     }
 
     override fun playerStateReporter(): PlayerState {
