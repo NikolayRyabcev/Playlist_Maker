@@ -73,6 +73,7 @@ class PlayerActivity : AppCompatActivity() {
             updateButton()
         )
         updateTimer()
+
     }
 
     override fun onPause() {
@@ -136,10 +137,8 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun updateTimer() {
-        lifecycleScope.launch {
-            delay(PLAYER_BUTTON_PRESSING_DELAY)
-            binding.trackTimer.text = playerViewModel.timer
-
+        playerViewModel.putTime().observe(this) {
+            binding.trackTimer.text = it
         }
     }
 

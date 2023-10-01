@@ -18,16 +18,15 @@ class PlayerViewModel(
 ) : ViewModel() {
 
     var stateLiveData = MutableLiveData<PlayerState>()
-    var timer :LiveData<String> = playerInteractor.time.asLiveData
+    var timer = MutableLiveData<String>("")
 
     fun createPlayer(url: String) {
         playerInteractor.createPlayer(url, listener = object : PlayerStateListener {
             override fun onStateChanged(state: PlayerState) {
                 stateLiveData.postValue(state)
-
             }
         })
-        getTime()
+        getTimeFromInteractor()
     }
 
     fun play() {
@@ -42,14 +41,18 @@ class PlayerViewModel(
         playerInteractor.destroy()
     }
 
-    fun getTime() {
+    fun getTimeFromInteractor() {
         viewModelScope.launch {
             playerInteractor.getTime().collect() {
-                timer = it
+                timer.postValue(it)
             }
+            timer.value?.let { Log.d("время", it) }
         }
     }
 
+    fun putTime():LiveData<String> {
+        return timer
+    }
 
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L

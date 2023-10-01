@@ -24,7 +24,7 @@ class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     private var timePlayed =  MutableStateFlow("00:00")
-    private val time : StateFlow<String> = timePlayed.asStateFlow()
+    val time : StateFlow<String> = timePlayed.asStateFlow()
     private lateinit var listener: PlayerStateListener
     private var playerJob: Job? = null
     private val playerScope = CoroutineScope(Job() + Dispatchers.Main)
@@ -83,9 +83,8 @@ class PlayerRepositoryImpl : PlayerRepository {
         }
     }
 
-    override fun timeTransfer(): Flow<String> = flow {
-        timePlayed
-        Log.d("время в репозитории", timePlayed.value)
+    override fun timeTransfer(): StateFlow<String> {
+        return time
     }
 
     override fun playerStateReporter(): PlayerState {
