@@ -24,7 +24,7 @@ class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     private var timePlayed =  MutableStateFlow("00:00")
-    val time : StateFlow<String> = timePlayed.asStateFlow()
+    var time : StateFlow<String> = timePlayed.asStateFlow()
     private lateinit var listener: PlayerStateListener
     private var playerJob: Job? = null
     private val playerScope = CoroutineScope(Job() + Dispatchers.Main)
@@ -74,18 +74,17 @@ class PlayerRepositoryImpl : PlayerRepository {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun timing() {
+    override fun timing() : StateFlow<String>{
         if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
             val sdf = SimpleDateFormat("mm:ss")
             timePlayed.value = sdf.format(mediaPlayer.currentPosition)
         } else {
             timePlayed.value = "00:00"
         }
-    }
-
-    override fun timeTransfer(): StateFlow<String> {
+        time = timePlayed.asStateFlow()
         return time
     }
+
 
     override fun playerStateReporter(): PlayerState {
         return playerState

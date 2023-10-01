@@ -6,8 +6,6 @@ import kotlinx.coroutines.flow.StateFlow
 
 class PlayerInteractorImpl (private val repository:PlayerRepository): PlayerInteractor {
 
-
-
     override fun play() {
         repository.play()
     }
@@ -25,8 +23,8 @@ class PlayerInteractorImpl (private val repository:PlayerRepository): PlayerInte
     }
 
     override fun getTime(): Flow<String> {
-        Log.d("время в интеракторе", repository.timeTransfer().toString())
-        return repository.timeTransfer()
+        Log.d("время в интеракторе", repository.timing().toString())
+        return repository.timing()
     }
     override fun playerStateListener(): PlayerState {
         return repository.playerStateReporter()
