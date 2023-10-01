@@ -9,5 +9,5 @@ interface PlayerRepository {
     fun destroy()
     fun preparePlayer(url: String, listener: PlayerStateListener)
     fun playerStateReporter() : PlayerState
-    fun timing() : StateFlow<String>
+    suspend fun timing() : StateFlow<String>
 }

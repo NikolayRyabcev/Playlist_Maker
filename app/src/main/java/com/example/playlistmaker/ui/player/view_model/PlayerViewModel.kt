@@ -26,7 +26,7 @@ class PlayerViewModel(
                 stateLiveData.postValue(state)
             }
         })
-        getTimeFromInteractor()
+
     }
 
     fun play() {
@@ -46,11 +46,13 @@ class PlayerViewModel(
             playerInteractor.getTime().collect() {
                 timer.postValue(it)
             }
-            timer.value?.let { Log.d("время", it) }
+            timer.value?.let { Log.d("время из интерактора", it) }
         }
     }
 
     fun putTime():LiveData<String> {
+        getTimeFromInteractor()
+        timer.value?.let { Log.d("время в модели", it) }
         return timer
     }
 

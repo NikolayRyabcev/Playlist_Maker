@@ -40,7 +40,7 @@ class PlayerRepositoryImpl : PlayerRepository {
             playerState = PlayerState.STATE_PREPARED
             listener.onStateChanged(playerState)
             Log.d("playerStateRep", playerState.toString())
-            timing()
+            //timing()
             playerJob?.start()
         }
         mediaPlayer.setOnCompletionListener {
@@ -74,14 +74,15 @@ class PlayerRepositoryImpl : PlayerRepository {
     }
 
     @SuppressLint("SimpleDateFormat")
-    override fun timing() : StateFlow<String>{
+    override suspend fun timing() : StateFlow<String>{
         if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
             val sdf = SimpleDateFormat("mm:ss")
             timePlayed.value = sdf.format(mediaPlayer.currentPosition)
         } else {
             timePlayed.value = "00:00"
         }
-        time = timePlayed.asStateFlow()
+        timePlayed.emit(timePlayed.value)
+        Log.d("время в репозитории", time.value)
         return time
     }
 

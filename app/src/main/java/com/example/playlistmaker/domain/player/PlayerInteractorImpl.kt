@@ -22,8 +22,8 @@ class PlayerInteractorImpl (private val repository:PlayerRepository): PlayerInte
         repository.preparePlayer(url, listener)
     }
 
-    override fun getTime(): Flow<String> {
-        Log.d("время в интеракторе", repository.timing().toString())
+    override suspend fun getTime(): Flow<String> {
+        Log.d("время в интеракторе", repository.timing().value)
         return repository.timing()
     }
     override fun playerStateListener(): PlayerState {

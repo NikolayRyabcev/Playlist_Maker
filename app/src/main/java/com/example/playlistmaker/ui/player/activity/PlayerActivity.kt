@@ -139,6 +139,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun updateTimer() {
         playerViewModel.putTime().observe(this) {
             binding.trackTimer.text = it
+            Log.d("время в активити", it)
         }
     }
 

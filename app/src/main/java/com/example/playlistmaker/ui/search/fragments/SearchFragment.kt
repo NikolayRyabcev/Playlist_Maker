@@ -175,7 +175,6 @@ class SearchFragment : Fragment() {
         val changedText = binding.searchUserText.text.toString()
         if (latestSearchText == changedText) return
         latestSearchText = changedText
-        Log.d("searching", "search")
         searchJob?.cancel()
         searchJob = lifecycleScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
@@ -231,7 +230,6 @@ class SearchFragment : Fragment() {
                     bottomNavigator.visibility = VISIBLE
                     searchDebounce()
                     trackAdapter.notifyDataSetChanged()
-                    Log.d("searching", "press")
                 }
                 true
             }

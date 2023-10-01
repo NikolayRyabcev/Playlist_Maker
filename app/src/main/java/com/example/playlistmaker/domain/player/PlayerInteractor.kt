@@ -8,6 +8,6 @@ interface PlayerInteractor {
     fun pause()
     fun destroy()
     fun createPlayer(url: String, listener: PlayerStateListener)
-    fun getTime(): Flow<String>
+    suspend fun getTime(): Flow<String>
     fun playerStateListener(): PlayerState
 }
