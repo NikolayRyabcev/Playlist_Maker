@@ -18,7 +18,7 @@ class PlayerViewModel(
 ) : ViewModel() {
 
     var stateLiveData = MutableLiveData<PlayerState>()
-    var timer = MutableLiveData<String>("")
+    var timer = MutableLiveData("00:00")
 
     fun createPlayer(url: String) {
         playerInteractor.createPlayer(url, listener = object : PlayerStateListener {
@@ -41,13 +41,15 @@ class PlayerViewModel(
         playerInteractor.destroy()
     }
 
-    fun getTimeFromInteractor() {
+    fun getTimeFromInteractor() :LiveData<String>{
         viewModelScope.launch {
+            delay(PLAYER_BUTTON_PRESSING_DELAY)
             playerInteractor.getTime().collect() {
                 timer.postValue(it)
             }
             timer.value?.let { Log.d("время из интерактора", it) }
         }
+        return timer
     }
 
     fun putTime():LiveData<String> {

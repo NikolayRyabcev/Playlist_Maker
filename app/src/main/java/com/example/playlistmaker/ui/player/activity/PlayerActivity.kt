@@ -72,7 +72,10 @@ class PlayerActivity : AppCompatActivity() {
         mainThreadHandler?.post(
             updateButton()
         )
-        updateTimer()
+        playerViewModel.getTimeFromInteractor().observe(this) {
+            binding.trackTimer.text = it
+            Log.d("время в активити", it)
+        }
 
     }
 
@@ -135,14 +138,6 @@ class PlayerActivity : AppCompatActivity() {
         }
         return updatedButton
     }
-
-    private fun updateTimer() {
-        playerViewModel.putTime().observe(this) {
-            binding.trackTimer.text = it
-            Log.d("время в активити", it)
-        }
-    }
-
 
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L
