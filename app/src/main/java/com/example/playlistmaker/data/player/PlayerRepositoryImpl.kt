@@ -67,17 +67,17 @@ class PlayerRepositoryImpl : PlayerRepository {
     }
 
     @SuppressLint("SimpleDateFormat")
-    override fun timing() : Flow<String> =flow {
-        if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
-            val sdf = SimpleDateFormat("mm:ss")
-            timePlayed.value = sdf.format(mediaPlayer.currentPosition)
-        } else {
-            timePlayed.value = "00:00"
+    override fun timing(): Flow<String> = flow {
+        val sdf = SimpleDateFormat("mm:ss")
+        while (true) {
+            if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
+                emit(sdf.format(mediaPlayer.currentPosition))
+            } else {
+                emit("00:00")
+            }
+            delay(DELAY_MILLIS)
         }
-        Log.d("время", timePlayed.value)
     }
-
-
 
     override fun playerStateReporter(): PlayerState {
         return playerState
