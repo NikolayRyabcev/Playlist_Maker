@@ -72,9 +72,9 @@ class PlayerActivity : AppCompatActivity() {
         mainThreadHandler?.post(
             updateButton()
         )
-        playerViewModel.getTimeFromInteractor().observe(this) {
-            binding.trackTimer.text = it
-            Log.d("время в активити", it)
+        playerViewModel.putTime().observe(this) {timer ->
+            binding.trackTimer.text = timer
+            Log.d("время в активити", timer)
         }
 
     }

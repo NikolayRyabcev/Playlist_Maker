@@ -33,6 +33,7 @@ class PlayerViewModel(
 
     fun play() {
         playerInteractor.play()
+        timeJob!!.start()
     }
 
     fun pause() {
@@ -45,17 +46,14 @@ class PlayerViewModel(
     }
 
     fun getTimeFromInteractor(): LiveData<String> {
-
         timeJob=viewModelScope.launch {
             while (true) {
                 delay(PLAYER_BUTTON_PRESSING_DELAY)
                 playerInteractor.getTime().collect() {
                     timer.postValue(it)
                 }
-                timer.value?.let { Log.d("время из интерактора", it) }
             }
         }
-        timeJob!!.start()
         return timer
     }
 

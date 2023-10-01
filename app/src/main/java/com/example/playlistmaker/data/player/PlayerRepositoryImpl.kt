@@ -24,10 +24,9 @@ class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
     private var timePlayed =  MutableStateFlow("00:00")
-    var time : StateFlow<String> = timePlayed.asStateFlow()
+
     private lateinit var listener: PlayerStateListener
     private var playerJob: Job? = null
-    private val playerScope = CoroutineScope(Job() + Dispatchers.Main)
 
     override fun preparePlayer(url: String, listener: PlayerStateListener) {
         this.listener = listener
@@ -39,8 +38,6 @@ class PlayerRepositoryImpl : PlayerRepository {
         mediaPlayer.setOnPreparedListener {
             playerState = PlayerState.STATE_PREPARED
             listener.onStateChanged(playerState)
-            Log.d("playerStateRep", playerState.toString())
-            //timing()
             playerJob?.start()
         }
         mediaPlayer.setOnCompletionListener {
@@ -52,17 +49,13 @@ class PlayerRepositoryImpl : PlayerRepository {
     override fun play() {
         mediaPlayer.start()
         playerState = PlayerState.STATE_PLAYING
-
         listener.onStateChanged(playerState)
-        Log.d("playerStateRep", playerState.toString())
     }
 
     override fun pause() {
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
         listener.onStateChanged(playerState)
-
-        Log.d("playerStateRep", playerState.toString())
     }
 
     override fun destroy() {
@@ -74,17 +67,16 @@ class PlayerRepositoryImpl : PlayerRepository {
     }
 
     @SuppressLint("SimpleDateFormat")
-    override suspend fun timing() : StateFlow<String>{
+    override fun timing() : Flow<String> =flow {
         if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
             val sdf = SimpleDateFormat("mm:ss")
             timePlayed.value = sdf.format(mediaPlayer.currentPosition)
         } else {
             timePlayed.value = "00:00"
         }
-        timePlayed.emit(timePlayed.value)
-        Log.d("время в репозитории", time.value)
-        return time
+        Log.d("время", timePlayed.value)
     }
+
 
 
     override fun playerStateReporter(): PlayerState {
