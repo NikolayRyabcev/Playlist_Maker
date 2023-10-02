@@ -43,8 +43,6 @@ class SearchFragment : Fragment() {
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
-    private val handler = Handler(Looper.getMainLooper())
-
     private lateinit var bottomNavigator: BottomNavigationView
     private val KEY_TEXT = ""
 
@@ -98,7 +96,6 @@ class SearchFragment : Fragment() {
         binding.trackRecycler.adapter = trackAdapter
 
         //история
-
         historyAdapter = TrackAdapter() {
             if (isClickAllowed) {
                 clickAdapting(it)

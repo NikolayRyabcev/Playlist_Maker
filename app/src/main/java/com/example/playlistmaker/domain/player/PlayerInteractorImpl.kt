@@ -1,12 +1,8 @@
 package com.example.playlistmaker.domain.player
 
-import android.util.Log
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
 
-class PlayerInteractorImpl (private val repository:PlayerRepository): PlayerInteractor {
+class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInteractor {
 
     override fun play() {
         repository.play()
@@ -24,14 +20,13 @@ class PlayerInteractorImpl (private val repository:PlayerRepository): PlayerInte
         repository.preparePlayer(url, listener)
     }
 
-    override fun getTime(): Flow<String> = flow {
-        emit (repository.timing())
+    override fun getTime(): Flow<String> {
+        return repository.timing()
     }
 
     override fun playerStateListener(): PlayerState {
         return repository.playerStateReporter()
     }
-
 }
 
 
