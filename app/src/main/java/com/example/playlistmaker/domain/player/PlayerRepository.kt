@@ -1,6 +1,7 @@
 package com.example.playlistmaker.domain.player
 
-import com.example.playlistmaker.domain.player.PlayerState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface PlayerRepository {
 
@@ -8,6 +9,6 @@ interface PlayerRepository {
     fun pause()
     fun destroy()
     fun preparePlayer(url: String, listener: PlayerStateListener)
-    fun timeTransfer() :String
     fun playerStateReporter() : PlayerState
+    fun timing() : Flow<String>
 }

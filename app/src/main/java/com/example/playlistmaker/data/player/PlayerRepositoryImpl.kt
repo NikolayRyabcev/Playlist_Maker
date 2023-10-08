@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.player
 
+import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
@@ -7,14 +8,25 @@ import android.util.Log
 import com.example.playlistmaker.domain.player.PlayerRepository
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerStateListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
-    var timePlayed = "00:00"
-    private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
+    private var timePlayed =  MutableStateFlow("00:00")
+
     private lateinit var listener: PlayerStateListener
+    private var playerJob: Job? = null
 
     override fun preparePlayer(url: String, listener: PlayerStateListener) {
         this.listener = listener
@@ -26,59 +38,45 @@ class PlayerRepositoryImpl : PlayerRepository {
         mediaPlayer.setOnPreparedListener {
             playerState = PlayerState.STATE_PREPARED
             listener.onStateChanged(playerState)
-            Log.d ("playerStateRep", playerState.toString())
+            playerJob?.start()
         }
         mediaPlayer.setOnCompletionListener {
             playerState = PlayerState.STATE_PREPARED
             listener.onStateChanged(playerState)
-
         }
-
-        //Log.d ("playerStateRep", playerState.toString())
     }
 
     override fun play() {
         mediaPlayer.start()
         playerState = PlayerState.STATE_PLAYING
-        mainThreadHandler?.post(
-            timing()
-        )
         listener.onStateChanged(playerState)
-        Log.d ("playerStateRep", playerState.toString())
     }
 
     override fun pause() {
         mediaPlayer.pause()
         playerState = PlayerState.STATE_PAUSED
         listener.onStateChanged(playerState)
-        Log.d ("playerStateRep", playerState.toString())
     }
 
     override fun destroy() {
         mediaPlayer.release()
         playerState = PlayerState.STATE_DEFAULT
         listener.onStateChanged(playerState)
-        Log.d ("playerStateRep", playerState.toString())
+        playerJob?.cancel()
+        Log.d("playerStateRep", playerState.toString())
     }
 
-    private fun timing(): Runnable {
-
-        return object : Runnable {
-            override fun run() {
-                if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
-                    val sdf = SimpleDateFormat("mm:ss")
-                    timePlayed = sdf.format(mediaPlayer.currentPosition)
-                    mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
-                } else {
-                    timePlayed = "00:00"
-                    mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
-                }
+    @SuppressLint("SimpleDateFormat")
+    override fun timing(): Flow<String> = flow {
+        val sdf = SimpleDateFormat("mm:ss")
+        while (true) {
+            if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
+                emit(sdf.format(mediaPlayer.currentPosition))
+            } else {
+                emit("00:00")
             }
+            delay(DELAY_MILLIS)
         }
-    }
-
-    override fun timeTransfer(): String {
-        return timePlayed
     }
 
     override fun playerStateReporter(): PlayerState {
@@ -86,6 +84,6 @@ class PlayerRepositoryImpl : PlayerRepository {
     }
 
     companion object {
-        const val DELAY_MILLIS = 50L
+        const val DELAY_MILLIS = 300L
     }
 }

@@ -1,6 +1,8 @@
 package com.example.playlistmaker.domain.player
 
-class PlayerInteractorImpl (private val repository:PlayerRepository): PlayerInteractor {
+import kotlinx.coroutines.flow.Flow
+
+class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInteractor {
 
     override fun play() {
         repository.play()
@@ -18,13 +20,13 @@ class PlayerInteractorImpl (private val repository:PlayerRepository): PlayerInte
         repository.preparePlayer(url, listener)
     }
 
-    override fun getTime(): String {
-        return repository.timeTransfer()
+    override fun getTime(): Flow<String> {
+        return repository.timing()
     }
+
     override fun playerStateListener(): PlayerState {
         return repository.playerStateReporter()
     }
-
 }
 
 

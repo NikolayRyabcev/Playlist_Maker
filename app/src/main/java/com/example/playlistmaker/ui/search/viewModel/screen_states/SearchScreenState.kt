@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search.viewModelForActivity.screen_states
+package com.example.playlistmaker.ui.search.viewModel.screen_states
 
 import com.example.playlistmaker.domain.search.models.Track
 

@@ -8,17 +8,19 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
-import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
 
-    private var mainThreadHandler: Handler? = Handler(Looper.getMainLooper())
     private val playerViewModel by viewModel<PlayerViewModel>()
     private lateinit var binding: PlayerActivityBinding
     private var url = ""
@@ -28,16 +30,12 @@ class PlayerActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding = PlayerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        binding.playButton.isEnabled = false
-
-
-        mainThreadHandler = Handler(Looper.getMainLooper())
         binding.playerBackButtonArrow.setOnClickListener {
             finish()
         }
-        val track = intent.getParcelableExtra<Track>("track")
 
+        //принятие и отрисовка данных трека
+        val track = intent.getParcelableExtra<Track>("track")
         binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
         binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
         binding.time.text = track?.trackTimeMillis ?: "00:00"
@@ -58,20 +56,25 @@ class PlayerActivity : AppCompatActivity() {
         }
         url = track?.previewUrl ?: return
 
+        //создание плеера
         playerViewModel.createPlayer(url)
 
+        //переключение кнопок плэй/пауза
+        binding.playButton.isEnabled = false
         binding.playButton.setOnClickListener {
             if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
         }
-        binding.pauseButton.setOnClickListener {
+        /*binding.pauseButton.setOnClickListener {
             playerViewModel.pause()
+        }*/
+
+        updateButton()
+
+        playerViewModel.putTime().observe(this) { timer ->
+            binding.trackTimer.text = timer
+            Log.d("время в активити", timer)
         }
-        mainThreadHandler?.post(
-            updateButton()
-        )
-        mainThreadHandler?.post(
-            updateTimer()
-        )
+
     }
 
     override fun onPause() {
@@ -126,24 +129,14 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateButton(): Runnable {
-        val updatedButton = Runnable {
+    private fun updateButton(){
+        lifecycleScope.launch {
+            delay (PLAYER_BUTTON_PRESSING_DELAY)
             playerStateDrawer()
-            mainThreadHandler?.postDelayed(updateButton(), PLAYER_BUTTON_PRESSING_DELAY)
         }
-        return updatedButton
     }
-
-    private fun updateTimer(): Runnable {
-        val updatedTimer = Runnable {
-            binding.trackTimer.text = playerViewModel.getTime()
-            mainThreadHandler?.postDelayed(updateTimer(), PLAYER_BUTTON_PRESSING_DELAY)
-        }
-        return updatedTimer
-    }
-
 
     companion object {
-        const val PLAYER_BUTTON_PRESSING_DELAY = 100L
+        const val PLAYER_BUTTON_PRESSING_DELAY = 300L
     }
 }
