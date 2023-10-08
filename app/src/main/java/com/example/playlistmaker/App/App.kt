@@ -29,7 +29,8 @@ class App : Application(), KoinComponent {
                 trackRepositoryModule,
                 playerModule,
                 settingsSharingModule,
-                mediaLibraryModule
+                mediaLibraryModule,
+                dataModule
             )
 
         }

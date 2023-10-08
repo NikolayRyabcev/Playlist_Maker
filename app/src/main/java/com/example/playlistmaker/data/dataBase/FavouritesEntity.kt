@@ -1,10 +1,17 @@
-package com.example.playlistmaker.data.search.requestAndResponse
+package com.example.playlistmaker.data.dataBase
 
-data class TrackDto (
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName="favourites_table")
+data class FavouritesEntity (
+    @PrimaryKey
     val trackName: String?,
     val artistName: String?,
     val trackTimeMillis: Long?,
     val artworkUrl100: String?,
+    @ColumnInfo (name="trackId")
     val trackId: Long?,
     val collectionName: String?,
     val releaseDate: String?,
