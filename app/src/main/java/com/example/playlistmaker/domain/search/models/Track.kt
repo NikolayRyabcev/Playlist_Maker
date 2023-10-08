@@ -14,7 +14,8 @@ data class Track(
     val releaseDate: String?,
     val primaryGenreName: String?,
     val country: String?,
-    val previewUrl: String?
+    val previewUrl: String?,
+    var isFavorite: Boolean = false
 ) : Parcelable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

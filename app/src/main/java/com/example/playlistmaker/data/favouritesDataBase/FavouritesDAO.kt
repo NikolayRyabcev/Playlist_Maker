@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.dataBase
+package com.example.playlistmaker.data.favouritesDataBase
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -11,14 +11,14 @@ import com.example.playlistmaker.domain.search.models.Track
 interface FavouritesDAO {
 
     @Insert (entity = FavouritesEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    fun insertTrack (track :Track)
+    fun insertTrack (id: Long)
 
     @Delete(entity = FavouritesEntity::class)
-    fun deleteTrack (track: Track)
+    fun deleteTrack (id: Long)
 
     @Query("SELECT * FROM favourites_table WHERE trackId=:searchId")
-    fun queryTrack(searchId:Long):FavouritesEntity?
+    fun queryTrack(searchId:Long):FavouritesEntity
 
     @Query("SELECT * FROM favourites_table WHERE trackId=:searchId")
-    fun queryTrackId(searchId:Long):Long?
+    fun queryTrackId(searchId:Long):FavouritesEntity
 }
