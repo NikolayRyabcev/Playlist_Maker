@@ -2,6 +2,7 @@ package com.example.playlistmaker.data.search.history
 
 import android.content.SharedPreferences
 import android.util.Log
+import com.example.playlistmaker.domain.favourites.FavouritesRepository
 import com.example.playlistmaker.domain.search.history.SearchHistory
 import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
@@ -11,7 +12,8 @@ const val SEARCH_SHARED_PREFS_KEY = "123"
 
 class SearchHistoryImpl(
     private val savedHistory: SharedPreferences,
-    private val gson: Gson
+    private val gson: Gson,
+    private val favourites: FavouritesRepository
 ) : SearchHistory {
 
 
@@ -56,12 +58,18 @@ class SearchHistoryImpl(
                     if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
                         val type = object : TypeToken<ArrayList<Track>>() {}.type
                         trackHistoryList = gson.fromJson(json, type)
+                        trackHistoryList.forEach { thisTrack ->
+                            if (thisTrack.trackId?.let {
+                                    favourites.checkFavourites(
+                                        it
+                                    )
+                                } == true) thisTrack.isFavorite = true
+                        }
                     }
                 }
                 Log.d("historyListdata", trackHistoryList.toString())
             } else {
                 trackHistoryList = ArrayList()
-                Log.d("historyListdata", "empty")
             }
         }
         return trackHistoryList

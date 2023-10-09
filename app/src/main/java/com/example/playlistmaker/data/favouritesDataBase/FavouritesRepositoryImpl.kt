@@ -16,10 +16,10 @@ class FavouritesRepositoryImpl (private val dataBase: AppDataBase, private val c
     }
 
     override fun getFavourites(id:Long): Flow<List<Track>> =flow {
-        converter.map(dataBase.favouritesDao().queryTrack(id))
+        converter.map(dataBase.favouritesDao().queryTrack())
     }
 
     override fun checkFavourites(id: Long): Boolean {
-        return true/*!converter.map(dataBase.favouritesDao().queryTrackId(id)).isNullOrEmpty()*/
+        return !converter.map(dataBase.favouritesDao().queryTrackId(id)).isFavorite
     }
 }
