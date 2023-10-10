@@ -7,5 +7,5 @@ interface FavouritesRepository  {
     fun addTrack (id:Long)
     fun deleteTrack (id:Long)
     fun getFavourites(id:Long):Flow<List<Track>>
-    fun checkFavourites(id:Long):Boolean
+    fun checkFavourites(id:Long):Flow<Boolean>
 }
