@@ -77,7 +77,7 @@ class PlayerViewModel(
         }
     }
 
-    fun favouritesChecker (track: Track) {
+    fun favouritesChecker (track: Track) : LiveData<Boolean> {
         favouritesJob=viewModelScope.launch{
             while (true) {
                 delay(PLAYER_BUTTON_PRESSING_DELAY)
@@ -88,6 +88,7 @@ class PlayerViewModel(
                 }
             }
         }
+        return favouritesIndicator
     }
 
     companion object {

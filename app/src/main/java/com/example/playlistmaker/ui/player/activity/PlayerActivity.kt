@@ -64,15 +64,25 @@ class PlayerActivity : AppCompatActivity() {
         binding.playButton.setOnClickListener {
             if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
         }
-        /*binding.pauseButton.setOnClickListener {
-            playerViewModel.pause()
-        }*/
 
         updateButton()
 
         playerViewModel.putTime().observe(this) { timer ->
             binding.trackTimer.text = timer
             Log.d("время в активити", timer)
+        }
+
+        //нажатие на кнопку нравится
+        binding.favourites.setOnClickListener {
+            playerViewModel.onFavoriteClicked(track)
+        }
+        playerViewModel.favouritesChecker(track).observe(this) { favourtitesIndicator ->
+            if (favourtitesIndicator) {
+                binding.favourites.setImageResource(R.drawable.button__like)
+            } else binding.favourites.setImageResource(
+                R.drawable.favourites
+            )
+
         }
 
     }
@@ -129,9 +139,9 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateButton(){
+    private fun updateButton() {
         lifecycleScope.launch {
-            delay (PLAYER_BUTTON_PRESSING_DELAY)
+            delay(PLAYER_BUTTON_PRESSING_DELAY)
             playerStateDrawer()
         }
     }
