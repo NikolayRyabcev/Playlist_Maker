@@ -1,5 +1,6 @@
 package com.example.playlistmaker.domain.favourites
 
+import com.example.playlistmaker.data.favouritesDataBase.FavouritesEntity
 import com.example.playlistmaker.domain.search.models.Track
 import kotlinx.coroutines.flow.Flow
 
@@ -8,12 +9,12 @@ class FavouritesInteractorImpl(private val favouritesRepository : FavouritesRepo
         favouritesRepository.addTrack(id)
     }
 
-    override fun favouritesDelete(id: Long) {
-        favouritesRepository.deleteTrack(id)
+    override fun favouritesDelete(track: Track) {
+        favouritesRepository.deleteTrack(track)
     }
 
-    override fun favouritesGet(id: Long): Flow<List<Track>> {
-        return favouritesRepository.getFavourites(id)
+    override fun favouritesGet(): Flow<List<Track>> {
+        return favouritesRepository.getFavourites()
     }
 
     override fun favouritesCheck(id: Long): Flow<Boolean> {

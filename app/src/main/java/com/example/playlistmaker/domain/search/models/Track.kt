@@ -5,10 +5,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Track(
-    val trackName: String?, // Название композиции
-    val artistName: String?, // Имя исполнителя
-    val trackTimeMillis: String?, // Продолжительность трека
-    val artworkUrl100: String?, // Ссылка на изображение обложки
+    val trackName: String?,
+    val artistName: String?,
+    val trackTimeMillis: Long?,
+    val artworkUrl100: String?,
     val trackId: Long?,
     val collectionName: String?,
     val releaseDate: String?,

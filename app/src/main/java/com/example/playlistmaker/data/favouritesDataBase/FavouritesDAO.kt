@@ -14,7 +14,7 @@ interface FavouritesDAO {
     fun insertTrack (id: Long)
 
     @Delete(entity = FavouritesEntity::class)
-    fun deleteTrack (id: Long)
+    fun deleteTrack (track:FavouritesEntity)
 
     @Query("SELECT * FROM favourites_table")
     fun queryTrack():FavouritesEntity

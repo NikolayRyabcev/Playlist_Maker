@@ -69,10 +69,10 @@ class PlayerViewModel(
 
     fun onFavoriteClicked(track: Track) {
         if (track.isFavorite) {
-            track.trackId?.let { favouritesInteractor.favouritesDelete(it) }
+            track.trackId?.let { favouritesInteractor.favouritesDelete(track) }
         } else track.trackId?.let {
             favouritesInteractor.favouritesDelete(
-                it
+                track
             )
         }
     }

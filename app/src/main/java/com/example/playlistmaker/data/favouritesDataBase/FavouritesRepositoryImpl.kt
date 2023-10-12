@@ -11,11 +11,11 @@ class FavouritesRepositoryImpl (private val dataBase: AppDataBase, private val c
         dataBase.favouritesDao().insertTrack(id)
     }
 
-    override fun deleteTrack(id: Long) {
-        dataBase.favouritesDao().deleteTrack(id)
+    override fun deleteTrack(track:Track) {
+        dataBase.favouritesDao().deleteTrack(converter.map(track))
     }
 
-    override fun getFavourites(id:Long): Flow<List<Track>> =flow {
+    override fun getFavourites(): Flow<List<Track>> =flow {
         converter.map(dataBase.favouritesDao().queryTrack())
     }
 
