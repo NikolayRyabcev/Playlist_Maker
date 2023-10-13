@@ -5,6 +5,7 @@ import com.example.playlistmaker.domain.search.models.Track
 import kotlinx.coroutines.flow.Flow
 
 class FavouritesInteractorImpl(private val favouritesRepository : FavouritesRepository) : FavouritesInteractor{
+
     override fun favouritesAdd(track:Track) {
         favouritesRepository.addTrack(track)
     }

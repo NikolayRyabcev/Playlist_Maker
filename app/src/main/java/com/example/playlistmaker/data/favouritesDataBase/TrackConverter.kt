@@ -1,11 +1,10 @@
 package com.example.playlistmaker.data.favouritesDataBase
 
-import androidx.room.PrimaryKey
-import com.example.playlistmaker.data.search.requestAndResponse.TrackDto
+import android.util.Log
 import com.example.playlistmaker.domain.search.models.Track
 
 class TrackConverter {
-    fun map(track: Track): FavouritesEntity {
+    fun mapTrackToFavourite(track: Track): FavouritesEntity {
         return FavouritesEntity(
             track.trackId,
             track.trackName,
@@ -21,7 +20,8 @@ class TrackConverter {
         )
     }
 
-    fun map(track: FavouritesEntity): Track {
+    fun mapFavouriteToTrack(track: FavouritesEntity): Track {
+        Log.d("TrackConverter", track.toString())
         return Track(
             track.trackName,
             track.artistName,

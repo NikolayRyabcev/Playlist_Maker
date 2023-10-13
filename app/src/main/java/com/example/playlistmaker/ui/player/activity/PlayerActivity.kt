@@ -76,14 +76,15 @@ class PlayerActivity : AppCompatActivity() {
         binding.favourites.setOnClickListener {
             playerViewModel.onFavoriteClicked(track)
         }
-//        playerViewModel.favouritesChecker(track).observe(this) { favourtitesIndicator ->
-//            if (favourtitesIndicator) {
-//                binding.favourites.setImageResource(R.drawable.button__like)
-//            } else binding.favourites.setImageResource(
-//                R.drawable.favourites
-//            )
-//
-//        }
+
+        playerViewModel.favouritesChecker(track).observe(this) { favourtitesIndicator ->
+            Log.d("favourtitesIndicator", "$favourtitesIndicator")
+            if (favourtitesIndicator) {
+                binding.favourites.setImageResource(R.drawable.button__like)
+            } else binding.favourites.setImageResource(
+                R.drawable.favourites
+            )
+        }
 
     }
 

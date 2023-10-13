@@ -68,28 +68,35 @@ class PlayerViewModel(
     }
 
     fun onFavoriteClicked(track: Track) {
+        Log.d("PlayerViewModel", "onFavoriteClicked")
+        Log.d("PlayerViewModel", "$track")
         if (track.isFavorite) {
             track.trackId?.let { favouritesInteractor.favouritesDelete(track) }
         } else track.trackId?.let {
-            favouritesInteractor.favouritesDelete(
+            favouritesInteractor.favouritesAdd(
                 track
             )
         }
     }
 
     fun favouritesChecker (track: Track) : LiveData<Boolean> {
+
         favouritesJob=viewModelScope.launch{
+
             while (true) {
                 delay(PLAYER_BUTTON_PRESSING_DELAY)
                 track.trackId?.let { id ->
-                    favouritesInteractor.favouritesCheck(id).collect() {
-                        favouritesIndicator.postValue(it)
-                    }
+                    favouritesInteractor.favouritesCheck(id)
+                        .collect {value ->
+                            Log.d("Hueta", "$value")
+                            favouritesIndicator.postValue(value)
+                        }
                 }
             }
         }
         return favouritesIndicator
     }
+
 
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L

@@ -15,7 +15,9 @@ import org.koin.dsl.module
 val favouritesDataModule = module {
 
     single {
-        Room.databaseBuilder(androidContext(), AppDataBase::class.java, "app_database").build()
+        Room.databaseBuilder(androidContext(), AppDataBase::class.java, "app_database")
+            .allowMainThreadQueries()
+            .build()
     }
 
     factory { TrackConverter() }
