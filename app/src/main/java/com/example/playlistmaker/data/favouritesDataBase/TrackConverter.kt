@@ -12,7 +12,6 @@ class TrackConverter {
             track.artistName,
             track.trackTimeMillis,
             track.artworkUrl100,
-
             track.collectionName,
             track.releaseDate,
             track.primaryGenreName,
@@ -22,8 +21,8 @@ class TrackConverter {
         )
     }
 
-    fun map(track: FavouritesEntity): TrackDto {
-        return TrackDto(
+    fun map(track: FavouritesEntity): Track {
+        return Track(
             track.trackName,
             track.artistName,
             track.trackTimeMillis,

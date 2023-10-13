@@ -10,5 +10,5 @@ import org.koin.dsl.module
 val mediaLibraryModule = module {
     viewModel { FavouritesViewModel() }
     viewModel { PlaylistViewModel() }
-    viewModel { MediaLibraryViewModel() }
+    viewModel { MediaLibraryViewModel(get()) }
 }

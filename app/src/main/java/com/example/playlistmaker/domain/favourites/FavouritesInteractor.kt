@@ -5,7 +5,7 @@ import com.example.playlistmaker.domain.search.models.Track
 import kotlinx.coroutines.flow.Flow
 
 interface FavouritesInteractor {
-    fun favouritesAdd (id:Long)
+    fun favouritesAdd (track:Track)
     fun favouritesDelete (track: Track)
     fun favouritesGet(): Flow<List<Track>>
     fun favouritesCheck(id:Long):Flow<Boolean>

@@ -58,13 +58,13 @@ class SearchHistoryImpl(
                     if (savedHistory.contains(SEARCH_SHARED_PREFS_KEY)) {
                         val type = object : TypeToken<ArrayList<Track>>() {}.type
                         trackHistoryList = gson.fromJson(json, type)
-                        trackHistoryList.forEach { thisTrack ->
+                        /*trackHistoryList.forEach { thisTrack ->
                             if (thisTrack.trackId?.let {
                                     favourites.checkFavourites(
                                         it
                                     )
-                                } == true) thisTrack.isFavorite = true
-                        }
+                                }) thisTrack.isFavorite = true
+                        }*/
                     }
                 }
                 Log.d("historyListdata", trackHistoryList.toString())

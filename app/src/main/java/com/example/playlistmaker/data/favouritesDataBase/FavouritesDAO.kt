@@ -11,7 +11,7 @@ import com.example.playlistmaker.domain.search.models.Track
 interface FavouritesDAO {
 
     @Insert (entity = FavouritesEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    fun insertTrack (id: Long)
+    fun insertTrack (track:Track)
 
     @Delete(entity = FavouritesEntity::class)
     fun deleteTrack (track:FavouritesEntity)

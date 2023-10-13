@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FavouritesRepositoryImpl (private val dataBase: AppDataBase, private val converter:TrackConverter): FavouritesRepository {
-    override fun addTrack(id: Long) {
-        dataBase.favouritesDao().insertTrack(id)
+    override fun addTrack(track:Track) {
+        dataBase.favouritesDao().insertTrack(track)
     }
 
     override fun deleteTrack(track:Track) {
