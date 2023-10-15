@@ -6,8 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.FragmentFavouritesBinding
 import com.example.playlistmaker.domain.search.models.Track
@@ -39,16 +42,21 @@ class FavouritesFragment : Fragment() {
     ): View {
         nullableFavouritesBinding = FragmentFavouritesBinding.inflate(inflater, container, false)
 
-        favouritesViewModel.favouritesMaker()
-        if (favouritesViewModel.trackResultList.value.isNullOrEmpty()) {
-            nullableFavouritesBinding.emptyMediaLibrary.visibility = View.VISIBLE
-            nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.VISIBLE
-        } else {
-            nullableFavouritesBinding.emptyMediaLibrary.visibility = View.GONE
-            nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.GONE
-            favouritesAdapter.setItems(favouritesViewModel.trackResultList.value!!)
-            favouritesAdapter.notifyDataSetChanged()
+        favouritesViewModel.favouritesMaker().observe(viewLifecycleOwner) {
+            trackResultList ->
+            if (favouritesViewModel.trackResultList.value.isNullOrEmpty()) {
+                nullableFavouritesBinding.emptyMediaLibrary.visibility = View.VISIBLE
+                nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.VISIBLE
+                nullableFavouritesBinding.favouritesRecycler.visibility=GONE
+            } else {
+                nullableFavouritesBinding.emptyMediaLibrary.visibility = View.GONE
+                nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.GONE
+                nullableFavouritesBinding.favouritesRecycler.visibility=VISIBLE
+                favouritesAdapter.setItems(favouritesViewModel.trackResultList.value!!)
+                favouritesAdapter.notifyDataSetChanged()
+            }
         }
+
 
         nullableFavouritesBinding.favouritesRecycler.layoutManager = LinearLayoutManager(requireContext())
         nullableFavouritesBinding.favouritesRecycler.adapter = favouritesAdapter

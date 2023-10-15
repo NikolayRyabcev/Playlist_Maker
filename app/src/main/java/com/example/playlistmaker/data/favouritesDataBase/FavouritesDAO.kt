@@ -17,7 +17,7 @@ interface FavouritesDAO {
     fun deleteTrack (track:FavouritesEntity)
 
     @Query("SELECT * FROM favourites_table")
-    fun queryTrack():FavouritesEntity
+    fun queryTrack():List<FavouritesEntity>
 
     @Query("SELECT * FROM favourites_table WHERE trackId=:searchId")
     fun queryTrackId(searchId:Long):FavouritesEntity?
