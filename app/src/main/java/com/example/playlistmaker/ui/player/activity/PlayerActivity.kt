@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.player.activity
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -81,6 +82,9 @@ class PlayerActivity : AppCompatActivity() {
             Log.d("favourtitesIndicator", "$favourtitesIndicator")
             if (favourtitesIndicator) {
                 binding.favourites.setImageResource(R.drawable.button__like)
+                /*val color = "#F56B6C" // Цвет, который вы хотите установить
+                val newColor = Color.parseColor(color)
+                binding.favourites.setColorFilter(newColor)*/
             } else binding.favourites.setImageResource(
                 R.drawable.favourites
             )

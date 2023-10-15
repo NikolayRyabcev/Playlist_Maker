@@ -42,6 +42,8 @@ class FavouritesFragment : Fragment() {
     ): View {
         nullableFavouritesBinding = FragmentFavouritesBinding.inflate(inflater, container, false)
 
+        nullableFavouritesBinding.emptyMediaLibrary.visibility = View.GONE
+        nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.GONE
         favouritesViewModel.favouritesMaker().observe(viewLifecycleOwner) {
             trackResultList ->
             if (favouritesViewModel.trackResultList.value.isNullOrEmpty()) {
