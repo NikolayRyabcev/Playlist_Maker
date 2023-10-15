@@ -28,6 +28,6 @@ val favouritesDataModule = module {
     single <FavouritesInteractor> { FavouritesInteractorImpl(get()) }
 
     viewModel{
-        FavouritesViewModel()
+        FavouritesViewModel(get(), get())
     }
 }

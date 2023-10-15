@@ -86,7 +86,7 @@ class SearchFragment : Fragment() {
         startSearchByEnterPress()
 
         //поиск
-        trackAdapter = TrackAdapter() {
+        trackAdapter = TrackAdapter {
             if (isClickAllowed) {
                 clickAdapting(it)
             }
