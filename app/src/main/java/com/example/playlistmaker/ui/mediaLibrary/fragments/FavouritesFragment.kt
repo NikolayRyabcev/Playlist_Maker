@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.mediaLibrary.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -30,16 +31,29 @@ class FavouritesFragment : Fragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         nullableFavouritesBinding = FragmentFavouritesBinding.inflate(inflater, container, false)
-        return nullableFavouritesBinding.root
+
+        favouritesViewModel.favouritesMaker()
+        if (favouritesViewModel.trackResultList.value.isNullOrEmpty()) {
+            nullableFavouritesBinding.emptyMediaLibrary.visibility = View.VISIBLE
+            nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.VISIBLE
+        } else {
+            nullableFavouritesBinding.emptyMediaLibrary.visibility = View.GONE
+            nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.GONE
+            favouritesAdapter.setItems(favouritesViewModel.trackResultList.value!!)
+            favouritesAdapter.notifyDataSetChanged()
+        }
 
         nullableFavouritesBinding.favouritesRecycler.layoutManager = LinearLayoutManager(requireContext())
         nullableFavouritesBinding.favouritesRecycler.adapter = favouritesAdapter
+
+        return nullableFavouritesBinding.root
     }
 
     private fun clickAdapting(item: Track) {

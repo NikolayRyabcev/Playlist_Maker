@@ -1,6 +1,5 @@
 package com.example.playlistmaker.data.favouritesDataBase
 
-import android.util.Log
 import com.example.playlistmaker.domain.search.models.Track
 
 class TrackConverter {
@@ -21,7 +20,6 @@ class TrackConverter {
     }
 
     fun mapFavouriteToTrack(track: FavouritesEntity): Track {
-        Log.d("TrackConverter", track.toString())
         return Track(
             track.trackName,
             track.artistName,

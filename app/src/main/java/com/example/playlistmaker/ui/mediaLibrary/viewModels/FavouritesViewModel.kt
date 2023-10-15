@@ -13,7 +13,7 @@ class FavouritesViewModel (
     private val searchHistoryInteractor :SearchHistoryInteractor
 ) : ViewModel() {
 
-    private var trackResultList: MutableLiveData<List<Track>?> = MutableLiveData<List<Track>?>()
+    var trackResultList: MutableLiveData<List<Track>?> = MutableLiveData<List<Track>?>()
 
     fun favouritesMaker() {
         viewModelScope.launch {
