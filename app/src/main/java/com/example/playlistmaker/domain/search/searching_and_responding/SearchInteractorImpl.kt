@@ -13,12 +13,10 @@ class SearchInteractorImpl(private val repository: TracksRepository) : SearchInt
                 is Resource.Success -> {
                     (Resource.Success(result.data))
                 }
-
                 is Resource.Error<*> -> {
-                    Resource.Error(null, result.message)
+                    Resource.Error(result.message, null)
                 }
             } as Resource<List<Track>>
         }
     }
-
 }
