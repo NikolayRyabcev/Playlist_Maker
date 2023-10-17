@@ -11,6 +11,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.player.PlayerState
@@ -48,11 +49,13 @@ class PlayerActivity : AppCompatActivity() {
             "100x100bb.jpg",
             "512x512bb.jpg"
         )
+        val radius = 8
         if (getImage != "Unknown Cover") {
             getImage.replace("100x100bb.jpg", "512x512bb.jpg")
             Glide.with(this)
                 .load(getImage)
                 .placeholder(R.drawable.bfplaceholder)
+                .transform(RoundedCorners(radius))
                 .into(binding.trackCover)
         }
         url = track?.previewUrl ?: return
