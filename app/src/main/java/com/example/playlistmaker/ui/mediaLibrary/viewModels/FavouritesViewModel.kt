@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favourites.FavouritesInteractor
 import com.example.playlistmaker.domain.search.history.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.models.Track
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FavouritesViewModel(
@@ -19,13 +20,15 @@ class FavouritesViewModel(
 
     fun favouritesMaker() : LiveData<List<Track>?>{
         viewModelScope.launch {
-            favouritesInteractor.favouritesGet()
-                .collect { trackList ->
-
-                    if (!trackList.isNullOrEmpty()) {
-                        trackResultList.postValue(trackList)
-                    } else trackResultList.postValue(emptyList())
-                }
+            while (true) {
+                delay (300)
+                favouritesInteractor.favouritesGet()
+                    .collect { trackList ->
+                        if (!trackList.isNullOrEmpty()) {
+                            trackResultList.postValue(trackList)
+                        } else trackResultList.postValue(emptyList())
+                    }
+            }
         }
         return trackResultList
     }

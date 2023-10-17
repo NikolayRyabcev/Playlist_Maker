@@ -44,12 +44,21 @@ class FavouritesFragment : Fragment() {
 
         nullableFavouritesBinding.emptyMediaLibrary.visibility = View.GONE
         nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.GONE
+
+        nullableFavouritesBinding.favouritesRecycler.layoutManager = LinearLayoutManager(requireContext())
+        nullableFavouritesBinding.favouritesRecycler.adapter = favouritesAdapter
+        return nullableFavouritesBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         favouritesViewModel.favouritesMaker().observe(viewLifecycleOwner) {
-            trackResultList ->
+                trackResultList ->
             if (favouritesViewModel.trackResultList.value.isNullOrEmpty()) {
                 nullableFavouritesBinding.emptyMediaLibrary.visibility = View.VISIBLE
                 nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.VISIBLE
                 nullableFavouritesBinding.favouritesRecycler.visibility=GONE
+                favouritesAdapter.notifyDataSetChanged()
             } else {
                 nullableFavouritesBinding.emptyMediaLibrary.visibility = View.GONE
                 nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.GONE
@@ -58,14 +67,7 @@ class FavouritesFragment : Fragment() {
                 favouritesAdapter.notifyDataSetChanged()
             }
         }
-
-
-        nullableFavouritesBinding.favouritesRecycler.layoutManager = LinearLayoutManager(requireContext())
-        nullableFavouritesBinding.favouritesRecycler.adapter = favouritesAdapter
-
-        return nullableFavouritesBinding.root
     }
-
     private fun clickAdapting(item: Track) {
         favouritesViewModel.addItem(item)
         val intent = Intent(requireContext(), PlayerActivity::class.java)
