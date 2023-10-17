@@ -29,6 +29,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient, private val
                         //val isFavorite = track.trackId?.let { favourites.checkFavourites(it) }
                         Track(
                             track.trackName,
+                            addTime = System.currentTimeMillis(),
                             track.artistName,
                             SimpleDateFormat(
                                 "mm:ss",

@@ -16,6 +16,7 @@ class FavouritesRepositoryImpl(
 
     override fun addTrack(track: Track) {
         track.isFavorite = true
+        track.addTime = System.currentTimeMillis()
         dataBase.favouritesDao().insertTrack(track)
     }
 

@@ -6,7 +6,7 @@ class TrackConverter {
     fun mapTrackToFavourite(track: Track): FavouritesEntity {
         return FavouritesEntity(
             track.trackId,
-            addTime=System.currentTimeMillis(),
+            track.addTime,
             track.trackName,
             track.artistName,
             track.trackTimeMillis,
@@ -23,6 +23,7 @@ class TrackConverter {
     fun mapFavouriteToTrack(track: FavouritesEntity): Track {
         return Track(
             track.trackName,
+            track.addTime,
             track.artistName,
             track.trackTimeMillis,
             track.artworkUrl100,
