@@ -16,20 +16,24 @@ class RetrofitNetworkClient(
 
     @RequiresApi(Build.VERSION_CODES.M)
     override suspend fun doRequest(dto: Any): Response {
-        if (!isConnected()) {
-            return Response().apply { resultCode = -1 }
-        }
-        return withContext(Dispatchers.IO) {
-            if (dto is TrackSearchRequest) {
-                try {
-                    val resp = iTunesService.search(dto.expression)
-                    resp.apply { resultCode = 200 }
-                } catch (e: Throwable) {
-                    Response().apply { resultCode = 500 }
-                }
-            } else {
-                Response().apply { resultCode = 400 }
+        try {
+            if (!isConnected()) {
+                return Response().apply { resultCode = -1 }
             }
+            return withContext(Dispatchers.IO) {
+                if (dto is TrackSearchRequest) {
+                    try {
+                        val resp = iTunesService.search(dto.expression)
+                        resp.apply { resultCode = 200 }
+                    } catch (e: Throwable) {
+                        Response().apply { resultCode = 500 }
+                    }
+                } else {
+                    Response().apply { resultCode = 400 }
+                }
+            }
+        } catch (e: Throwable){
+            return Response().apply { resultCode = 500 }
         }
     }
 

@@ -24,9 +24,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient, private val
                 }
 
                 200 -> {
-
                     emit(Resource.Success((response as TrackResponse).results.map {track ->
-                        //val isFavorite = track.trackId?.let { favourites.checkFavourites(it) }
                         Track(
                             track.trackName,
                             addTime = System.currentTimeMillis(),
