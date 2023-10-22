@@ -45,6 +45,7 @@
             android:layout_marginTop="82dp"
             android:background="@drawable/rounded_corners"
             android:src="@drawable/trackcoverplaceholder"
+            app:cornerRadius="8dp"
             app:layout_constraintDimensionRatio="h, 1:1"
             app:layout_constraintEnd_toStartOf="@+id/rightGuide"
             app:layout_constraintStart_toStartOf="@+id/leftGuide"
@@ -91,11 +92,11 @@
             android:background="@drawable/round_button"
             android:backgroundTint="#401A1B22"
             android:src="@drawable/playlistadd"
-            app:layout_goneMarginTop="142.33dp"
+            app:layout_constraintBottom_toBottomOf="@id/playButton"
             app:layout_constraintStart_toStartOf="@+id/leftGuide"
             app:layout_constraintTop_toTopOf="@id/playButton"
-            app:layout_constraintBottom_toBottomOf="@id/playButton"
-            app:tint="#fff" />
+            app:layout_goneMarginTop="142.33dp"
+            app:tintMode="multiply" />
 
         <!--Кнопка плэй/пауза-->
 
@@ -120,12 +121,12 @@
             android:layout_marginTop="38.33dp"
             android:background="@drawable/round_button2"
             android:src="@drawable/pause"
+            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/favourites"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/playlistAddButton"
             app:layout_constraintTop_toBottomOf="@id/playerArtistName"
-            app:tint="?attr/colorOnSecondary"
-            android:visibility="gone" />
+            app:tint="?attr/colorOnSecondary" />
 
         <!--Кнопка добавить в избранное-->
         <ImageButton
@@ -135,10 +136,10 @@
             android:background="@drawable/round_button"
             android:backgroundTint="#401A1B22"
             android:src="@drawable/favourites"
+            app:layout_constraintBottom_toBottomOf="@id/playButton"
             app:layout_constraintEnd_toStartOf="@+id/rightGuide"
             app:layout_constraintTop_toTopOf="@id/playButton"
-            app:layout_constraintBottom_toBottomOf="@id/playButton"
-            app:tint="#fff" />
+            app:tintMode="multiply" />
 
         <!-- Продолжительность трека -->
         <TextView
@@ -150,11 +151,11 @@
             android:text="@string/_00_00"
             android:textColor="?attr/colorOnSecondary"
             android:textSize="14sp"
-            app:layout_goneMarginTop="142.33dp"
             app:layout_constraintEnd_toStartOf="@+id/favourites"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/playlistAddButton"
-            app:layout_constraintTop_toBottomOf="@+id/playButton" />
+            app:layout_constraintTop_toBottomOf="@+id/playButton"
+            app:layout_goneMarginTop="142.33dp" />
 
         <!-- Поля трека -->
 
