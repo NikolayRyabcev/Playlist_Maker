@@ -42,6 +42,7 @@
     <string name="medialib">Медиатека</string>
     <string name="settingsButton">Настройки</string>
     <string name="picture">Картинка</string>
+    <string name="new_playlist">Новый плейлист</string>
 
 
 </resources>

@@ -17,15 +17,46 @@
         app:tint="?attr/colorOnSecondary" />
 
     <TextView
+        android:id="@+id/playlistHeaderText"
         style="@style/SettingsText"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/ys_display_medium"
-        android:text="@string/MediaLibrary"
+        android:text="@string/new_playlist"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="@dimen/text1"
-        app:layout_constraintStart_toEndOf="playlistBackButtonArrow"
+        app:layout_constraintStart_toEndOf="@id/playlistBackButtonArrow"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--Обертка плейлиста-->
+    <ImageView
+        android:id="@+id/playlistCover"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/cover_rounded_corners_and_dash"
+        app:cornerRadius="8dp"
+        app:layout_constraintDimensionRatio="h, 1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playlistHeaderText" />
+
+    <!--Плейсхолдер плейлиста-->
+    <ImageView
+        android:id="@+id/playlistPlaceHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/add_photo"
+        app:cornerRadius="8dp"
+        app:layout_constraintDimensionRatio="h, 1:1"
+        app:layout_constraintEnd_toEndOf="@+id/playlistCover"
+        app:layout_constraintStart_toStartOf="@+id/playlistCover"
+        app:layout_constraintTop_toTopOf="@+id/playlistCover"
+        app:layout_constraintBottom_toBottomOf="@+id/playlistCover"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
