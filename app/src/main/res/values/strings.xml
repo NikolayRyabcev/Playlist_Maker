@@ -43,6 +43,7 @@
     <string name="settingsButton">Настройки</string>
     <string name="picture">Картинка</string>
     <string name="new_playlist">Новый плейлист</string>
+    <string name="playlistName">Название*</string>
 
 
 </resources>
