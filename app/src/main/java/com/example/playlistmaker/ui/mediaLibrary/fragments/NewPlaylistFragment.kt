@@ -21,8 +21,6 @@ class NewPlaylistFragment : Fragment() {
         newPlaylistBinding = NewPlaylistBinding.inflate(inflater,container,false)
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility=GONE
-        newPlaylistBinding.playlistNameEditText.setOnFocusChangeListener { _, hasFocus ->
-            newPlaylistBinding.playlistName.hint = if (hasFocus) "Название*" else null  }
         return newPlaylistBinding.root
     }
 }

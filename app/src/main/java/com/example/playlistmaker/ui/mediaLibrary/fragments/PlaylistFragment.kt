@@ -10,11 +10,13 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.ui.mediaLibrary.viewModels.FavouritesViewModel
 import com.example.playlistmaker.ui.mediaLibrary.viewModels.PlaylistViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistFragment : Fragment() {
     private val playlistViewModel by viewModel<PlaylistViewModel>()
     private lateinit var nullablePlaylistBinding: FragmentPlaylistsBinding
+    private lateinit var bottomNavigator: BottomNavigationView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,6 +31,8 @@ class PlaylistFragment : Fragment() {
             transaction.addToBackStack(null)
             transaction.commit()
         }
+        bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavigator.visibility= View.VISIBLE
         return nullablePlaylistBinding.root
     }
 
