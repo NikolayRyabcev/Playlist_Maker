@@ -63,7 +63,6 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/playlistName"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="?attr/colorOnSecondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -79,6 +78,7 @@
         android:textColor="?attr/colorOnSecondary"
         android:textColorHint="?attr/colorOnSecondary"
         android:textSize="@dimen/text2"
+        app:boxStrokeColor="?attr/colorOnSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playlistCover">
@@ -87,9 +87,9 @@
             android:id="@+id/playlistNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/playlistName"
             android:textColor="?attr/colorOnSecondary"
             android:textColorHint="?attr/colorOnSecondary"
-            android:hint="@string/playlistName"
             app:hintTextColor="#3772E7" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,15 +114,15 @@
         android:textSize="@dimen/text2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playlistName" >
+        app:layout_constraintTop_toBottomOf="@+id/playlistName">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/playlistDescriptEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Описание"
             android:textColor="?attr/colorOnSecondary"
             android:textColorHint="?attr/colorOnSecondary"
-            android:hint="Описание"
             app:hintTextColor="#3772E7" />
     </com.google.android.material.textfield.TextInputLayout>
 
