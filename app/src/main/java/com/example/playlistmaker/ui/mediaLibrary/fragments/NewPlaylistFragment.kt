@@ -1,6 +1,8 @@
 package com.example.playlistmaker.ui.mediaLibrary.fragments
 
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,27 +13,17 @@ import android.view.View.GONE
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.NewPlaylistBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.tbruyelle.rxpermissions3.RxPermissions
 
 class NewPlaylistFragment : Fragment() {
     private lateinit var newPlaylistBinding: NewPlaylistBinding
     private lateinit var bottomNavigator: BottomNavigationView
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-                // Пользователь дал разрешение, идем во вью-модель загружать фото
-                loadImage()
-                Log.d("Разрешение на загрузку", "дано")
-
-            } else {
-                // Пользователь отказал, ничего не делаем
-                Log.d("Разрешение на загрузку", "отказано")
-            }
-        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,22 +35,14 @@ class NewPlaylistFragment : Fragment() {
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = GONE
 
-        //обработка нажатия на область обложки
-        newPlaylistBinding.playlistCover.setOnClickListener {
-            if (checkImagePermission()) loadImage() else {
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                    READ_MEDIA_IMAGES_REQUEST_CODE
-                )
-                requestPermissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
-            }
-        }
-
-        return newPlaylistBinding.root
+      return newPlaylistBinding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val rxPermissions = RxPermissions(this)
         //устанавливаем цвет кнопки "Создать"
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -78,6 +62,20 @@ class NewPlaylistFragment : Fragment() {
             }
         }
         newPlaylistBinding.playlistNameEditText.addTextChangedListener(simpleTextWatcher)
+
+        //обработка нажатия на область обложки
+        newPlaylistBinding.playlistCover.setOnClickListener {
+            rxPermissions.request(android.Manifest.permission.READ_MEDIA_IMAGES)
+                .subscribe { granted: Boolean ->
+                    if (granted) {
+                        loadImage()
+                        Log.d("Разрешение на загрузку", "дано")
+                    } else {
+                        // Пользователь отказал, ничего не делаем
+                        Log.d("Разрешение на загрузку", "отказано")
+                    }
+                }
+        }
     }
 
     private fun loadImage() {}
@@ -92,16 +90,5 @@ class NewPlaylistFragment : Fragment() {
         newPlaylistBinding.createButton.backgroundTintList =
             (ContextCompat.getColorStateList(requireContext(), R.color.back1))
         newPlaylistBinding.createButton.isEnabled = true
-    }
-
-    private fun checkImagePermission(): Boolean {
-        val permissionProvided = ContextCompat.checkSelfPermission(
-            requireContext(), android.Manifest.permission.READ_MEDIA_IMAGES
-        )
-        return permissionProvided == PackageManager.PERMISSION_GRANTED
-    }
-
-    companion object {
-        const val READ_MEDIA_IMAGES_REQUEST_CODE = 1
     }
 }
