@@ -21,6 +21,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.NewPlaylistBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -41,6 +43,10 @@ class NewPlaylistFragment : Fragment() {
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = GONE
+        newPlaylistBinding.playlistBackButtonArrow.setOnClickListener {
+            val fragmentmanager=requireActivity().supportFragmentManager
+            fragmentmanager.popBackStack()
+        }
 
         return newPlaylistBinding.root
     }
@@ -116,6 +122,12 @@ class NewPlaylistFragment : Fragment() {
             .decodeStream(inputStream)
             //.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         Log.d("Разрешение на загрузку", "файл записан")
+        val radius = 8
+        Glide.with(requireActivity())
+            .load(file)
+            .placeholder(R.drawable.add_photo)
+            .transform(RoundedCorners(radius))
+            .into(newPlaylistBinding.playlistCover)
     }
 
 
