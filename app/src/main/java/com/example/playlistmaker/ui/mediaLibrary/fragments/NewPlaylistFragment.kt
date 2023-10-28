@@ -26,6 +26,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.NewPlaylistBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tbruyelle.rxpermissions3.RxPermissions
 import java.io.File
 import java.io.FileOutputStream
@@ -33,6 +34,7 @@ import java.io.FileOutputStream
 class NewPlaylistFragment : Fragment() {
     private lateinit var newPlaylistBinding: NewPlaylistBinding
     private lateinit var bottomNavigator: BottomNavigationView
+    var isFileLoaded = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,8 +46,7 @@ class NewPlaylistFragment : Fragment() {
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = GONE
         newPlaylistBinding.playlistBackButtonArrow.setOnClickListener {
-            val fragmentmanager=requireActivity().supportFragmentManager
-            fragmentmanager.popBackStack()
+            onBackClick()
         }
 
         return newPlaylistBinding.root
@@ -120,7 +121,7 @@ class NewPlaylistFragment : Fragment() {
         val outputStream = FileOutputStream(file)
         BitmapFactory
             .decodeStream(inputStream)
-            //.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+        //.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         Log.d("Разрешение на загрузку", "файл записан")
         val radius = 8
         Glide.with(requireActivity())
@@ -128,8 +129,23 @@ class NewPlaylistFragment : Fragment() {
             .placeholder(R.drawable.add_photo)
             .transform(RoundedCorners(radius))
             .into(newPlaylistBinding.playlistCover)
+        isFileLoaded = true
     }
 
+    private fun onBackClick() {
+        if (isFileLoaded && (!newPlaylistBinding.playlistNameEditText.text.isNullOrEmpty()) && (!newPlaylistBinding.playlistDescriptEditText.text.isNullOrEmpty())) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Завершить создание плейлиста?")
+                .setMessage("Все несохраненные данные будут потеряны")
+                .setNegativeButton("Отмена") {dialog, which ->
+                    return@setNegativeButton
+                }
+                .setPositiveButton("Завершить"){dialog, which -> }
+                .show()
+        }
+        val fragmentmanager = requireActivity().supportFragmentManager
+        fragmentmanager.popBackStack()
+    }
 
     private fun turnOffCreateButton() {
         newPlaylistBinding.createButton.backgroundTintList =
