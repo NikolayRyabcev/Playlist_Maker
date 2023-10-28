@@ -27,8 +27,6 @@ class FavouritesRepositoryImpl(
 
     override fun getFavourites(): Flow<List<Track>> = flow {
         val favourites = dataBase.favouritesDao().queryTrack()
-
-        Log.d("Избранное репозиторий", favourites.toString())
         if (favourites != null) {
             val favouritesConverted =
                 dataBase.favouritesDao().queryTrack().map { converter.mapFavouriteToTrack(it) }

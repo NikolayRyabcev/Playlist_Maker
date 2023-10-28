@@ -14,8 +14,8 @@ interface PlaylistDAO {
     fun insertPlaylist (playlist: Playlist)
 
     @Delete (entity=PlaylistEntity::class)
-    fun deletePlaylist (playlist: Playlist)
+    fun deletePlaylist (playlist: PlaylistEntity)
 
     @Query("SELECT * FROM playlist_table")
-    fun queryPlaylist () : List <Playlist>
+    fun queryPlaylist () : List <PlaylistEntity>
 }
