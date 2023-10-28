@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.mediaLibrary.fragments
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog.show
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -50,8 +51,16 @@ class NewPlaylistFragment : Fragment() {
         }
         newPlaylistBinding.createButton.setOnClickListener {
             createPlaylist()
-            closer()
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage("Плейлист $newPlaylistBinding.playlistNameEditText.text создан")
+                .setNegativeButton("Оk") { dialog, which ->
+                    closer()
+                }
+                .show()
+
         }
+
+
         return newPlaylistBinding.root
     }
 
@@ -130,7 +139,7 @@ class NewPlaylistFragment : Fragment() {
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         Log.d("Разрешение на загрузку", "файл записан")
-        newPlaylistBinding.playlistPlaceHolder.visibility=GONE
+        newPlaylistBinding.playlistPlaceHolder.visibility = GONE
         isFileLoaded = true
     }
 
@@ -151,10 +160,11 @@ class NewPlaylistFragment : Fragment() {
         }
     }
 
-    private fun closer(){
+    private fun closer() {
         val fragmentmanager = requireActivity().supportFragmentManager
         fragmentmanager.popBackStack()
     }
+
     private fun turnOffCreateButton() {
         newPlaylistBinding.createButton.backgroundTintList =
             (ContextCompat.getColorStateList(requireContext(), R.color.settingsIconGray))
@@ -166,7 +176,8 @@ class NewPlaylistFragment : Fragment() {
             (ContextCompat.getColorStateList(requireContext(), R.color.back1))
         newPlaylistBinding.createButton.isEnabled = true
     }
-    private fun createPlaylist(){
+
+    private fun createPlaylist() {
 
     }
 }
