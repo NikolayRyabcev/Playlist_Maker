@@ -48,7 +48,10 @@ class NewPlaylistFragment : Fragment() {
         newPlaylistBinding.playlistBackButtonArrow.setOnClickListener {
             onBackClick()
         }
-
+        newPlaylistBinding.createButton.setOnClickListener {
+            createPlaylist()
+            closer()
+        }
         return newPlaylistBinding.root
     }
 
@@ -127,12 +130,12 @@ class NewPlaylistFragment : Fragment() {
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         Log.d("Разрешение на загрузку", "файл записан")
-
+        newPlaylistBinding.playlistPlaceHolder.visibility=GONE
         isFileLoaded = true
     }
 
     private fun onBackClick() {
-        if (!(isFileLoaded && newPlaylistBinding.playlistNameEditText.text.isNullOrEmpty() && newPlaylistBinding.playlistDescriptEditText.text.isNullOrEmpty())) {
+        if (isFileLoaded && !newPlaylistBinding.playlistNameEditText.text.isNullOrEmpty() && !newPlaylistBinding.playlistDescriptEditText.text.isNullOrEmpty()) {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Завершить создание плейлиста?")
                 .setMessage("Все несохраненные данные будут потеряны")
@@ -140,16 +143,18 @@ class NewPlaylistFragment : Fragment() {
                     return@setNegativeButton
                 }
                 .setPositiveButton("Завершить") { dialog, which ->
-                    val fragmentmanager = requireActivity().supportFragmentManager
-                    fragmentmanager.popBackStack()
+                    closer()
                 }
                 .show()
         } else {
-            val fragmentmanager = requireActivity().supportFragmentManager
-            fragmentmanager.popBackStack()
+            closer()
         }
     }
 
+    private fun closer(){
+        val fragmentmanager = requireActivity().supportFragmentManager
+        fragmentmanager.popBackStack()
+    }
     private fun turnOffCreateButton() {
         newPlaylistBinding.createButton.backgroundTintList =
             (ContextCompat.getColorStateList(requireContext(), R.color.settingsIconGray))
@@ -160,5 +165,8 @@ class NewPlaylistFragment : Fragment() {
         newPlaylistBinding.createButton.backgroundTintList =
             (ContextCompat.getColorStateList(requireContext(), R.color.back1))
         newPlaylistBinding.createButton.isEnabled = true
+    }
+    private fun createPlaylist(){
+
     }
 }
