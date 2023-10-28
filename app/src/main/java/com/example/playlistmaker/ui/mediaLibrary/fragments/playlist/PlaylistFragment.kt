@@ -3,6 +3,8 @@ package com.example.playlistmaker.ui.mediaLibrary.fragments.playlist
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
@@ -15,6 +17,7 @@ class PlaylistFragment : Fragment() {
     private val playlistViewModel by viewModel<PlaylistViewModel>()
     private lateinit var nullablePlaylistBinding: FragmentPlaylistsBinding
     private lateinit var bottomNavigator: BottomNavigationView
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,8 +33,32 @@ class PlaylistFragment : Fragment() {
             transaction.commit()
         }
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
-        bottomNavigator.visibility= View.VISIBLE
+        bottomNavigator.visibility = View.VISIBLE
+
         return nullablePlaylistBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        playlistViewModel.playlistMaker().observe(viewLifecycleOwner) { playlistList ->
+            if (playlistViewModel.playlistMaker().value.isNullOrEmpty()) {
+                noPlaylist()
+            } else {
+                existPlaylist()
+            }
+        }
+    }
+
+    private fun noPlaylist(){
+        nullablePlaylistBinding.refreshButton.visibility=VISIBLE
+        nullablePlaylistBinding.emptyPlaylist.visibility=VISIBLE
+        nullablePlaylistBinding.emptyPlaylistText.visibility=VISIBLE
+    }
+
+    private fun existPlaylist(){
+        nullablePlaylistBinding.refreshButton.visibility=GONE
+        nullablePlaylistBinding.emptyPlaylist.visibility=GONE
+        nullablePlaylistBinding.emptyPlaylistText.visibility=GONE
     }
 
     companion object {

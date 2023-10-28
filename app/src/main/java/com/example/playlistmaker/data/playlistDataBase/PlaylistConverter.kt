@@ -15,6 +15,7 @@ class PlaylistConverter() {
 
     fun mapplaylistClassToEntity(item: Playlist): PlaylistEntity {
         return PlaylistEntity(
+            0,
             item.playlistName,
             item.description,
             item.uri,

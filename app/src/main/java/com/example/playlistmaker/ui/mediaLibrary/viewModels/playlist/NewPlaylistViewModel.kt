@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class NewPlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel() {
-    val playlistList: MutableLiveData<List<Playlist>> = MutableLiveData<List<Playlist>>()
+
 
     fun addPlayList(item: Playlist) {
         interactor.addPlaylist(item)
@@ -21,20 +21,5 @@ class NewPlaylistViewModel(private val interactor: PlaylistInteractor) : ViewMod
         interactor.deletePlaylist(item)
     }
 
-    fun playlistMaker(): LiveData<List<Playlist>> {
-        viewModelScope.launch {
-            while (true) {
-                delay(300)
-                interactor.queryPlaylist()
-                    .collect {
-                        if (it.isNotEmpty()) {
-                            playlistList.postValue(it)
-                        } else {
-                            playlistList.postValue(emptyList())
-                        }
-                    }
-            }
-        }
-        return playlistList
-    }
+
 }
