@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Playlist (
     val playlistName:String,
-    val descroption:String?,
+    val description:String?,
     val uri:String,
     val trackArray:List<Track>,
     val arrayNumber:Int = trackArray.size
