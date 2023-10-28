@@ -19,11 +19,13 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.NewPlaylistBinding
+import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.NewPlaylistViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -36,7 +38,8 @@ class NewPlaylistFragment : Fragment() {
     private lateinit var newPlaylistBinding: NewPlaylistBinding
     private lateinit var bottomNavigator: BottomNavigationView
     var isFileLoaded = false
-    private val viewModel :NewPlaylistViewModel by viewModel<NewPlaylistViewModel>()
+    private val viewModel :NewPlaylistViewModel by viewModel()
+    private var selectedUri: Uri? =null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -99,6 +102,7 @@ class NewPlaylistFragment : Fragment() {
                         .transform(RoundedCorners(radius))
                         .into(newPlaylistBinding.playlistCover)
                     saveImageToPrivateStorage(uri)
+
                 } else {
                     //ничего не делаем
                 }
@@ -139,6 +143,7 @@ class NewPlaylistFragment : Fragment() {
         Log.d("Разрешение на загрузку", "файл записан")
         newPlaylistBinding.playlistPlaceHolder.visibility = GONE
         isFileLoaded = true
+        selectedUri=file.toUri()
     }
 
     private fun onBackClick() {
@@ -176,6 +181,12 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun createPlaylist() {
-
+        viewModel.addPlayList(Playlist(
+            newPlaylistBinding.playlistNameEditText.text.toString(),
+            newPlaylistBinding.playlistDescriptEditText.text.toString(),
+            selectedUri.toString(),
+            emptyList(),
+            0
+        ))
     }
 }
