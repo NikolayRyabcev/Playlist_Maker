@@ -82,7 +82,12 @@ class NewPlaylistFragment : Fragment() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
-                    newPlaylistBinding.playlistCover.setImageURI(uri)
+                    val radius = 8
+                    Glide.with(requireActivity())
+                        .load(uri)
+                        .placeholder(R.drawable.add_photo)
+                        .transform(RoundedCorners(radius))
+                        .into(newPlaylistBinding.playlistCover)
                     saveImageToPrivateStorage(uri)
                 } else {
                     //ничего не делаем
@@ -117,34 +122,32 @@ class NewPlaylistFragment : Fragment() {
         }
         val file = File(filePath, "first_cover.jpg")
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
-        //пока не нужно, но пусть полежит
         val outputStream = FileOutputStream(file)
         BitmapFactory
             .decodeStream(inputStream)
-        //.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         Log.d("Разрешение на загрузку", "файл записан")
-        val radius = 8
-        Glide.with(requireActivity())
-            .load(file)
-            .placeholder(R.drawable.add_photo)
-            .transform(RoundedCorners(radius))
-            .into(newPlaylistBinding.playlistCover)
+
         isFileLoaded = true
     }
 
     private fun onBackClick() {
-        if (isFileLoaded && (!newPlaylistBinding.playlistNameEditText.text.isNullOrEmpty()) && (!newPlaylistBinding.playlistDescriptEditText.text.isNullOrEmpty())) {
+        if (!(isFileLoaded && newPlaylistBinding.playlistNameEditText.text.isNullOrEmpty() && newPlaylistBinding.playlistDescriptEditText.text.isNullOrEmpty())) {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Завершить создание плейлиста?")
                 .setMessage("Все несохраненные данные будут потеряны")
-                .setNegativeButton("Отмена") {dialog, which ->
+                .setNegativeButton("Отмена") { dialog, which ->
                     return@setNegativeButton
                 }
-                .setPositiveButton("Завершить"){dialog, which -> }
+                .setPositiveButton("Завершить") { dialog, which ->
+                    val fragmentmanager = requireActivity().supportFragmentManager
+                    fragmentmanager.popBackStack()
+                }
                 .show()
+        } else {
+            val fragmentmanager = requireActivity().supportFragmentManager
+            fragmentmanager.popBackStack()
         }
-        val fragmentmanager = requireActivity().supportFragmentManager
-        fragmentmanager.popBackStack()
     }
 
     private fun turnOffCreateButton() {
