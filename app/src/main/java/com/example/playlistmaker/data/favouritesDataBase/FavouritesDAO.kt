@@ -5,13 +5,13 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 
 @Dao
 interface FavouritesDAO {
 
     @Insert (entity = FavouritesEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    fun insertTrack (track:Track)
+    fun insertTrack (track: Track)
 
     @Delete(entity = FavouritesEntity::class)
     fun deleteTrack (track:FavouritesEntity)

@@ -7,7 +7,7 @@ import com.example.playlistmaker.data.search.requestAndResponse.TrackSearchReque
 import com.example.playlistmaker.domain.favourites.FavouritesRepository
 import com.example.playlistmaker.domain.search.ErrorType
 import com.example.playlistmaker.domain.search.TracksRepository
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat

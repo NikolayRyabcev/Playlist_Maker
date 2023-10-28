@@ -15,7 +15,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

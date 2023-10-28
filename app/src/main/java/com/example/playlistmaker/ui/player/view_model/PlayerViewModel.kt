@@ -10,7 +10,7 @@ import com.example.playlistmaker.domain.favourites.FavouritesInteractor
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerStateListener
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

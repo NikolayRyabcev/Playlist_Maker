@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.search.history
 
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 
 
 class SearchHistoryInteractorImpl(private val historyRepository: SearchHistory) :

@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.playlistmaker.App.AppDataBase
 import com.example.playlistmaker.domain.favourites.FavouritesRepository
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

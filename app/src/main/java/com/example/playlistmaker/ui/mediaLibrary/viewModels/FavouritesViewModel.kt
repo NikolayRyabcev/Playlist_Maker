@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favourites.FavouritesInteractor
 import com.example.playlistmaker.domain.search.history.SearchHistoryInteractor
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

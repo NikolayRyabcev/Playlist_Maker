@@ -1,12 +1,12 @@
 package com.example.playlistmaker.domain.favourites
 
 import com.example.playlistmaker.data.favouritesDataBase.FavouritesEntity
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 class FavouritesInteractorImpl(private val favouritesRepository : FavouritesRepository) : FavouritesInteractor{
 
-    override fun favouritesAdd(track:Track) {
+    override fun favouritesAdd(track: Track) {
         favouritesRepository.addTrack(track)
     }
 

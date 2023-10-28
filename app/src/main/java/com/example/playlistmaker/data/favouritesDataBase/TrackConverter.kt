@@ -1,6 +1,6 @@
 package com.example.playlistmaker.data.favouritesDataBase
 
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 
 class TrackConverter {
     fun mapTrackToFavourite(track: Track): FavouritesEntity {

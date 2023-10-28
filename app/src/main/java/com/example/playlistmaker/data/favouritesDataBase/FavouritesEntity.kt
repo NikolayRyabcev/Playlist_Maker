@@ -20,4 +20,3 @@ data class FavouritesEntity(
     var isFavorite: Boolean = false
 )
 
-//@ColumnInfo(name = "trackId", typeAffinity=INTEGER)
