@@ -1,8 +1,6 @@
-package com.example.playlistmaker.ui.mediaLibrary.fragments
+package com.example.playlistmaker.ui.mediaLibrary.fragments.playlist
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog.show
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -26,9 +24,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.NewPlaylistBinding
+import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.NewPlaylistViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tbruyelle.rxpermissions3.RxPermissions
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
@@ -36,6 +36,7 @@ class NewPlaylistFragment : Fragment() {
     private lateinit var newPlaylistBinding: NewPlaylistBinding
     private lateinit var bottomNavigator: BottomNavigationView
     var isFileLoaded = false
+    private val viewModel :NewPlaylistViewModel by viewModel<NewPlaylistViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,10 +58,7 @@ class NewPlaylistFragment : Fragment() {
                     closer()
                 }
                 .show()
-
         }
-
-
         return newPlaylistBinding.root
     }
 

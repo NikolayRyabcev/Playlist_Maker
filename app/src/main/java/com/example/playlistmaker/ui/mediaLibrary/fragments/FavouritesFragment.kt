@@ -76,6 +76,5 @@ class FavouritesFragment : Fragment() {
     }
     companion object {
         fun newInstance() = FavouritesFragment()
-
     }
 }

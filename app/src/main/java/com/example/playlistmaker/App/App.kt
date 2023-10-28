@@ -10,6 +10,7 @@ import com.example.playlistmaker.di.SearchModule.trackRepositoryModule
 import com.example.playlistmaker.di.SettingsSharingModule.settingsSharingModule
 import com.example.playlistmaker.di.favouritesDataModule
 import com.example.playlistmaker.di.mediaLibraryModule.mediaLibraryModule
+import com.example.playlistmaker.di.playlistModule
 import com.example.playlistmaker.domain.settings.SettingsInteractor
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
@@ -31,7 +32,8 @@ class App : Application(), KoinComponent {
                 playerModule,
                 settingsSharingModule,
                 mediaLibraryModule,
-                favouritesDataModule
+                favouritesDataModule,
+                playlistModule
             )
 
         }

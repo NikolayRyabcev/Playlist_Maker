@@ -1,6 +1,5 @@
-package com.example.playlistmaker.ui.mediaLibrary.fragments
+package com.example.playlistmaker.ui.mediaLibrary.fragments.playlist
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
-import com.example.playlistmaker.ui.mediaLibrary.viewModels.FavouritesViewModel
-import com.example.playlistmaker.ui.mediaLibrary.viewModels.PlaylistViewModel
+import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.PlaylistViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
