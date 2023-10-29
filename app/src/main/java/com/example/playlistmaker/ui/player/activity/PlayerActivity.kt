@@ -17,6 +17,7 @@ import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -90,6 +91,31 @@ class PlayerActivity : AppCompatActivity() {
             )
         }
 
+        //BottomSheet
+        val bottomSheetContainer = binding.standardBottomSheet
+
+        val overlay = binding.overlay
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        overlay.visibility = View.GONE
+                    }
+
+                    else -> {
+                        overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
     }
 
     override fun onPause() {
