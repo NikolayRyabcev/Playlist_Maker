@@ -7,10 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favourites.FavouritesInteractor
+import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerStateListener
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.playlist.PlaylistInteractor
 import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -19,7 +21,8 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val favouritesInteractor: FavouritesInteractor
+    private val favouritesInteractor: FavouritesInteractor,
+    private val interactor: PlaylistInteractor
 ) : ViewModel() {
     var timeJob: Job? = null
     var stateLiveData = MutableLiveData<PlayerState>()
@@ -97,6 +100,24 @@ class PlayerViewModel(
         return favouritesIndicator
     }
 
+    val playlistList: MutableLiveData<List<Playlist>> = MutableLiveData<List<Playlist>>()
+
+    fun playlistMaker(): LiveData<List<Playlist>> {
+        viewModelScope.launch {
+            while (true) {
+                delay(300)
+                interactor.queryPlaylist()
+                    .collect {
+                        if (it.isNotEmpty()) {
+                            playlistList.postValue(it)
+                        } else {
+                            playlistList.postValue(emptyList())
+                        }
+                    }
+            }
+        }
+        return playlistList
+    }
 
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L

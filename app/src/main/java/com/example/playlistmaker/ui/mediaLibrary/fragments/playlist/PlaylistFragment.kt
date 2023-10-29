@@ -19,7 +19,6 @@ class PlaylistFragment : Fragment() {
     private val playlistViewModel by viewModel<PlaylistViewModel>()
     private lateinit var nullablePlaylistBinding: FragmentPlaylistsBinding
     private lateinit var bottomNavigator: BottomNavigationView
-    private lateinit var playlistAdapter: PlaylistAdapter
 
 
     override fun onCreateView(
@@ -29,7 +28,7 @@ class PlaylistFragment : Fragment() {
     ): View {
         nullablePlaylistBinding = FragmentPlaylistsBinding.inflate(inflater, container, false)
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
-        bottomNavigator.visibility = View.VISIBLE
+        bottomNavigator.visibility = VISIBLE
 
         //кнопка создать плейлист
         nullablePlaylistBinding.newPlaylistButton.setOnClickListener {
@@ -61,15 +60,15 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun noPlaylist(){
-        nullablePlaylistBinding.newPlaylistButton.visibility=VISIBLE
         nullablePlaylistBinding.emptyPlaylist.visibility=VISIBLE
         nullablePlaylistBinding.emptyPlaylistText.visibility=VISIBLE
+        nullablePlaylistBinding.playlistList.visibility=GONE
     }
 
     private fun existPlaylist(){
-        nullablePlaylistBinding.newPlaylistButton.visibility=GONE
         nullablePlaylistBinding.emptyPlaylist.visibility=GONE
         nullablePlaylistBinding.emptyPlaylistText.visibility=GONE
+        nullablePlaylistBinding.playlistList.visibility=VISIBLE
     }
 
     companion object {
