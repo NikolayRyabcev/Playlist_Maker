@@ -11,7 +11,7 @@ class PlaylistRepositoryImpl(
     private val converter: PlaylistConverter
 ) :PlaylistRepository{
     override fun addPlaylist(item:Playlist) {
-        database.playlistDao().insertPlaylist(item)
+        database.playlistDao().insertPlaylist(converter.mapplaylistClassToEntity(item))
     }
 
     override fun deletePlaylist(item:Playlist) {

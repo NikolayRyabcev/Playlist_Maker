@@ -11,7 +11,7 @@ import com.example.playlistmaker.domain.models.Playlist
 interface PlaylistDAO {
 
     @Insert (entity=PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    fun insertPlaylist (playlist: Playlist)
+    fun insertPlaylist (playlist: PlaylistEntity)
 
     @Delete (entity=PlaylistEntity::class)
     fun deletePlaylist (playlist: PlaylistEntity)
