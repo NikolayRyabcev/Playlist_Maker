@@ -19,6 +19,7 @@ class PlaylistFragment : Fragment() {
     private val playlistViewModel by viewModel<PlaylistViewModel>()
     private lateinit var nullablePlaylistBinding: FragmentPlaylistsBinding
     private lateinit var bottomNavigator: BottomNavigationView
+    private lateinit var playlistAdapter: PlaylistAdapter
 
 
     override fun onCreateView(
@@ -42,7 +43,7 @@ class PlaylistFragment : Fragment() {
         //список плейлистов
         val recyclerView = nullablePlaylistBinding.playlistList
         recyclerView.layoutManager = GridLayoutManager(requireContext(),2)
-        recyclerView.adapter= playlistViewModel.playlistList.value?.let { PlaylistAdapter(it) }
+        recyclerView.adapter= playlistViewModel.playlistList.value?.let { PlaylistAdapter(it, {}) }
         if (playlistViewModel.playlistList.value.isNullOrEmpty()) nullablePlaylistBinding.playlistList.visibility=GONE
 
         return nullablePlaylistBinding.root
