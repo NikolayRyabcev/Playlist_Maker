@@ -122,28 +122,28 @@ class PlayerActivity : AppCompatActivity() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
-        bottomSheetBehavior.state=STATE_COLLAPSED
+        bottomSheetBehavior.state = STATE_COLLAPSED
 
         //нажатие на кнопку "добавить в плейлист"
         binding.playlistAddButton.setOnClickListener {
-            bottomSheetBehavior.state= STATE_EXPANDED
-            binding.overlay.visibility=VISIBLE
+            bottomSheetBehavior.state = STATE_EXPANDED
+            binding.overlay.visibility = VISIBLE
         }
 
         //нажатие на кнопку "новый плейлист"
         binding.newPlaylistButton.setOnClickListener {
-                val walkerToNewPlaylistFragment = NewPlaylistFragment()
-                val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
+            val walkerToNewPlaylistFragment = NewPlaylistFragment()
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
 
         //список плейлистов
         val recyclerView = binding.playlistRecycler
-        recyclerView.layoutManager = GridLayoutManager(this,2)
-        recyclerView.adapter= playerViewModel.playlistList.value?.let { PlaylistAdapter(it, {}) }
-        if (playerViewModel.playlistList.value.isNullOrEmpty()) binding.playlistRecycler.visibility=
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        recyclerView.adapter = playerViewModel.playlistList.value?.let { PlaylistAdapter(it, {}) }
+        if (playerViewModel.playlistList.value.isNullOrEmpty()) binding.playlistRecycler.visibility =
             View.GONE
     }
 
@@ -193,7 +193,6 @@ class PlayerActivity : AppCompatActivity() {
                 }
 
                 else -> {
-
                 }
             }
         }
