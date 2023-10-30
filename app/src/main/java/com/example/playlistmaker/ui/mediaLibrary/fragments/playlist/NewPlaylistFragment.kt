@@ -134,7 +134,8 @@ class NewPlaylistFragment : Fragment() {
         if (!filePath.exists()) {
             filePath.mkdirs()
         }
-        val file = File(filePath, "first_cover.jpg")
+        val fileCunt = filePath.listFiles()?.size ?: 0
+        val file = File(filePath, "first_cover_${fileCunt + 1}.jpg")
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
         BitmapFactory

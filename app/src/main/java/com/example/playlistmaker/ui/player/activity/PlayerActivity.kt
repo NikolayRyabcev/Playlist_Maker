@@ -1,11 +1,9 @@
 package com.example.playlistmaker.ui.player.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.View.VISIBLE
@@ -16,13 +14,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerActivityBinding
-import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.ui.mediaLibrary.adapters.PlaylistAdapter
-import com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
+import com.example.playlistmaker.ui.root.RootActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -102,27 +99,31 @@ class PlayerActivity : AppCompatActivity() {
 
         val overlay = binding.overlay
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
-
-        bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        overlay.visibility = View.GONE
-                    }
-
-                    else -> {
-                        overlay.visibility = View.VISIBLE
-                    }
-                }
+        val bottomSheetBehavior = BottomSheetBehavior
+            .from(bottomSheetContainer)
+            .apply {
+                state = BottomSheetBehavior.STATE_HIDDEN
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-        })
-        bottomSheetBehavior.state = STATE_COLLAPSED
+        bottomSheetBehavior
+            .addBottomSheetCallback(
+                object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        when (newState) {
+                            BottomSheetBehavior.STATE_HIDDEN -> {
+                                overlay.visibility = View.GONE
+                            }
+
+                            else -> {
+                                overlay.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+                }
+            )
+
+//        bottomSheetBehavior.state = STATE_COLLAPSED
 
         //нажатие на кнопку "добавить в плейлист"
         binding.playlistAddButton.setOnClickListener {
@@ -132,11 +133,16 @@ class PlayerActivity : AppCompatActivity() {
 
         //нажатие на кнопку "новый плейлист"
         binding.newPlaylistButton.setOnClickListener {
-            val walkerToNewPlaylistFragment = NewPlaylistFragment()
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
+
+            val intent = Intent(this, RootActivity::class.java)
+            this.startActivity(intent)
+
+//            val walkerToNewPlaylistFragment = NewPlaylistFragment()
+//            val transaction = supportFragmentManager.beginTransaction()
+//            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
+//            transaction.addToBackStack(null)
+//            transaction.commit()
+//            ToDo
         }
 
         //список плейлистов

@@ -14,8 +14,8 @@ class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel(
 
     fun playlistMaker(): LiveData<List<Playlist>> {
         viewModelScope.launch {
-            while (true) {
-                delay(300)
+            /*while (true) {
+                delay(300)*/
                 interactor.queryPlaylist()
                     .collect {
                         if (it.isNotEmpty()) {
@@ -24,7 +24,7 @@ class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel(
                             playlistList.postValue(emptyList())
                         }
                     }
-            }
+           // }
         }
         return playlistList
     }
