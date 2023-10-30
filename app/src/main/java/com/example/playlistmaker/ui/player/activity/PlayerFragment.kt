@@ -1,13 +1,13 @@
 package com.example.playlistmaker.ui.player.activity
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -16,83 +16,39 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerState
+import com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
-import com.example.playlistmaker.ui.root.RootActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerFragment : Fragment() {
 
     private val playerViewModel by viewModel<PlayerViewModel>()
     private lateinit var binding: PlayerActivityBinding
     private var url = ""
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = PlayerActivityBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding = PlayerActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
         binding.playerBackButtonArrow.setOnClickListener {
-            finish()
+            closer()
         }
 
-        //принятие и отрисовка данных трека
-        val track = intent.getParcelableExtra<Track>("track")
-        binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
-        binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
-        binding.time.text = track?.trackTimeMillis ?: "00:00"
-        binding.album.text = track?.collectionName ?: "Unknown Album"
-        binding.year.text = (track?.releaseDate ?: "Year").take(4)
-        binding.genre.text = track?.primaryGenreName ?: "Unknown Genre"
-        binding.country.text = track?.country ?: "Unknown Country"
-        val getImage = (track?.artworkUrl100 ?: "Unknown Cover").replace(
-            "100x100bb.jpg",
-            "512x512bb.jpg"
-        )
-        val radius = 8
-        if (getImage != "Unknown Cover") {
-            getImage.replace("100x100bb.jpg", "512x512bb.jpg")
-            Glide.with(this)
-                .load(getImage)
-                .placeholder(R.drawable.bfplaceholder)
-                .transform(RoundedCorners(radius))
-                .into(binding.trackCover)
-        }
-        url = track?.previewUrl ?: return
-
-        //создание плеера
-        playerViewModel.createPlayer(url)
-
-        //переключение кнопок плэй/пауза
-        binding.playButton.isEnabled = false
-        binding.playButton.setOnClickListener {
-            if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
-        }
-
-        updateButton()
-
-        playerViewModel.putTime().observe(this) { timer ->
-            binding.trackTimer.text = timer
-            Log.d("время в активити", timer)
-        }
-
-        //нажатие на кнопку нравится
-        binding.favourites.setOnClickListener {
-            playerViewModel.onFavoriteClicked(track)
-        }
-
-        playerViewModel.favouritesChecker(track).observe(this) { favourtitesIndicator ->
-            Log.d("favourtitesIndicator", "$favourtitesIndicator")
-            if (favourtitesIndicator) {
-                binding.favourites.setImageResource(R.drawable.button__like)
-            } else binding.favourites.setImageResource(
-                R.drawable.favourites
-            )
-        }
 
         //BottomSheet
         val bottomSheetContainer = binding.standardBottomSheet
@@ -134,21 +90,16 @@ class PlayerActivity : AppCompatActivity() {
 
         //нажатие на кнопку "новый плейлист"
         binding.newPlaylistButton.setOnClickListener {
-
-            val intent = Intent(this, RootActivity::class.java)
-            this.startActivity(intent)
-
-//            val walkerToNewPlaylistFragment = NewPlaylistFragment()
-//            val transaction = supportFragmentManager.beginTransaction()
-//            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
-//            transaction.addToBackStack(null)
-//            transaction.commit()
-//            ToDo
+            val walkerToNewPlaylistFragment = NewPlaylistFragment()
+            val transaction = childFragmentManager.beginTransaction()
+            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
 
         //список плейлистов
         val recyclerView = binding.playlistRecycler
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter =
             playerViewModel.playlistList.value?.let {
                 Log.d("ыджвпыдывдып", "$it")
@@ -161,6 +112,64 @@ class PlayerActivity : AppCompatActivity() {
             binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {}
         }
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //принятие и отрисовка данных трека
+        val track = intent.getParcelableExtra<Track>("track")
+        binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
+        binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
+        binding.time.text = track?.trackTimeMillis ?: "00:00"
+        binding.album.text = track?.collectionName ?: "Unknown Album"
+        binding.year.text = (track?.releaseDate ?: "Year").take(4)
+        binding.genre.text = track?.primaryGenreName ?: "Unknown Genre"
+        binding.country.text = track?.country ?: "Unknown Country"
+        val getImage = (track?.artworkUrl100 ?: "Unknown Cover").replace(
+            "100x100bb.jpg",
+            "512x512bb.jpg"
+        )
+        val radius = 8
+        if (getImage != "Unknown Cover") {
+            getImage.replace("100x100bb.jpg", "512x512bb.jpg")
+            Glide.with(this)
+                .load(getImage)
+                .placeholder(R.drawable.bfplaceholder)
+                .transform(RoundedCorners(radius))
+                .into(binding.trackCover)
+        }
+        url = track?.previewUrl ?: return
+
+        //создание плеера
+        playerViewModel.createPlayer(url)
+
+        //переключение кнопок плэй/пауза
+        binding.playButton.isEnabled = false
+        binding.playButton.setOnClickListener {
+            if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
+        }
+
+        updateButton()
+
+        playerViewModel.putTime().observe(requireActivity()) { timer ->
+            binding.trackTimer.text = timer
+            Log.d("время в активити", timer)
+        }
+        //нажатие на кнопку нравится
+        binding.favourites.setOnClickListener {
+            playerViewModel.onFavoriteClicked(track)
+        }
+
+        playerViewModel.favouritesChecker(track).observe(requireActivity()) { favourtitesIndicator ->
+            Log.d("favourtitesIndicator", "$favourtitesIndicator")
+            if (favourtitesIndicator) {
+                binding.favourites.setImageResource(R.drawable.button__like)
+            } else binding.favourites.setImageResource(
+                R.drawable.favourites
+            )
+        }
+    }
+
 
     override fun onPause() {
         super.onPause()
@@ -181,7 +190,7 @@ class PlayerActivity : AppCompatActivity() {
     @SuppressLint("ResourceType")
     fun playerStateDrawer() {
 
-        playerViewModel.stateLiveData.observe(this) {
+        playerViewModel.stateLiveData.observe(requireActivity()) {
             when (playerViewModel.stateLiveData.value) {
                 PlayerState.STATE_DEFAULT -> {
                     binding.playButton.setImageResource(R.drawable.play)
@@ -220,6 +229,10 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    private fun closer() {
+        val fragmentmanager = requireActivity().supportFragmentManager
+        fragmentmanager.popBackStack()
+    }
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L
     }

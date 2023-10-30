@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.player.activity.PlayerActivity">
+    tools:context=".ui.player.activity.PlayerFragment">
 
     <ScrollView
         android:layout_width="match_parent"
