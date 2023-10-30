@@ -55,6 +55,7 @@ class PlaylistFragment : Fragment() {
             if (playlistViewModel.playlistMaker().value.isNullOrEmpty()) {
                 noPlaylist()
             } else {
+                nullablePlaylistBinding.playlistList.adapter=PlaylistAdapter(playlistList) {}
                 existPlaylist()
             }
         }
