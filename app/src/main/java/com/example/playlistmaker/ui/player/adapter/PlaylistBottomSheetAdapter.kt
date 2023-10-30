@@ -1,29 +1,34 @@
 package com.example.playlistmaker.ui.player.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.databinding.PlaylistLayoutBinding
+import com.example.playlistmaker.databinding.PlaylistTrackerBinding
 import com.example.playlistmaker.domain.models.Playlist
 
 class PlaylistBottomSheetAdapter(
-    private var plalists: List<Playlist>,
+    private var playlists: List<Playlist>,
     private val clickListener: PlaylistClick
-) :
-    RecyclerView.Adapter<PlaylistBottomSheetViewHolder>() {
+) : RecyclerView.Adapter<PlaylistBottomSheetViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistBottomSheetViewHolder {
+        Log.d("ыджвпыдывдып", "ViewHolder created")
         val layoutInspector = LayoutInflater.from(parent.context)
-        return PlaylistBottomSheetViewHolder(PlaylistLayoutBinding.inflate(layoutInspector, parent, false))
+
+        return PlaylistBottomSheetViewHolder(PlaylistTrackerBinding.inflate(layoutInspector, parent, false))
     }
 
     override fun getItemCount(): Int {
-        return plalists.size
+        return playlists.size
     }
 
     override fun onBindViewHolder(holder: PlaylistBottomSheetViewHolder, position: Int) {
-        holder.bind(plalists[position])
+        Log.d("ыджвпыдывдып", "$playlists")
+
+        holder.bind(playlists[position])
         holder.itemView.setOnClickListener {
-            clickListener.onClick(plalists[position])
+            clickListener.onClick(playlists[position])
             notifyDataSetChanged()
         }
     }
@@ -33,7 +38,7 @@ class PlaylistBottomSheetAdapter(
     }
 
     fun setItems(items: List<Playlist>) {
-        plalists = items
+        playlists = items
         notifyDataSetChanged()
     }
 }

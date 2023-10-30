@@ -4,19 +4,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favourites.FavouritesInteractor
 import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerStateListener
-import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.playlist.PlaylistInteractor
-import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
@@ -28,7 +25,7 @@ class PlayerViewModel(
     var stateLiveData = MutableLiveData<PlayerState>()
     var timer = MutableLiveData("00:00")
     val favouritesIndicator = MutableLiveData<Boolean>()
-    var favouritesJob:Job?=null
+    var favouritesJob: Job? = null
 
     fun createPlayer(url: String) {
         playerInteractor.createPlayer(url, listener = object : PlayerStateListener {
@@ -82,15 +79,15 @@ class PlayerViewModel(
         }
     }
 
-    fun favouritesChecker (track: Track) : LiveData<Boolean> {
+    fun favouritesChecker(track: Track): LiveData<Boolean> {
 
-        favouritesJob=viewModelScope.launch{
+        favouritesJob = viewModelScope.launch {
 
             while (true) {
                 delay(PLAYER_BUTTON_PRESSING_DELAY)
                 track.trackId?.let { id ->
                     favouritesInteractor.favouritesCheck(id)
-                        .collect {value ->
+                        .collect { value ->
                             Log.d("Hueta", "$value")
                             favouritesIndicator.postValue(value)
                         }
@@ -104,17 +101,14 @@ class PlayerViewModel(
 
     fun playlistMaker(): LiveData<List<Playlist>> {
         viewModelScope.launch {
-            while (true) {
-                delay(300)
-                interactor.queryPlaylist()
-                    .collect {
-                        if (it.isNotEmpty()) {
-                            playlistList.postValue(it)
-                        } else {
-                            playlistList.postValue(emptyList())
-                        }
+            interactor.queryPlaylist()
+                .collect {
+                    if (it.isNotEmpty()) {
+                        playlistList.postValue(it)
+                    } else {
+                        playlistList.postValue(emptyList())
                     }
-            }
+                }
         }
         return playlistList
     }

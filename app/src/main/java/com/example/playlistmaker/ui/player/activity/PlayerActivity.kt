@@ -9,14 +9,14 @@ import android.view.View
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.ui.mediaLibrary.adapters.PlaylistAdapter
+import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.ui.root.RootActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -119,6 +119,7 @@ class PlayerActivity : AppCompatActivity() {
                             }
                         }
                     }
+
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {}
                 }
             )
@@ -147,10 +148,18 @@ class PlayerActivity : AppCompatActivity() {
 
         //список плейлистов
         val recyclerView = binding.playlistRecycler
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
-        recyclerView.adapter = playerViewModel.playlistList.value?.let { PlaylistAdapter(it, {}) }
-        if (playerViewModel.playlistList.value.isNullOrEmpty()) binding.playlistRecycler.visibility =
-            View.GONE
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter =
+            playerViewModel.playlistList.value?.let {
+                Log.d("ыджвпыдывдып", "$it")
+                PlaylistBottomSheetAdapter(it) {}
+            }
+//        if (playerViewModel.playlistList.value.isNullOrEmpty()) binding.playlistRecycler.visibility =
+//            View.GONE
+        playerViewModel.playlistMaker().observe(this) { playlistList ->
+            if (playlistList.isNullOrEmpty()) return@observe
+            binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {}
+        }
     }
 
     override fun onPause() {
