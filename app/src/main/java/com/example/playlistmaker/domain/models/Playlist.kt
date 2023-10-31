@@ -9,5 +9,5 @@ data class Playlist (
     val description:String?,
     val uri:String,
     val trackArray:List<Track>,
-    val arrayNumber:Int? 
+    val arrayNumber:Int?,
 ) : Parcelable

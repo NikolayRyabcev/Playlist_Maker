@@ -2,6 +2,7 @@ package com.example.playlistmaker.data.playlistDataBase
 
 import com.example.playlistmaker.App.PlayistDataBase
 import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.playlist.PlaylistRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -25,5 +26,9 @@ class PlaylistRepositoryImpl(
                 database.playlistDao().queryPlaylist().map { converter.mapplaylistEntityToClass(it) }
             emit(playlistConverted)
         }
+    }
+
+    override fun addTrack(track: Track) {
+        TODO("Not yet implemented")
     }
 }

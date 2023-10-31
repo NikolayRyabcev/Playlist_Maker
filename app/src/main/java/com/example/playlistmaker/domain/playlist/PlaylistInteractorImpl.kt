@@ -1,6 +1,7 @@
 package com.example.playlistmaker.domain.playlist
 
 import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 class PlaylistInteractorImpl(val repository: PlaylistRepository) : PlaylistInteractor {
@@ -14,5 +15,9 @@ class PlaylistInteractorImpl(val repository: PlaylistRepository) : PlaylistInter
 
     override fun queryPlaylist(): Flow<List<Playlist>> {
         return repository.queryPlaylist()
+    }
+
+    override fun addTrack(track: Track) {
+        TODO("Not yet implemented")
     }
 }

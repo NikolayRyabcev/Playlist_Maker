@@ -108,7 +108,9 @@ class PlayerFragment : Fragment() {
 //            View.GONE
         playerViewModel.playlistMaker().observe(this) { playlistList ->
             if (playlistList.isNullOrEmpty()) return@observe
-            binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {}
+            binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {
+
+            }
         }
     }
 

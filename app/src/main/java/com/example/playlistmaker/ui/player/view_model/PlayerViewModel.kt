@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
     private val favouritesInteractor: FavouritesInteractor,
-    private val interactor: PlaylistInteractor
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
     var timeJob: Job? = null
     var stateLiveData = MutableLiveData<PlayerState>()
@@ -101,7 +101,7 @@ class PlayerViewModel(
 
     fun playlistMaker(): LiveData<List<Playlist>> {
         viewModelScope.launch {
-            interactor.queryPlaylist()
+            playlistInteractor.queryPlaylist()
                 .collect {
                     if (it.isNotEmpty()) {
                         playlistList.postValue(it)
@@ -111,6 +111,10 @@ class PlayerViewModel(
                 }
         }
         return playlistList
+    }
+
+    fun addTrack(track: Track) {
+        playlistInteractor.addTrack(track)
     }
 
     companion object {
