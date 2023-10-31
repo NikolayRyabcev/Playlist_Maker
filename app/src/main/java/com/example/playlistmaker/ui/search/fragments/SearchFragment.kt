@@ -330,6 +330,8 @@ class SearchFragment : Fragment() {
         binding.trackRecycler.visibility = GONE
         binding.refreshButton.setOnClickListener { search() }
         binding.progressBar.visibility = GONE
+        binding.nothingfoundPict.visibility = GONE
+        binding.nothingfoundText.visibility = GONE
         historyInVisible()
         binding.searchBlock.visibility = VISIBLE
     }
