@@ -21,11 +21,11 @@ class PlayerViewModel(
     private val favouritesInteractor: FavouritesInteractor,
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
-    var timeJob: Job? = null
+    private var timeJob: Job? = null
     var stateLiveData = MutableLiveData<PlayerState>()
-    var timer = MutableLiveData("00:00")
-    val favouritesIndicator = MutableLiveData<Boolean>()
-    var favouritesJob: Job? = null
+    private var timer = MutableLiveData("00:00")
+    private val favouritesIndicator = MutableLiveData<Boolean>()
+    private var favouritesJob: Job? = null
 
     fun createPlayer(url: String) {
         playerInteractor.createPlayer(url, listener = object : PlayerStateListener {
@@ -113,8 +113,18 @@ class PlayerViewModel(
         return playlistList
     }
 
-    fun addTrack(track: Track) {
-        playlistInteractor.addTrack(track)
+    val playlistAdding =MutableLiveData(false)
+
+    fun addTrack(track: Track, playlist: Playlist) {
+        if (playlist.trackArray.contains(track.trackId)) {
+            playlistAdding.postValue(true)
+        } else {
+            playlistAdding.postValue(false)
+            playlistInteractor.addTrack(track)
+            playlist.trackArray = (playlist.trackArray + track.trackId)!!
+            playlist.arrayNumber = (playlist.arrayNumber?.plus(1))!!
+            playlistInteractor.update(playlist)
+        }
     }
 
     companion object {

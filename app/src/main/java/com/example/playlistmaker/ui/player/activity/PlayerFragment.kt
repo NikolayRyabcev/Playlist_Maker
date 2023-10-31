@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -97,21 +98,7 @@ class PlayerFragment : Fragment() {
             transaction.commit()
         }
 
-        //список плейлистов
-        val recyclerView = binding.playlistRecycler
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter =
-            playerViewModel.playlistList.value?.let {
-                PlaylistBottomSheetAdapter(it) {}
-            }
-//        if (playerViewModel.playlistList.value.isNullOrEmpty()) binding.playlistRecycler.visibility =
-//            View.GONE
-        playerViewModel.playlistMaker().observe(this) { playlistList ->
-            if (playlistList.isNullOrEmpty()) return@observe
-            binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {
 
-            }
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -162,13 +149,40 @@ class PlayerFragment : Fragment() {
         }
 
         playerViewModel.favouritesChecker(track).observe(requireActivity()) { favourtitesIndicator ->
-            Log.d("favourtitesIndicator", "$favourtitesIndicator")
             if (favourtitesIndicator) {
                 binding.favourites.setImageResource(R.drawable.button__like)
             } else binding.favourites.setImageResource(
                 R.drawable.favourites
             )
         }
+
+        //список плейлистов
+        val recyclerView = binding.playlistRecycler
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView.adapter =
+            playerViewModel.playlistList.value?.let {
+                PlaylistBottomSheetAdapter(it) {
+                    playerViewModel.playlistAdding
+                    playerViewModel.playlistAdding.observe(viewLifecycleOwner) {playlistAdding ->
+                        if (playlistAdding) {
+                            val toastMessage = "Трек уже добавлен в плейлист $it"
+                            Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                        } else {
+                            val toastMessage = "Добавлено в плейлист $it"
+                            Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+//        if (playerViewModel.playlistList.value.isNullOrEmpty()) binding.playlistRecycler.visibility =
+//            View.GONE
+        playerViewModel.playlistMaker().observe(viewLifecycleOwner) { playlistList ->
+            if (playlistList.isNullOrEmpty()) return@observe
+            binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {
+                playerViewModel.addTrack(track, it)
+            }
+        }
+
     }
 
 

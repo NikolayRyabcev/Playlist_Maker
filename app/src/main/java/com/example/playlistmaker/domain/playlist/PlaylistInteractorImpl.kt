@@ -20,4 +20,8 @@ class PlaylistInteractorImpl(val repository: PlaylistRepository) : PlaylistInter
     override fun addTrack(track: Track) {
         TODO("Not yet implemented")
     }
+
+    override fun update(playlist: Playlist) {
+        repository.update(playlist)
+    }
 }

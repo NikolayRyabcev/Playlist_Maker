@@ -5,6 +5,9 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
+import com.example.playlistmaker.data.trackInPlaylist.TrackInPlaylistDAO
+import com.example.playlistmaker.data.trackInPlaylist.TrackInPlaylistEntity
 import com.example.playlistmaker.domain.models.Playlist
 
 @Dao
@@ -18,4 +21,7 @@ interface PlaylistDAO {
 
     @Query("SELECT * FROM playlist_table")
     fun queryPlaylist () : List <PlaylistEntity>
+
+    @Update(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    fun updatePlaylist(playlist: PlaylistEntity)
 }

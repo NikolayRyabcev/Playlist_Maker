@@ -13,7 +13,7 @@ class PlaylistConverter {
             item.playlistName,
             item.description,
             item.uri,
-            gson.fromJson(item.trackList, object : TypeToken<List<Track>>() {}.type),
+            gson.fromJson(item.trackList, object : TypeToken<List<Long>>() {}.type),
             item.arrayNumber
         )
     }

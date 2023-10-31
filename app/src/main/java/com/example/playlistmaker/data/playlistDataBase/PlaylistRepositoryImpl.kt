@@ -28,7 +28,7 @@ class PlaylistRepositoryImpl(
         }
     }
 
-    override fun addTrack(track: Track) {
-        TODO("Not yet implemented")
+    override fun update(playlist: Playlist) {
+        database.playlistDao().updatePlaylist(converter.mapplaylistClassToEntity(playlist))
     }
 }
