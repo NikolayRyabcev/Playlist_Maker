@@ -78,7 +78,7 @@
         android:textColor="?attr/colorOnSecondary"
         android:textColorHint="?attr/colorOnSecondary"
         android:textSize="@dimen/text2"
-        app:boxStrokeColor="?attr/colorOnSecondary"
+        app:boxStrokeColor="@color/text_input_layout_stroke_colors"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playlistCover">
@@ -116,6 +116,7 @@
         android:textColor="?attr/colorOnSecondary"
         android:textColorHint="?attr/colorOnSecondary"
         android:textSize="@dimen/text2"
+        app:boxStrokeColor="@color/text_input_layout_stroke_colors"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playlistName">
