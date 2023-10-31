@@ -123,7 +123,7 @@ class PlayerViewModel(
             playlistInteractor.addTrack(track)
             playlist.trackArray = (playlist.trackArray + track.trackId)!!
             playlist.arrayNumber = (playlist.arrayNumber?.plus(1))!!
-            playlistInteractor.update(playlist)
+            playlistInteractor.update(track, playlist)
         }
     }
 

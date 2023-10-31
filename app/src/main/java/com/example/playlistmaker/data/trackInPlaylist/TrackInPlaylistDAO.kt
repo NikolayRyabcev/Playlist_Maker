@@ -18,8 +18,8 @@ interface TrackInPlaylistDAO {
     fun deleteTrack (track: FavouritesEntity)
 
     @Query("SELECT * FROM favourites_table ORDER BY addTime DESC")
-    fun queryTrack():List<FavouritesEntity>*/
+    fun queryTrack():List<FavouritesEntity>
 
     @Query("SELECT * FROM track_in_playlist_table WHERE trackId=:searchId")
-    fun queryTrackId(searchId:Long): TrackInPlaylistEntity?
+    fun queryTrackId(searchId:Long): TrackInPlaylistEntity?*/
 }

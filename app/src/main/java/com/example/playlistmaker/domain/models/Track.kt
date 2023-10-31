@@ -10,7 +10,7 @@ data class Track(
     val artistName: String?,
     val trackTimeMillis: String?,
     val artworkUrl100: String?,
-    val trackId: Long,
+    val trackId: Long?,
     val collectionName: String?,
     val releaseDate: String?,
     val primaryGenreName: String?,

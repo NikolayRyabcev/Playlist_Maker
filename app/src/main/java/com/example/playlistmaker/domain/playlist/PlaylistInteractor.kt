@@ -9,5 +9,5 @@ interface PlaylistInteractor {
     fun deletePlaylist(item: Playlist)
     fun queryPlaylist() : Flow<List<Playlist>>
     fun addTrack(track: Track)
-    fun update(playlist:Playlist)
+    fun update(track: Track, playlist: Playlist)
 }

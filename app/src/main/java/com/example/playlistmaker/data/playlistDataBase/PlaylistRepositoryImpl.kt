@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.playlistDataBase
 
 import com.example.playlistmaker.App.PlayistDataBase
+import com.example.playlistmaker.App.TrackInPlaylistDataBase
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.playlist.PlaylistRepository
@@ -9,7 +10,8 @@ import kotlinx.coroutines.flow.flow
 
 class PlaylistRepositoryImpl(
     private val database: PlayistDataBase,
-    private val converter: PlaylistConverter
+    private val converter: PlaylistConverter,
+    private val trackInDataBase: TrackInPlaylistDataBase
 ) :PlaylistRepository{
     override fun addPlaylist(item:Playlist) {
         database.playlistDao().insertPlaylist(converter.mapplaylistClassToEntity(item))
@@ -28,7 +30,10 @@ class PlaylistRepositoryImpl(
         }
     }
 
-    override fun update(playlist: Playlist) {
+    override fun update(track: Track, playlist: Playlist) {
         database.playlistDao().updatePlaylist(converter.mapplaylistClassToEntity(playlist))
+        trackInDataBase.trackListingDao().insertTrack(track)
     }
+
+
 }

@@ -8,6 +8,6 @@ data class Playlist (
     val playlistName:String,
     val description:String?,
     val uri:String,
-    var trackArray:List<Long>,
+    var trackArray:List<Long?>,
     var arrayNumber:Int?,
 ) : Parcelable
