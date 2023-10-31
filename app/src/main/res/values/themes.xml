@@ -20,5 +20,6 @@
         <item name="colorOnBackground">#c01A1B22</item>
         <item name="colorErrorContainer">#E6E8EB</item>
         <item name="colorOnTertiary">#000</item>
+        <item name="colorPrimaryDark">@color/white</item>
     </style>
 </resources>
