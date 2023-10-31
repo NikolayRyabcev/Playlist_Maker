@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.player.activity.PlayerFragment
 import com.example.playlistmaker.ui.search.adapter.TrackAdapter
 import com.example.playlistmaker.ui.search.viewModel.SearchViewModel
@@ -145,9 +146,14 @@ class SearchFragment : Fragment() {
 
     private fun clickAdapting(item: Track) {
         searchViewModel.addItem(item)
-        val intent = Intent(requireContext(), PlayerFragment::class.java)
-        intent.putExtra("track", item)
-        this.startActivity(intent)
+        val fragment = PlayerFragment()
+        val bundle = Bundle()
+        bundle.putParcelable("track", item)
+        fragment.arguments = bundle
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.rootContainer, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     //видимость кнопки удаления введенной строки (крестик)

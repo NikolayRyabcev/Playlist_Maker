@@ -102,7 +102,6 @@ class PlayerFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter =
             playerViewModel.playlistList.value?.let {
-                Log.d("ыджвпыдывдып", "$it")
                 PlaylistBottomSheetAdapter(it) {}
             }
 //        if (playerViewModel.playlistList.value.isNullOrEmpty()) binding.playlistRecycler.visibility =
@@ -117,7 +116,7 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //принятие и отрисовка данных трека
-        val track = intent.getParcelableExtra<Track>("track")
+        val track = arguments?.getParcelable<Track>("track")
         binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
         binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
         binding.time.text = track?.trackTimeMillis ?: "00:00"
