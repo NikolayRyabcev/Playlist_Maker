@@ -25,11 +25,7 @@ class FavouritesFragment : Fragment() {
 
     private var isClickAllowed = true
     private val favouritesAdapter: TrackAdapter by lazy {
-        TrackAdapter {
-            if (isClickAllowed) {
-                clickAdapting(it)
-            }
-        }
+        TrackAdapter { clickAdapting(it) }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -43,29 +39,31 @@ class FavouritesFragment : Fragment() {
         nullableFavouritesBinding.emptyMediaLibrary.visibility = View.GONE
         nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.GONE
 
-        nullableFavouritesBinding.favouritesRecycler.layoutManager = LinearLayoutManager(requireContext())
+        nullableFavouritesBinding.favouritesRecycler.layoutManager =
+            LinearLayoutManager(requireContext())
         nullableFavouritesBinding.favouritesRecycler.adapter = favouritesAdapter
         return nullableFavouritesBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        favouritesViewModel.favouritesMaker().observe(viewLifecycleOwner) {
-                trackResultList ->
+        favouritesViewModel.favouritesMaker().observe(viewLifecycleOwner) { trackResultList ->
             if (favouritesViewModel.trackResultList.value.isNullOrEmpty()) {
                 nullableFavouritesBinding.emptyMediaLibrary.visibility = View.VISIBLE
                 nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.VISIBLE
-                nullableFavouritesBinding.favouritesRecycler.visibility=GONE
+                nullableFavouritesBinding.favouritesRecycler.visibility = GONE
                 favouritesAdapter.notifyDataSetChanged()
             } else {
                 nullableFavouritesBinding.emptyMediaLibrary.visibility = View.GONE
                 nullableFavouritesBinding.emptyMediaLibraryText.visibility = View.GONE
-                nullableFavouritesBinding.favouritesRecycler.visibility=VISIBLE
+                nullableFavouritesBinding.favouritesRecycler.visibility = VISIBLE
                 favouritesAdapter.setItems(favouritesViewModel.trackResultList.value!!)
+
                 favouritesAdapter.notifyDataSetChanged()
             }
         }
     }
+
     private fun clickAdapting(item: Track) {
         favouritesViewModel.addItem(item)
         val intent = Intent(requireContext(), PlayerFragment::class.java)

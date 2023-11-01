@@ -21,6 +21,7 @@ import com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistF
 import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -81,7 +82,7 @@ class PlayerFragment : Fragment() {
                 }
             )
 
-//        bottomSheetBehavior.state = STATE_COLLAPSED
+        bottomSheetBehavior.state = STATE_COLLAPSED
 
         //нажатие на кнопку "добавить в плейлист"
         binding.playlistAddButton.setOnClickListener {
@@ -97,7 +98,8 @@ class PlayerFragment : Fragment() {
             transaction.addToBackStack(null)
             transaction.commit()
         }
-
+        bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavigator.visibility = View.GONE
 
     }
 
