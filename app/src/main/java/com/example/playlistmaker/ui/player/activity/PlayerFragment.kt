@@ -20,6 +20,7 @@ import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
@@ -32,6 +33,7 @@ class PlayerFragment : Fragment() {
     private val playerViewModel by viewModel<PlayerViewModel>()
     private lateinit var binding: PlayerActivityBinding
     private var url = ""
+    private lateinit var bottomNavigator: BottomNavigationView
 
     override fun onCreateView(
         inflater: LayoutInflater,
