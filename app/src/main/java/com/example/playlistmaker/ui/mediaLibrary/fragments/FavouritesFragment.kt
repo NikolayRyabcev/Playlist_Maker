@@ -1,7 +1,6 @@
 package com.example.playlistmaker.ui.mediaLibrary.fragments
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavouritesBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.mediaLibrary.viewModels.FavouritesViewModel

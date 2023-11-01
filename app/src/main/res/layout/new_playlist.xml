@@ -95,7 +95,6 @@
             android:maxLines="1"
             android:textColor="?attr/colorOnSecondary"
             android:textColorHint="#3772E7"
-            app:boxStrokeColor="@color/text_input_layout_stroke_colors"
             app:hintTextColor="#3772E7" />
     </com.google.android.material.textfield.TextInputLayout>
 

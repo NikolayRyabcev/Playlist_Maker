@@ -44,7 +44,6 @@ class PlaylistFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(),2)
         recyclerView.adapter= playlistViewModel.playlistList.value?.let { PlaylistAdapter(it, {}) }
         if (playlistViewModel.playlistList.value.isNullOrEmpty()) nullablePlaylistBinding.playlistList.visibility=GONE
-
         nullablePlaylistBinding.playlistList.visibility=VISIBLE
         return nullablePlaylistBinding.root
     }

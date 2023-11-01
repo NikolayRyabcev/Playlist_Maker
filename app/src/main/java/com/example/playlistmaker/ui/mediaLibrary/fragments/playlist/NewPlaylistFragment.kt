@@ -55,8 +55,9 @@ class NewPlaylistFragment : Fragment() {
         }
         newPlaylistBinding.createButton.setOnClickListener {
             createPlaylist()
+            val name =newPlaylistBinding.playlistNameEditText.text
             MaterialAlertDialogBuilder(requireContext())
-                .setMessage("Плейлист $newPlaylistBinding.playlistNameEditText.text создан")
+                .setMessage("Плейлист $name создан")
                 .setNegativeButton("Оk") { dialog, which ->
                     closer()
                 }
