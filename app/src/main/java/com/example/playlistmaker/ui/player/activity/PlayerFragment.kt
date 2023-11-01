@@ -22,8 +22,7 @@ import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -55,15 +54,12 @@ class PlayerFragment : Fragment() {
 
         //BottomSheet
         val bottomSheetContainer = binding.standardBottomSheet
-
         val overlay = binding.overlay
-
         val bottomSheetBehavior = BottomSheetBehavior
             .from(bottomSheetContainer)
             .apply {
                 state = BottomSheetBehavior.STATE_HIDDEN
             }
-
         bottomSheetBehavior
             .addBottomSheetCallback(
                 object : BottomSheetBehavior.BottomSheetCallback() {
@@ -85,7 +81,7 @@ class PlayerFragment : Fragment() {
 
         //нажатие на кнопку "добавить в плейлист"
         binding.playlistAddButton.setOnClickListener {
-            bottomSheetBehavior.state = STATE_COLLAPSED
+            bottomSheetBehavior.state = STATE_HIDDEN
             binding.overlay.visibility = VISIBLE
         }
 
