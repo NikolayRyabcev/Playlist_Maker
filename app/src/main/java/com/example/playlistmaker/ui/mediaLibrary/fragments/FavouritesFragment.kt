@@ -66,12 +66,14 @@ class FavouritesFragment : Fragment() {
 
     private fun clickAdapting(item: Track) {
         favouritesViewModel.addItem(item)
-        val intent = Intent(requireContext(), PlayerFragment::class.java)
-        intent.putExtra("track", item)
-        requireActivity().supportFragmentManager.beginTransaction()
-            //.replace(R.id.container, PlayerFragment.newInstance(item))
-            .addToBackStack(null)
-            .commit()
+        val fragment = PlayerFragment()
+        val bundle = Bundle()
+        bundle.putParcelable("track", item)
+        fragment.arguments = bundle
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.rootContainer, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     companion object {

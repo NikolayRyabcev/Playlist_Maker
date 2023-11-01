@@ -185,6 +185,14 @@ class PlayerFragment : Fragment() {
             }
         }
 
+        //кнопка создать плейлист
+        binding.newPlaylistButton.setOnClickListener {
+            val walkerToNewPlaylistFragment = NewPlaylistFragment()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
     }
 
 
