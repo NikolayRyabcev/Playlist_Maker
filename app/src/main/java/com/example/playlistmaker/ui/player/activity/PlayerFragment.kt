@@ -22,6 +22,7 @@ import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,14 +39,13 @@ class PlayerFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = PlayerActivityBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding = PlayerActivityBinding.inflate(layoutInflater)
 
         binding.playerBackButtonArrow.setOnClickListener {
@@ -83,11 +83,9 @@ class PlayerFragment : Fragment() {
                 }
             )
 
-      //  bottomSheetBehavior.state = STATE_COLLAPSED
-
         //нажатие на кнопку "добавить в плейлист"
         binding.playlistAddButton.setOnClickListener {
-            bottomSheetBehavior.state = STATE_EXPANDED
+            bottomSheetBehavior.state = STATE_COLLAPSED
             binding.overlay.visibility = VISIBLE
         }
 
@@ -101,7 +99,6 @@ class PlayerFragment : Fragment() {
         }
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = View.GONE
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

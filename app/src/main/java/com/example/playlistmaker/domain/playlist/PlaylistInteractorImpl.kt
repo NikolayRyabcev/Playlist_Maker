@@ -17,6 +17,10 @@ class PlaylistInteractorImpl(val repository: PlaylistRepository) : PlaylistInter
         return repository.queryPlaylist()
     }
 
+    override fun addTrack(track: Track) {
+        TODO("Not yet implemented")
+    }
+
     override fun update(track: Track, playlist: Playlist) {
         repository.update(track, playlist)
     }
