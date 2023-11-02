@@ -50,9 +50,7 @@ class NewPlaylistFragment : Fragment() {
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = GONE
-        newPlaylistBinding.playlistBackButtonArrow.setOnClickListener {
-            onBackClick()
-        }
+
         newPlaylistBinding.createButton.setOnClickListener {
             createPlaylist()
             val dialogPlaylistName = newPlaylistBinding.playlistNameEditText.text
@@ -71,6 +69,11 @@ class NewPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val rxPermissions = RxPermissions(this)
+
+        //отработка на кнопку назад
+        newPlaylistBinding.playlistBackButtonArrow.setOnClickListener {
+            onBackClick()
+        }
 
         //устанавливаем цвет кнопки "Создать"
         val simpleTextWatcher = object : TextWatcher {
@@ -117,13 +120,11 @@ class NewPlaylistFragment : Fragment() {
                         pickMedia.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                         )
-                        Log.d("Разрешение на загрузку", "дано")
                     } else {
                         // Пользователь отказал, ничего не делаем
                         pickMedia.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                         )
-                        Log.d("Разрешение на загрузку", "отказано")
                     }
                 }
         }
@@ -142,14 +143,19 @@ class NewPlaylistFragment : Fragment() {
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-        Log.d("Разрешение на загрузку", "файл записан")
         newPlaylistBinding.playlistPlaceHolder.visibility = GONE
         isFileLoaded = true
         selectedUri=file.toUri()
     }
 
     private fun onBackClick() {
-        if (isFileLoaded && !newPlaylistBinding.playlistNameEditText.text.isNullOrEmpty() && !newPlaylistBinding.playlistDescriptEditText.text.isNullOrEmpty()) {
+        val name = newPlaylistBinding.playlistNameEditText.text
+        val descr = newPlaylistBinding.playlistDescriptEditText.text
+        Log.d("кнопка назад ", isFileLoaded.toString())
+        Log.d("кнопка назад ", name.toString())
+        Log.d("кнопка назад ", descr.toString())
+
+        if (isFileLoaded || !(name.isNullOrEmpty()) || (!descr.isNullOrEmpty())) {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Завершить создание плейлиста?")
                 .setMessage("Все несохраненные данные будут потеряны")
@@ -160,8 +166,10 @@ class NewPlaylistFragment : Fragment() {
                     closer()
                 }
                 .show()
+            Log.d("кнопка назад ", "yes")
         } else {
             closer()
+            Log.d("кнопка назад ", "no")
         }
     }
 
