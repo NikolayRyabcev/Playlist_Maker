@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -15,8 +16,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerActivityBinding
+import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerState
+import com.example.playlistmaker.ui.mediaLibrary.adapters.PlaylistAdapter
 import com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
@@ -34,6 +37,8 @@ class PlayerFragment : Fragment() {
     private lateinit var binding: PlayerActivityBinding
     private var url = ""
     private lateinit var bottomNavigator: BottomNavigationView
+    private lateinit var playlistAdapter: PlaylistBottomSheetAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -104,13 +109,14 @@ class PlayerFragment : Fragment() {
         binding.favourites.setOnClickListener {
             playerViewModel.onFavoriteClicked(track)
         }
-        playerViewModel.favouritesChecker(track).observe(requireActivity()) { favourtitesIndicator ->
-            if (favourtitesIndicator) {
-                binding.favourites.setImageResource(R.drawable.button__like)
-            } else binding.favourites.setImageResource(
-                R.drawable.favourites
-            )
-        }
+        playerViewModel.favouritesChecker(track)
+            .observe(requireActivity()) { favourtitesIndicator ->
+                if (favourtitesIndicator) {
+                    binding.favourites.setImageResource(R.drawable.button__like)
+                } else binding.favourites.setImageResource(
+                    R.drawable.favourites
+                )
+            }
 
         //кнопка создать плейлист
         binding.newPlaylistButton.setOnClickListener {
@@ -163,25 +169,36 @@ class PlayerFragment : Fragment() {
         }
 
         //список плейлистов
-        val recyclerView = binding.playlistRecycler
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter =
-            playerViewModel.playlistList.value?.let {
+        if (playerViewModel.playlistList.value.isNullOrEmpty()) {
+            playlistAdapter = playerViewModel.playlistList.value?.let {
                 PlaylistBottomSheetAdapter(it) {
-                    playerViewModel.playlistAdding
-                    playerViewModel.playlistAdding.observe(viewLifecycleOwner) {playlistAdding ->
+                    playerViewModel.addTrack(track, it)
+                    Log.d("добавление", "кликлистенер")
+                    playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
+                        playerViewModel.addTrack(track, it)
                         if (playlistAdding) {
+                            Log.d("добавление", "уже было")
                             val toastMessage = "Трек уже добавлен в плейлист $it"
-                            Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+                                .show()
                             bottomSheetBehavior.state = STATE_COLLAPSED
                         } else {
+                            Log.d("добавление", "добавлено")
                             val toastMessage = "Добавлено в плейлист $it"
-                            Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+                                .show()
                             bottomSheetBehavior.state = STATE_COLLAPSED
                         }
                     }
                 }
-            }
+            }!!
+        } else {
+            playlistAdapter = PlaylistBottomSheetAdapter(emptyList()) {}
+        }
+        val recyclerView = binding.playlistRecycler
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView.adapter = playlistAdapter
+
         playerViewModel.playlistMaker().observe(viewLifecycleOwner) { playlistList ->
             if (playlistList.isNullOrEmpty()) return@observe
             binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {
@@ -189,7 +206,6 @@ class PlayerFragment : Fragment() {
             }
         }
     }
-
 
     override fun onPause() {
         super.onPause()
@@ -254,6 +270,7 @@ class PlayerFragment : Fragment() {
         bottomNavigator.visibility = VISIBLE
         fragmentmanager.popBackStack()
     }
+
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L
     }

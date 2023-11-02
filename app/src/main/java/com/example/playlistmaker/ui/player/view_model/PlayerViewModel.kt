@@ -26,6 +26,7 @@ class PlayerViewModel(
     private var timer = MutableLiveData("00:00")
     private val favouritesIndicator = MutableLiveData<Boolean>()
     private var favouritesJob: Job? = null
+    val playlistList: MutableLiveData<List<Playlist>> = MutableLiveData<List<Playlist>>(emptyList())
 
     fun createPlayer(url: String) {
         playerInteractor.createPlayer(url, listener = object : PlayerStateListener {
@@ -97,7 +98,7 @@ class PlayerViewModel(
         return favouritesIndicator
     }
 
-    val playlistList: MutableLiveData<List<Playlist>> = MutableLiveData<List<Playlist>>()
+
 
     fun playlistMaker(): LiveData<List<Playlist>> {
         viewModelScope.launch {
