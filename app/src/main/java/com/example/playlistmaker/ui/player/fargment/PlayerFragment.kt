@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.player.activity
+package com.example.playlistmaker.ui.player.fargment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +18,6 @@ import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.ui.mediaLibrary.adapters.PlaylistAdapter
 import com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
@@ -46,6 +44,15 @@ class PlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = PlayerActivityBinding.inflate(layoutInflater)
+
+        //кнопка создать плейлист
+        binding.newPlaylistButton.setOnClickListener {
+            val walkerToNewPlaylistFragment = NewPlaylistFragment()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
         return binding.root
     }
 
@@ -118,14 +125,7 @@ class PlayerFragment : Fragment() {
                 )
             }
 
-        //кнопка создать плейлист
-        binding.newPlaylistButton.setOnClickListener {
-            val walkerToNewPlaylistFragment = NewPlaylistFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
+
 
         //BottomSheet
         val bottomSheetContainer = binding.standardBottomSheet
@@ -170,26 +170,10 @@ class PlayerFragment : Fragment() {
 
         //список плейлистов
         if (!playerViewModel.playlistList.value.isNullOrEmpty()) {
-            playlistAdapter = playerViewModel.playlistList.value?.let {
+            playlistAdapter = playerViewModel.playlistList.value?.let { it ->
                 PlaylistBottomSheetAdapter(it) {
-                    playerViewModel.addTrack(track, it)
-                    Log.d("добавление", "кликлистенер")
-                    playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
-                        playerViewModel.addTrack(track, it)
-                        if (playlistAdding) {
-                            Log.d("добавление", "уже было")
-                            val toastMessage = "Трек уже добавлен в плейлист $it"
-                            Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
-                                .show()
-                            bottomSheetBehavior.state = STATE_COLLAPSED
-                        } else {
-                            Log.d("добавление", "добавлено")
-                            val toastMessage = "Добавлено в плейлист $it"
-                            Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
-                                .show()
-                            bottomSheetBehavior.state = STATE_COLLAPSED
-                        }
-                    }
+                    playlistClickAdapting(track, it)
+                    bottomSheetBehavior.state = STATE_HIDDEN
                 }
             }!!
         } else {
@@ -202,24 +186,8 @@ class PlayerFragment : Fragment() {
         playerViewModel.playlistMaker().observe(viewLifecycleOwner) { playlistList ->
             if (playlistList.isNullOrEmpty()) return@observe
             binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {
-                playerViewModel.addTrack(track, it)
-                Log.d("добавление", "кликлистенер")
-                playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
-                    playerViewModel.addTrack(track, it)
-                    if (playlistAdding) {
-                        Log.d("добавление", "уже было")
-                        val toastMessage = "Трек уже добавлен в плейлист $it"
-                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
-                            .show()
-                        bottomSheetBehavior.state = STATE_COLLAPSED
-                    } else {
-                        Log.d("добавление", "добавлено")
-                        val toastMessage = "Добавлено в плейлист $it"
-                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
-                            .show()
-                        bottomSheetBehavior.state = STATE_COLLAPSED
-                    }
-                }
+                playlistClickAdapting(track, it)
+                bottomSheetBehavior.state = STATE_HIDDEN
             }
         }
     }
@@ -286,6 +254,29 @@ class PlayerFragment : Fragment() {
         val fragmentmanager = requireActivity().supportFragmentManager
         bottomNavigator.visibility = VISIBLE
         fragmentmanager.popBackStack()
+    }
+
+    private fun playlistClickAdapting(track: Track, playlist: Playlist) {
+        var trackIsAdded = false
+        playerViewModel.addTrack(track, playlist)
+        Log.d("добавление", "кликлистенер")
+        playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
+            playerViewModel.addTrack(track, playlist)
+                if (playlistAdding && !trackIsAdded) {
+
+                    val toastMessage = "Трек уже добавлен в плейлист $playlist"
+                    Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+                        .show()
+                    trackIsAdded=true
+                } else {
+                    if (!trackIsAdded) {
+                        val toastMessage = "Добавлено в плейлист $playlist"
+                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    trackIsAdded=true
+                }
+        }
     }
 
     companion object {
