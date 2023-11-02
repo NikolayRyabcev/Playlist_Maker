@@ -22,6 +22,7 @@ import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -47,52 +48,11 @@ class PlayerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         binding = PlayerActivityBinding.inflate(layoutInflater)
 
+        //кнопка назад
         binding.playerBackButtonArrow.setOnClickListener {
             closer()
         }
 
-
-        //BottomSheet
-        val bottomSheetContainer = binding.standardBottomSheet
-        val overlay = binding.overlay
-        val bottomSheetBehavior = BottomSheetBehavior
-            .from(bottomSheetContainer)
-            .apply {
-                state = BottomSheetBehavior.STATE_HIDDEN
-            }
-        bottomSheetBehavior
-            .addBottomSheetCallback(
-                object : BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        when (newState) {
-                            BottomSheetBehavior.STATE_HIDDEN -> {
-                                overlay.visibility = View.GONE
-                            }
-
-                            else -> {
-                                overlay.visibility = View.VISIBLE
-                            }
-                        }
-                    }
-
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-                }
-            )
-
-        //нажатие на кнопку "добавить в плейлист"
-        binding.playlistAddButton.setOnClickListener {
-            bottomSheetBehavior.state = STATE_HIDDEN
-            binding.overlay.visibility = VISIBLE
-        }
-
-        //нажатие на кнопку "новый плейлист"
-        binding.newPlaylistButton.setOnClickListener {
-            val walkerToNewPlaylistFragment = NewPlaylistFragment()
-            val transaction = childFragmentManager.beginTransaction()
-            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = View.GONE
     }
@@ -139,17 +99,67 @@ class PlayerFragment : Fragment() {
             binding.trackTimer.text = timer
             Log.d("время в активити", timer)
         }
+
         //нажатие на кнопку нравится
         binding.favourites.setOnClickListener {
             playerViewModel.onFavoriteClicked(track)
         }
-
         playerViewModel.favouritesChecker(track).observe(requireActivity()) { favourtitesIndicator ->
             if (favourtitesIndicator) {
                 binding.favourites.setImageResource(R.drawable.button__like)
             } else binding.favourites.setImageResource(
                 R.drawable.favourites
             )
+        }
+
+        //кнопка создать плейлист
+        binding.newPlaylistButton.setOnClickListener {
+            val walkerToNewPlaylistFragment = NewPlaylistFragment()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
+        //BottomSheet
+        val bottomSheetContainer = binding.standardBottomSheet
+        val overlay = binding.overlay
+        val bottomSheetBehavior = BottomSheetBehavior
+            .from(bottomSheetContainer)
+            .apply {
+                state = STATE_HIDDEN
+            }
+        bottomSheetBehavior
+            .addBottomSheetCallback(
+                object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        when (newState) {
+                            STATE_HIDDEN -> {
+                                overlay.visibility = View.GONE
+                            }
+
+                            else -> {
+                                overlay.visibility = VISIBLE
+                            }
+                        }
+                    }
+
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+                }
+            )
+        //нажатие на кнопку "добавить в плейлист"
+        binding.playlistAddButton.setOnClickListener {
+            bottomSheetBehavior.state = STATE_COLLAPSED
+            binding.overlay.visibility = VISIBLE
+        }
+
+        //нажатие на кнопку "новый плейлист"
+        binding.newPlaylistButton.setOnClickListener {
+            val walkerToNewPlaylistFragment = NewPlaylistFragment()
+            val transaction = childFragmentManager.beginTransaction()
+            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
 
         //список плейлистов
@@ -163,29 +173,20 @@ class PlayerFragment : Fragment() {
                         if (playlistAdding) {
                             val toastMessage = "Трек уже добавлен в плейлист $it"
                             Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                            bottomSheetBehavior.state = STATE_COLLAPSED
                         } else {
                             val toastMessage = "Добавлено в плейлист $it"
                             Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                            bottomSheetBehavior.state = STATE_COLLAPSED
                         }
                     }
                 }
             }
-//        if (playerViewModel.playlistList.value.isNullOrEmpty()) binding.playlistRecycler.visibility =
-//            View.GONE
         playerViewModel.playlistMaker().observe(viewLifecycleOwner) { playlistList ->
             if (playlistList.isNullOrEmpty()) return@observe
             binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {
                 playerViewModel.addTrack(track, it)
             }
-        }
-
-        //кнопка создать плейлист
-        binding.newPlaylistButton.setOnClickListener {
-            val walkerToNewPlaylistFragment = NewPlaylistFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
         }
     }
 
@@ -202,7 +203,7 @@ class PlayerFragment : Fragment() {
 
     private fun preparePlayer() {
         binding.playButton.isEnabled = true
-        binding.playButton.visibility = View.VISIBLE
+        binding.playButton.visibility = VISIBLE
         binding.pauseButton.visibility = View.GONE
     }
 
@@ -250,6 +251,7 @@ class PlayerFragment : Fragment() {
 
     private fun closer() {
         val fragmentmanager = requireActivity().supportFragmentManager
+        bottomNavigator.visibility = VISIBLE
         fragmentmanager.popBackStack()
     }
     companion object {
