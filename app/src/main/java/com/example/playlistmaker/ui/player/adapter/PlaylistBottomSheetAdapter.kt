@@ -13,9 +13,7 @@ class PlaylistBottomSheetAdapter(
 ) : RecyclerView.Adapter<PlaylistBottomSheetViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistBottomSheetViewHolder {
-        Log.d("ыджвпыдывдып", "ViewHolder created")
         val layoutInspector = LayoutInflater.from(parent.context)
-
         return PlaylistBottomSheetViewHolder(PlaylistTrackerBinding.inflate(layoutInspector, parent, false))
     }
 
@@ -24,7 +22,6 @@ class PlaylistBottomSheetAdapter(
     }
 
     override fun onBindViewHolder(holder: PlaylistBottomSheetViewHolder, position: Int) {
-        Log.d("ыджвпыдывдып", "$playlists")
 
         holder.bind(playlists[position])
         holder.itemView.setOnClickListener {

@@ -12,7 +12,8 @@ class PlaylistBottomSheetViewHolder(
 ) :RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Playlist) {
         binding.PlaylistName.text = item.playlistName
-        binding.playlistNumber.text = item.arrayNumber.toString()
+        val number= item.arrayNumber.toString() + " треков"
+        binding.playlistNumber.text = number
 
         val radius = itemView.resources.getDimensionPixelSize(R.dimen.trackCornerRadius)
         Glide.with(itemView)

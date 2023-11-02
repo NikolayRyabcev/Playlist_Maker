@@ -169,7 +169,7 @@ class PlayerFragment : Fragment() {
         }
 
         //список плейлистов
-        if (playerViewModel.playlistList.value.isNullOrEmpty()) {
+        if (!playerViewModel.playlistList.value.isNullOrEmpty()) {
             playlistAdapter = playerViewModel.playlistList.value?.let {
                 PlaylistBottomSheetAdapter(it) {
                     playerViewModel.addTrack(track, it)
@@ -203,6 +203,23 @@ class PlayerFragment : Fragment() {
             if (playlistList.isNullOrEmpty()) return@observe
             binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {
                 playerViewModel.addTrack(track, it)
+                Log.d("добавление", "кликлистенер")
+                playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
+                    playerViewModel.addTrack(track, it)
+                    if (playlistAdding) {
+                        Log.d("добавление", "уже было")
+                        val toastMessage = "Трек уже добавлен в плейлист $it"
+                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+                            .show()
+                        bottomSheetBehavior.state = STATE_COLLAPSED
+                    } else {
+                        Log.d("добавление", "добавлено")
+                        val toastMessage = "Добавлено в плейлист $it"
+                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+                            .show()
+                        bottomSheetBehavior.state = STATE_COLLAPSED
+                    }
+                }
             }
         }
     }
