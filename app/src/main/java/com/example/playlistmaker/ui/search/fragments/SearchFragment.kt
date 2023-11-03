@@ -148,7 +148,7 @@ class SearchFragment : Fragment() {
         val bundle = Bundle()
         bundle.putParcelable("track", item)
         val navController = findNavController()
-        navController.navigate(R.id.playerFragment, bundle)
+        navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
     }
 
     //видимость кнопки удаления введенной строки (крестик)

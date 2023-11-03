@@ -50,7 +50,7 @@ class PlayerFragment : Fragment() {
 
         //нажатие на кнопку "новый плейлист"
         binding.newPlaylistButton.setOnClickListener {
-            findNavController().navigate(R.id.newPlaylistFragment)
+            findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
         }
 
         //кнопка назад

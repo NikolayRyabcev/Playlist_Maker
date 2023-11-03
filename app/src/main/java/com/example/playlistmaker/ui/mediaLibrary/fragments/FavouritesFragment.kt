@@ -70,7 +70,7 @@ class FavouritesFragment : Fragment() {
         val bundle = Bundle()
         bundle.putParcelable("track", item)
         val navController = findNavController()
-        navController.navigate(R.id.playerFragment, bundle)
+        navController.navigate(R.id.action_mediaLibraryFragment_to_playerFragment, bundle)
     }
 
     companion object {
