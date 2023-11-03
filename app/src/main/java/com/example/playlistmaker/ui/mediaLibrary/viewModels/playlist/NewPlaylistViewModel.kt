@@ -12,14 +12,15 @@ import kotlinx.coroutines.launch
 
 class NewPlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel() {
 
-
-    fun addPlayList(item: Playlist) {
-        interactor.addPlaylist(item)
+    fun addPlayList(
+        playlistName: String,
+        description: String?,
+        uri: String
+    ) {
+        interactor.addPlaylist(playlistName, description, uri)
     }
 
     fun deletePlaylist(item: Playlist) {
         interactor.deletePlaylist(item)
     }
-
-
 }

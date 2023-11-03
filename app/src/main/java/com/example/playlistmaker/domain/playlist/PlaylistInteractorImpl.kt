@@ -5,8 +5,12 @@ import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 class PlaylistInteractorImpl(val repository: PlaylistRepository) : PlaylistInteractor {
-    override fun addPlaylist(item: Playlist) {
-        repository.addPlaylist(item)
+    override fun addPlaylist(
+        playlistName: String,
+        description: String?,
+        uri: String
+    ) {
+        repository.addPlaylist(playlistName, description, uri)
     }
 
     override fun deletePlaylist(item: Playlist) {

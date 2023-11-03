@@ -38,8 +38,8 @@ class NewPlaylistFragment : Fragment() {
     private lateinit var newPlaylistBinding: NewPlaylistBinding
     private lateinit var bottomNavigator: BottomNavigationView
     var isFileLoaded = false
-    private val viewModel :NewPlaylistViewModel by viewModel()
-    private var selectedUri: Uri? =null
+    private val viewModel: NewPlaylistViewModel by viewModel()
+    private var selectedUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -145,7 +145,7 @@ class NewPlaylistFragment : Fragment() {
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         newPlaylistBinding.playlistPlaceHolder.visibility = GONE
         isFileLoaded = true
-        selectedUri=file.toUri()
+        selectedUri = file.toUri()
     }
 
     private fun onBackClick() {
@@ -191,12 +191,10 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun createPlaylist() {
-        viewModel.addPlayList(Playlist(
+        viewModel.addPlayList(
             newPlaylistBinding.playlistNameEditText.text.toString(),
             newPlaylistBinding.playlistDescriptEditText.text.toString(),
             selectedUri.toString(),
-            emptyList(),
-            0
-        ))
+        )
     }
 }

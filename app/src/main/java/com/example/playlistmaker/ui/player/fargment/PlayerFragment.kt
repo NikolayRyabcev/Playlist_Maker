@@ -45,14 +45,7 @@ class PlayerFragment : Fragment() {
     ): View {
         binding = PlayerActivityBinding.inflate(layoutInflater)
 
-        //кнопка создать плейлист
-        binding.newPlaylistButton.setOnClickListener {
-            val walkerToNewPlaylistFragment = NewPlaylistFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
+
         return binding.root
     }
 
@@ -71,6 +64,16 @@ class PlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //кнопка создать плейлист
+        binding.newPlaylistButton.setOnClickListener {
+            val walkerToNewPlaylistFragment = NewPlaylistFragment()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            val rootContainer = requireActivity().findViewById<ViewGroup>(R.id.rootContainer)
+            transaction.replace(rootContainer.id, walkerToNewPlaylistFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
 
         //принятие и отрисовка данных трека
         val track = arguments?.getParcelable<Track>("track")
