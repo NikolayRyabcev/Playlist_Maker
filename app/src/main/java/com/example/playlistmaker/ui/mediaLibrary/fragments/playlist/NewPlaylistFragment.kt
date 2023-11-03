@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -53,7 +55,14 @@ class NewPlaylistFragment : Fragment() {
 
         newPlaylistBinding.createButton.setOnClickListener {
             createPlaylist()
-
+            val currentTheme = requireContext().theme
+            val textColor: Int
+            val isDarkTheme = currentTheme.resolveAttribute(R.attr.isDarkTheme, TypedValue(), true)
+            if (isDarkTheme) {
+                textColor = Color.BLACK
+            } else {
+                textColor = Color.WHITE
+            }
             val dialogPlaylistName = newPlaylistBinding.playlistNameEditText.text
             val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setMessage("Плейлист $dialogPlaylistName создан")
@@ -61,7 +70,7 @@ class NewPlaylistFragment : Fragment() {
                     closer()
                 }
                 .show()
-            //dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(...)
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textColor)
         }
         return newPlaylistBinding.root
     }
