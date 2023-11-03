@@ -47,10 +47,10 @@ class PlayerFragment : Fragment() {
     ): View {
         binding = PlayerActivityBinding.inflate(layoutInflater)
 
-        //кнопка создать плейлист
+
+        //нажатие на кнопку "новый плейлист"
         binding.newPlaylistButton.setOnClickListener {
-            val navController = findNavController()
-            navController.navigate(R.id.action_playlistFragment_to_newPlaylistFragment)
+            findNavController().navigate(R.id.newPlaylistFragment)
         }
 
         //кнопка назад
@@ -65,7 +65,6 @@ class PlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
 
         //принятие и отрисовка данных трека
@@ -120,7 +119,6 @@ class PlayerFragment : Fragment() {
                     R.drawable.favourites
                 )
             }
-
 
 
         //BottomSheet
@@ -258,20 +256,20 @@ class PlayerFragment : Fragment() {
         Log.d("добавление", "кликлистенер")
         playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
             playerViewModel.addTrack(track, playlist)
-                if (playlistAdding && !trackIsAdded) {
+            if (playlistAdding && !trackIsAdded) {
 
-                    val toastMessage = "Трек уже добавлен в плейлист $playlist"
+                val toastMessage = "Трек уже добавлен в плейлист $playlist"
+                Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+                    .show()
+                trackIsAdded = true
+            } else {
+                if (!trackIsAdded) {
+                    val toastMessage = "Добавлено в плейлист $playlist"
                     Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
                         .show()
-                    trackIsAdded=true
-                } else {
-                    if (!trackIsAdded) {
-                        val toastMessage = "Добавлено в плейлист $playlist"
-                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                    trackIsAdded=true
                 }
+                trackIsAdded = true
+            }
         }
     }
 
