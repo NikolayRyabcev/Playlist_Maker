@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.mediaLibrary.fragments.playlist
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -52,13 +53,15 @@ class NewPlaylistFragment : Fragment() {
 
         newPlaylistBinding.createButton.setOnClickListener {
             createPlaylist()
+
             val dialogPlaylistName = newPlaylistBinding.playlistNameEditText.text
-            MaterialAlertDialogBuilder(requireContext())
+            val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setMessage("Плейлист $dialogPlaylistName создан")
                 .setNegativeButton("Оk") { dialog, which ->
                     closer()
                 }
                 .show()
+            //dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(...)
         }
         return newPlaylistBinding.root
     }

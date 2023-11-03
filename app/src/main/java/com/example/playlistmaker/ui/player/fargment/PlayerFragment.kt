@@ -47,13 +47,11 @@ class PlayerFragment : Fragment() {
     ): View {
         binding = PlayerActivityBinding.inflate(layoutInflater)
 
-
-        return binding.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = PlayerActivityBinding.inflate(layoutInflater)
+        //кнопка создать плейлист
+        binding.newPlaylistButton.setOnClickListener {
+            val navController = findNavController()
+            navController.navigate(R.id.action_playlistFragment_to_newPlaylistFragment)
+        }
 
         //кнопка назад
         binding.playerBackButtonArrow.setOnClickListener {
@@ -62,17 +60,13 @@ class PlayerFragment : Fragment() {
 
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = View.GONE
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //кнопка создать плейлист
-        binding.newPlaylistButton.setOnClickListener {
 
-            findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
-
-        }
 
         //принятие и отрисовка данных трека
         val track = arguments?.getParcelable<Track>("track")

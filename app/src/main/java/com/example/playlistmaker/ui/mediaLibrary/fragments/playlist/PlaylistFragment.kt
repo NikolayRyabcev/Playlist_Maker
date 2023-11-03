@@ -34,7 +34,7 @@ class PlaylistFragment : Fragment() {
         //кнопка создать плейлист
         nullablePlaylistBinding.newPlaylistButton.setOnClickListener {
             val navController = findNavController()
-            navController.navigate(R.id.action_playlistFragment_to_newPlaylistFragment)
+            navController.navigate(R.id.newPlaylistFragment)
         }
 
         //список плейлистов
