@@ -25,7 +25,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.NewPlaylistBinding
-import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.NewPlaylistViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -102,6 +101,7 @@ class NewPlaylistFragment : Fragment() {
                     val radius = 8
                     Glide.with(requireActivity())
                         .load(uri)
+                        .centerCrop()
                         .placeholder(R.drawable.add_photo)
                         .transform(RoundedCorners(radius))
                         .into(newPlaylistBinding.playlistCover)
@@ -136,8 +136,8 @@ class NewPlaylistFragment : Fragment() {
         if (!filePath.exists()) {
             filePath.mkdirs()
         }
-        val fileCunt = filePath.listFiles()?.size ?: 0
-        val file = File(filePath, "first_cover_${fileCunt + 1}.jpg")
+        val fileCount = filePath.listFiles()?.size ?: 0
+        val file = File(filePath, "first_cover_${fileCount + 1}.jpg")
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
         BitmapFactory

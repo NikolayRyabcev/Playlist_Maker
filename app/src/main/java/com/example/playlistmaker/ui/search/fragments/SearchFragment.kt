@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
@@ -144,14 +145,10 @@ class SearchFragment : Fragment() {
 
     private fun clickAdapting(item: Track) {
         searchViewModel.addItem(item)
-        val fragment = PlayerFragment()
         val bundle = Bundle()
         bundle.putParcelable("track", item)
-        fragment.arguments = bundle
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.rootContainer, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        val navController = findNavController()
+        navController.navigate(R.id.playerFragment, bundle)
     }
 
     //видимость кнопки удаления введенной строки (крестик)

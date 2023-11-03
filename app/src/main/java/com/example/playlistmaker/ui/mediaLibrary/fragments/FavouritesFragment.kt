@@ -8,6 +8,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavouritesBinding
@@ -66,14 +67,10 @@ class FavouritesFragment : Fragment() {
 
     private fun clickAdapting(item: Track) {
         favouritesViewModel.addItem(item)
-        val fragment = PlayerFragment()
         val bundle = Bundle()
         bundle.putParcelable("track", item)
-        fragment.arguments = bundle
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.rootContainer, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        val navController = findNavController()
+        navController.navigate(R.id.playerFragment, bundle)
     }
 
     companion object {
