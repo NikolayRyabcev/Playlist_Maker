@@ -7,6 +7,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
@@ -32,11 +33,8 @@ class PlaylistFragment : Fragment() {
 
         //кнопка создать плейлист
         nullablePlaylistBinding.newPlaylistButton.setOnClickListener {
-            val walkerToNewPlaylistFragment = NewPlaylistFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
+            val navController = findNavController()
+            navController.navigate(R.id.action_playlistFragment_to_newPlaylistFragment)
         }
 
         //список плейлистов
