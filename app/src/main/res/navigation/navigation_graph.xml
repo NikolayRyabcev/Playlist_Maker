@@ -25,4 +25,25 @@
         android:name="com.example.playlistmaker.BottomNavigation"
         android:label="fragment_bottom_navigation"
         tools:layout="@layout/fragment_bottom_navigation" />
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.PlaylistFragment"
+        android:label="PlaylistFragment" />
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.example.playlistmaker.ui.player.fargment.PlayerFragment"
+        android:label="player_activity"
+        tools:layout="@layout/player_activity" >
+        <action
+            android:id="@+id/action_playerFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPlaylistFragment"
+        android:name="com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment"
+        android:label="NewPlaylistFragment" />
+    <activity
+        android:id="@+id/rootActivity"
+        android:name="com.example.playlistmaker.ui.root.RootActivity"
+        android:label="RootActivity" />
 </navigation>
