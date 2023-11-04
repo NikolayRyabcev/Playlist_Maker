@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.NewPlaylistBinding
@@ -111,11 +112,14 @@ class NewPlaylistFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     val radius = 8
+                    val width = 45
+                    val height = 45
                     Glide.with(requireActivity())
                         .load(uri)
                         .centerCrop()
                         .placeholder(R.drawable.add_photo)
-                        .transform(RoundedCorners(radius))
+                        .transform(CenterCrop(), RoundedCorners(radius))
+                        .override(width, height)
                         .into(newPlaylistBinding.playlistCover)
                     saveImageToPrivateStorage(uri)
 

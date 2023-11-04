@@ -1,9 +1,8 @@
 package com.example.playlistmaker.ui.mediaLibrary.adapters
 
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistLayoutBinding
@@ -18,7 +17,7 @@ class PlaylistViewHolder(private val binding: PlaylistLayoutBinding) :
 
         val radius = itemView.resources.getDimensionPixelSize(R.dimen.trackCornerRadius)
 
-        if (item.uri.isNullOrEmpty()) {
+        if (item.uri.isEmpty()) {
             val imageResource = R.drawable.musicalbum
             binding.playlistlittleCover.setImageResource(imageResource)
             val layoutParams = binding.playlistlittleCover.layoutParams
@@ -27,10 +26,13 @@ class PlaylistViewHolder(private val binding: PlaylistLayoutBinding) :
             binding.playlistlittleCover.layoutParams = layoutParams
         } else {
 
+            val width = 160
+            val height = 160
             Glide.with(itemView)
                 .load(item.uri)
                 .placeholder(R.drawable.musicalbum)
-                .transform(RoundedCorners(radius))
+                .transform(CenterCrop(), RoundedCorners(radius))
+                .override(width, height)
                 .into(binding.playlistlittleCover)
         }
     }
