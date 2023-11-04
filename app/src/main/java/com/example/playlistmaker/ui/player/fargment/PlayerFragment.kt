@@ -46,7 +46,9 @@ class PlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = PlayerActivityBinding.inflate(layoutInflater)
-
+        //Нижний навигатор
+        bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavigator.visibility = View.GONE
 
         //нажатие на кнопку "новый плейлист"
         binding.newPlaylistButton.setOnClickListener {
@@ -55,12 +57,18 @@ class PlayerFragment : Fragment() {
 
         //кнопка назад
         binding.playerBackButtonArrow.setOnClickListener {
+            bottomNavigator.visibility = View.VISIBLE
             closer()
         }
 
-        bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
-        bottomNavigator.visibility = View.GONE
+
         return binding.root
+    }
+
+    override fun onStop() {
+        bottomNavigator.visibility = View.VISIBLE
+        super.onStop()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -253,18 +261,18 @@ class PlayerFragment : Fragment() {
     private fun playlistClickAdapting(track: Track, playlist: Playlist) {
         var trackIsAdded = false
         playerViewModel.addTrack(track, playlist)
-        Log.d("добавление", "кликлистенер")
         playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
             playerViewModel.addTrack(track, playlist)
+            val playlistName = playlist.playlistName
             if (playlistAdding && !trackIsAdded) {
 
-                val toastMessage = "Трек уже добавлен в плейлист $playlist"
+                val toastMessage = "Трек уже добавлен в плейлист $playlistName"
                 Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
                     .show()
                 trackIsAdded = true
             } else {
                 if (!trackIsAdded) {
-                    val toastMessage = "Добавлено в плейлист $playlist"
+                    val toastMessage = "Добавлено в плейлист $playlistName"
                     Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
                         .show()
                 }
