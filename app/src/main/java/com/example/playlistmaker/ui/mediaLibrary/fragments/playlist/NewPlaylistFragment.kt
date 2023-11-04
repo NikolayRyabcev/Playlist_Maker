@@ -55,9 +55,8 @@ class NewPlaylistFragment : Fragment() {
 
         newPlaylistBinding.createButton.setOnClickListener {
             createPlaylist()
-            val currentTheme = requireContext().theme
             val textColor: Int
-            val isDarkTheme = currentTheme.resolveAttribute(R.attr.isDarkTheme, TypedValue(), true)
+            val isDarkTheme = viewModel.isAppThemeDark()
             if (isDarkTheme) {
                 textColor = Color.BLACK
             } else {
@@ -71,6 +70,7 @@ class NewPlaylistFragment : Fragment() {
                 }
                 .show()
             dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textColor)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(textColor)
         }
         return newPlaylistBinding.root
     }
@@ -163,12 +163,16 @@ class NewPlaylistFragment : Fragment() {
     private fun onBackClick() {
         val name = newPlaylistBinding.playlistNameEditText.text
         val descr = newPlaylistBinding.playlistDescriptEditText.text
-        Log.d("кнопка назад ", isFileLoaded.toString())
-        Log.d("кнопка назад ", name.toString())
-        Log.d("кнопка назад ", descr.toString())
 
         if (isFileLoaded || !(name.isNullOrEmpty()) || (!descr.isNullOrEmpty())) {
-            MaterialAlertDialogBuilder(requireContext())
+            val textColor: Int
+            val isDarkTheme = viewModel.isAppThemeDark()
+            if (isDarkTheme) {
+                textColor = Color.BLACK
+            } else {
+                textColor = Color.WHITE
+            }
+            val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Завершить создание плейлиста?")
                 .setMessage("Все несохраненные данные будут потеряны")
                 .setNegativeButton("Отмена") { dialog, which ->
@@ -178,10 +182,10 @@ class NewPlaylistFragment : Fragment() {
                     closer()
                 }
                 .show()
-            Log.d("кнопка назад ", "yes")
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textColor)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(textColor)
         } else {
             closer()
-            Log.d("кнопка назад ", "no")
         }
     }
 

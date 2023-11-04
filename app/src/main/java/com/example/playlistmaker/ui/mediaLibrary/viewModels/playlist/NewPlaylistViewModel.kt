@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.playlist.PlaylistInteractor
+import com.example.playlistmaker.domain.settings.SettingsInteractor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel() {
+class NewPlaylistViewModel(private val interactor: PlaylistInteractor, private val settingsInteractor: SettingsInteractor) : ViewModel() {
 
     fun addPlayList(
         playlistName: String,
@@ -22,5 +23,9 @@ class NewPlaylistViewModel(private val interactor: PlaylistInteractor) : ViewMod
 
     fun deletePlaylist(item: Playlist) {
         interactor.deletePlaylist(item)
+    }
+
+    fun isAppThemeDark() :Boolean{
+        return settingsInteractor.isAppThemeDark()
     }
 }
