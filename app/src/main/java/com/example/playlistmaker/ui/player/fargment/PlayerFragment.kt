@@ -57,7 +57,7 @@ class PlayerFragment : Fragment() {
 
         //кнопка назад
         binding.playerBackButtonArrow.setOnClickListener {
-            bottomNavigator.visibility = View.VISIBLE
+            bottomNavigator.visibility = VISIBLE
             closer()
         }
 
@@ -66,7 +66,7 @@ class PlayerFragment : Fragment() {
     }
 
     override fun onStop() {
-        bottomNavigator.visibility = View.VISIBLE
+        bottomNavigator.visibility = VISIBLE
         super.onStop()
 
     }
@@ -159,15 +159,6 @@ class PlayerFragment : Fragment() {
         binding.playlistAddButton.setOnClickListener {
             bottomSheetBehavior.state = STATE_COLLAPSED
             binding.overlay.visibility = VISIBLE
-        }
-
-        //нажатие на кнопку "новый плейлист"
-        binding.newPlaylistButton.setOnClickListener {
-            val walkerToNewPlaylistFragment = NewPlaylistFragment()
-            val transaction = childFragmentManager.beginTransaction()
-            transaction.replace(R.id.rootContainer, walkerToNewPlaylistFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
         }
 
         //список плейлистов
