@@ -7,15 +7,16 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class PlaylistConverter {
-    //val gson = Gson()
+    val gson = Gson()
 
     fun mapplaylistEntityToClass(item: PlaylistEntity): Playlist {
 
         return Playlist(
+            item.playlistId,
             item.playlistName,
             item.description,
             item.uri,
-            item.trackArray,
+            gson.fromJson(item.trackList, object : TypeToken<List<Long>>() {}.type),
             item.arrayNumber
         )
     }
@@ -24,11 +25,11 @@ class PlaylistConverter {
         val tracklist = item.trackArray.toString()
         Log.d("Запись в плейлист", "пишем в конвертер  $tracklist")
         return PlaylistEntity(
-            0,
+            item.playlistId,
             item.playlistName,
             item.description,
             item.uri,
-            item.trackArray,
+            gson.toJson(item.trackArray),
             item.arrayNumber
         )
     }

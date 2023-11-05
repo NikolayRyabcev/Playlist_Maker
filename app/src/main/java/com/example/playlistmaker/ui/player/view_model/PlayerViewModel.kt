@@ -113,12 +113,10 @@ class PlayerViewModel(
         if (playlist.trackArray.contains(track.trackId)) {
             playlistAdding.postValue(true)
         } else {
-            playlistAdding.postValue(false)
+            playlistAdding.postValue(true)
             playlist.trackArray = (playlist.trackArray + track.trackId)!!
             playlist.arrayNumber = (playlist.arrayNumber?.plus(1))!!
             playlistInteractor.update(track, playlist)
-            val tracklist = playlist.trackArray.toString()
-            Log.d("Запись в плейлист", "ушли в интерактор $tracklist")
         }
     }
 

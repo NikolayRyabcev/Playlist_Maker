@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.playlistDataBase
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.App.PlayistDataBase
 import com.example.playlistmaker.App.TrackInPlaylistDataBase
 import com.example.playlistmaker.domain.models.Playlist
@@ -8,6 +9,7 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.playlist.PlaylistRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class PlaylistRepositoryImpl(
     private val playistDataBase: PlayistDataBase,
@@ -21,6 +23,7 @@ class PlaylistRepositoryImpl(
         uri: String
     ) {
         val playlist = Playlist(
+            null,
             playlistName,
             description,
             uri,
@@ -33,7 +36,8 @@ class PlaylistRepositoryImpl(
     }
 
     override fun deletePlaylist(item: Playlist) {
-        converter.mapplaylistClassToEntity(item)?.let { playistDataBase.playlistDao().deletePlaylist(it) }
+        converter.mapplaylistClassToEntity(item)
+            ?.let { playistDataBase.playlistDao().deletePlaylist(it) }
     }
 
     override fun queryPlaylist(): Flow<List<Playlist>> = flow {
@@ -47,11 +51,9 @@ class PlaylistRepositoryImpl(
     }
 
     override fun update(track: Track, playlist: Playlist) {
-        val tracklist = playlist.trackArray.toString()
-        Log.d("Запись в плейлист", "пишем в репозиторий  $tracklist")
+
         playistDataBase.playlistDao().updatePlaylist(converter.mapplaylistClassToEntity(playlist))
         trackInDataBase.trackListingDao().insertTrack(track)
-        val entityTrackList = converter.mapplaylistClassToEntity(playlist).trackList.toString()
-        Log.d("Запись в плейлист", "в таблицу  $entityTrackList")
+
     }
 }

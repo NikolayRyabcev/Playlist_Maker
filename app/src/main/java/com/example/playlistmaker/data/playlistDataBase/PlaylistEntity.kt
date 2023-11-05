@@ -7,10 +7,10 @@ import com.example.playlistmaker.domain.models.Track
 @Entity (tableName = "playlist_table")
 data class PlaylistEntity (
     @PrimaryKey(autoGenerate = true)
-    val number:Int,
+    val playlistId:Int?,
     val playlistName:String,
     val description:String?,
     val uri:String,
-    var trackArray:List<Long?>,
+    val trackList:String?,
     val arrayNumber:Int?
 )
