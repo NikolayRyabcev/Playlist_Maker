@@ -52,9 +52,11 @@ class PlaylistFragment : Fragment() {
         playlistViewModel.playlistMaker().observe(viewLifecycleOwner) { playlistList ->
             if (playlistViewModel.playlistMaker().value.isNullOrEmpty()) {
                 noPlaylist()
+                return@observe
             } else {
                 nullablePlaylistBinding.playlistList.adapter=PlaylistAdapter(playlistList) {}
                 existPlaylist()
+                return@observe
             }
         }
     }
