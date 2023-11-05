@@ -55,6 +55,7 @@ class NewPlaylistFragment : Fragment() {
         bottomNavigator.visibility = GONE
 
         newPlaylistBinding.createButton.setOnClickListener {
+            if (newPlaylistBinding.playlistNameEditText.text.toString().isEmpty()) return@setOnClickListener
             createPlaylist()
             val textColor: Int
             val isDarkTheme = viewModel.isAppThemeDark()
