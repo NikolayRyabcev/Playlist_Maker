@@ -167,6 +167,7 @@ class PlayerFragment : Fragment() {
                 PlaylistBottomSheetAdapter(it) {
                     playlistClickAdapting(track, it)
                     bottomSheetBehavior.state = STATE_HIDDEN
+
                 }
             }!!
         } else {
@@ -181,6 +182,7 @@ class PlayerFragment : Fragment() {
             binding.playlistRecycler.adapter = PlaylistBottomSheetAdapter(playlistList) {
                 playlistClickAdapting(track, it)
                 bottomSheetBehavior.state = STATE_HIDDEN
+                Log.d("Запись в плейлист", "click!")
             }
         }
     }
@@ -209,25 +211,21 @@ class PlayerFragment : Fragment() {
                 PlayerState.STATE_DEFAULT -> {
                     binding.playButton.setImageResource(R.drawable.play)
                     binding.playButton.alpha = 0.5f
-
                 }
 
                 PlayerState.STATE_PREPARED -> {
                     preparePlayer()
                     binding.playButton.setImageResource(R.drawable.play)
                     binding.playButton.alpha = 1f
-
                 }
 
                 PlayerState.STATE_PAUSED -> {
                     binding.playButton.setImageResource(R.drawable.play)
                     binding.playButton.alpha = 1f
-
                 }
 
                 PlayerState.STATE_PLAYING -> {
                     binding.playButton.setImageResource(R.drawable.pause)
-
                 }
 
                 else -> {
@@ -251,18 +249,21 @@ class PlayerFragment : Fragment() {
 
     private fun playlistClickAdapting(track: Track, playlist: Playlist) {
         var trackIsAdded = false
+        Log.d("Запись в плейлист", "clickadapting!")
         playerViewModel.addTrack(track, playlist)
         playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
-            playerViewModel.addTrack(track, playlist)
             val playlistName = playlist.playlistName
             if (playlistAdding && !trackIsAdded) {
-
+                Log.d("Запись в плейлист", "playlistAdding && !trackIsAdded!")
                 val toastMessage = "Трек уже добавлен в плейлист $playlistName"
                 Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
                     .show()
                 trackIsAdded = true
             } else {
-                if (!trackIsAdded) {
+                 if (!trackIsAdded) {
+
+                     val tracklist = playlist.trackArray.toString()
+                    Log.d("Запись в плейлист", "!trackIsAdded $tracklist")
                     val toastMessage = "Добавлено в плейлист $playlistName"
                     Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
                         .show()

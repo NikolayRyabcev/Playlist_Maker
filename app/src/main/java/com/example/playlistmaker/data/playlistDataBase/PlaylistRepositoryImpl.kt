@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.playlistDataBase
 
+import android.util.Log
 import com.example.playlistmaker.App.PlayistDataBase
 import com.example.playlistmaker.App.TrackInPlaylistDataBase
 import com.example.playlistmaker.domain.models.Playlist
@@ -45,9 +46,8 @@ class PlaylistRepositoryImpl(
     }
 
     override fun update(track: Track, playlist: Playlist) {
+        Log.d("Запись в плейлист", "пишем в репозиторий")
         database.playlistDao().updatePlaylist(converter.mapplaylistClassToEntity(playlist))
         trackInDataBase.trackListingDao().insertTrack(track)
     }
-
-
 }

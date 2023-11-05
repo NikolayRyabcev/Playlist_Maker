@@ -64,13 +64,11 @@ class PlayerViewModel(
 
     fun putTime(): LiveData<String> {
         getTimeFromInteractor()
-        timer.value?.let { Log.d("время в модели", it) }
+       // timer.value?.let { Log.d("время в модели", it) }
         return timer
     }
 
     fun onFavoriteClicked(track: Track) {
-        Log.d("PlayerViewModel", "onFavoriteClicked")
-        Log.d("PlayerViewModel", "$track")
         if (track.isFavorite) {
             track.trackId?.let { favouritesInteractor.favouritesDelete(track) }
         } else track.trackId?.let {
@@ -81,15 +79,12 @@ class PlayerViewModel(
     }
 
     fun favouritesChecker(track: Track): LiveData<Boolean> {
-
         favouritesJob = viewModelScope.launch {
-
             while (true) {
                 delay(PLAYER_BUTTON_PRESSING_DELAY)
                 track.trackId?.let { id ->
                     favouritesInteractor.favouritesCheck(id)
                         .collect { value ->
-                            Log.d("Hueta", "$value")
                             favouritesIndicator.postValue(value)
                         }
                 }
@@ -97,8 +92,6 @@ class PlayerViewModel(
         }
         return favouritesIndicator
     }
-
-
 
     fun playlistMaker(): LiveData<List<Playlist>> {
         viewModelScope.launch {
@@ -124,6 +117,7 @@ class PlayerViewModel(
             playlist.trackArray = (playlist.trackArray + track.trackId)!!
             playlist.arrayNumber = (playlist.arrayNumber?.plus(1))!!
             playlistInteractor.update(track, playlist)
+            Log.d("Запись в плейлист", "ушли в интерактор")
         }
     }
 
