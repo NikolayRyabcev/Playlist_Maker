@@ -14,7 +14,7 @@ import org.koin.dsl.module
 
 val playlistModule = module {
     single {
-        Room.databaseBuilder(androidContext(), PlayistDataBase::class.java, "favourites_table")
+        Room.databaseBuilder(androidContext(), PlayistDataBase::class.java, "playlist_table")
             .allowMainThreadQueries()
             .build()
     }
