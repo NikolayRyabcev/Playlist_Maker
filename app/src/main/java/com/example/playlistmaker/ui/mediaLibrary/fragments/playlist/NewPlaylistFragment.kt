@@ -18,6 +18,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -55,7 +56,9 @@ class NewPlaylistFragment : Fragment() {
         bottomNavigator.visibility = GONE
 
         newPlaylistBinding.createButton.setOnClickListener {
-            if (newPlaylistBinding.playlistNameEditText.text.toString().isEmpty()) return@setOnClickListener
+            if (newPlaylistBinding.playlistNameEditText.text.toString()
+                    .isEmpty()
+            ) return@setOnClickListener
             createPlaylist()
             val textColor: Int
             val isDarkTheme = viewModel.isAppThemeDark()
@@ -76,6 +79,7 @@ class NewPlaylistFragment : Fragment() {
         }
         return newPlaylistBinding.root
     }
+
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @SuppressLint("CheckResult")
@@ -145,6 +149,10 @@ class NewPlaylistFragment : Fragment() {
                     }
                 }
         }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            onBackClick()
+        }
+
     }
 
     private fun saveImageToPrivateStorage(uri: Uri) {
