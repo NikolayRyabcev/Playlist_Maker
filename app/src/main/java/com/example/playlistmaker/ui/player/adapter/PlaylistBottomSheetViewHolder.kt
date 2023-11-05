@@ -13,7 +13,9 @@ class PlaylistBottomSheetViewHolder(
 ) :RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Playlist) {
         binding.PlaylistName.text = item.playlistName
-        val number= item.arrayNumber.toString() + " треков"
+        val innerNumber = item.arrayNumber.toString()
+        val text = if (innerNumber.toInt() % 10 == 1 && innerNumber.toInt() % 100 != 11) " трек" else " треков"
+        val number = "$innerNumber $text"
         binding.playlistNumber.text = number
 
         val radius = itemView.resources.getDimensionPixelSize(R.dimen.trackCornerRadius)

@@ -13,7 +13,8 @@ class PlaylistViewHolder(private val binding: PlaylistLayoutBinding) :
     fun bind(item: Playlist) {
         binding.playlistlittleName.text = item.playlistName
         val innerNumber = item.arrayNumber.toString()
-        val number= innerNumber + " треков"
+        val text = if (innerNumber.toInt() % 10 == 1 && innerNumber.toInt() % 100 != 11) " трек" else " треков"
+        val number = "$innerNumber $text"
         binding.playlistlittleSongNumber.text = number
 
         val radius = itemView.resources.getDimensionPixelSize(R.dimen.trackCornerRadius)
