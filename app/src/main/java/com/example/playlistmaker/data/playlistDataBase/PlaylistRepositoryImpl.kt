@@ -41,17 +41,12 @@ class PlaylistRepositoryImpl(
     }
 
     override fun queryPlaylist(): Flow<List<Playlist>> = flow {
-        val playlistList = playistDataBase.playlistDao().queryPlaylist()
-        if (playlistList.isEmpty()) {
-            emit(emptyList())
-            return@flow
-        } else {
-            val playlistConverted =
-                playistDataBase.playlistDao().queryPlaylist()
-                    .map { converter.mapplaylistEntityToClass(it) }
-            emit(playlistConverted)
-            return@flow
-        }
+        val playlistConverted =
+            playistDataBase.playlistDao().queryPlaylist()
+                .map { converter.mapplaylistEntityToClass(it) }
+        emit(playlistConverted)
+        return@flow
+
     }
 
     override fun update(track: Track, playlist: Playlist) {
