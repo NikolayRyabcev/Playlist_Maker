@@ -117,7 +117,8 @@ class PlayerViewModel(
             playlist.trackArray = (playlist.trackArray + track.trackId)!!
             playlist.arrayNumber = (playlist.arrayNumber?.plus(1))!!
             playlistInteractor.update(track, playlist)
-            Log.d("Запись в плейлист", "ушли в интерактор")
+            val tracklist = playlist.trackArray.toString()
+            Log.d("Запись в плейлист", "ушли в интерактор $tracklist")
         }
     }
 

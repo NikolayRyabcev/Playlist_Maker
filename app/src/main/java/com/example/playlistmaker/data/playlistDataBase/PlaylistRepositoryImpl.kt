@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class PlaylistRepositoryImpl(
-    private val database: PlayistDataBase,
+    private val playistDataBase: PlayistDataBase,
     private val converter: PlaylistConverter,
     private val trackInDataBase: TrackInPlaylistDataBase
 ) : PlaylistRepository {
@@ -26,28 +26,29 @@ class PlaylistRepositoryImpl(
             emptyList(),
             0
         )
-        database.playlistDao().insertPlaylist(
+        playistDataBase.playlistDao().insertPlaylist(
             converter.mapplaylistClassToEntity(playlist)
         )
     }
 
     override fun deletePlaylist(item: Playlist) {
-        converter.mapplaylistClassToEntity(item)?.let { database.playlistDao().deletePlaylist(it) }
+        converter.mapplaylistClassToEntity(item)?.let { playistDataBase.playlistDao().deletePlaylist(it) }
     }
 
     override fun queryPlaylist(): Flow<List<Playlist>> = flow {
-        val playlistList = database.playlistDao().queryPlaylist()
+        val playlistList = playistDataBase.playlistDao().queryPlaylist()
         if (playlistList.isEmpty()) emit(emptyList()) else {
             val playlistConverted =
-                database.playlistDao().queryPlaylist()
+                playistDataBase.playlistDao().queryPlaylist()
                     .map { converter.mapplaylistEntityToClass(it) }
             emit(playlistConverted)
         }
     }
 
     override fun update(track: Track, playlist: Playlist) {
-        Log.d("Запись в плейлист", "пишем в репозиторий")
-        database.playlistDao().updatePlaylist(converter.mapplaylistClassToEntity(playlist))
+        val tracklist = playlist.trackArray.toString()
+        Log.d("Запись в плейлист", "пишем в репозиторий  $tracklist")
+        playistDataBase.playlistDao().updatePlaylist(converter.mapplaylistClassToEntity(playlist))
         trackInDataBase.trackListingDao().insertTrack(track)
     }
 }

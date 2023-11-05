@@ -9,6 +9,7 @@ class PlaylistConverter {
     val gson = Gson()
 
     fun mapplaylistEntityToClass(item: PlaylistEntity): Playlist {
+
         return Playlist(
             item.playlistName,
             item.description,
