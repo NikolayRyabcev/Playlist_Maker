@@ -28,7 +28,6 @@
         android:textAllCaps="false"
         android:textColor="?attr/colorSecondary"
         android:textSize="14sp"
-        android:visibility="gone"
         app:cornerRadius="54dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
