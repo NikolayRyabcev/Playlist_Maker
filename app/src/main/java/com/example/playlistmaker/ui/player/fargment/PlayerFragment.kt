@@ -27,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -250,21 +251,29 @@ class PlayerFragment : Fragment() {
     private fun playlistClickAdapting(track: Track, playlist: Playlist) {
         var trackIsAdded = false
         playerViewModel.addTrack(track, playlist)
-        playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
-            val playlistName = playlist.playlistName
-            if (!trackIsAdded) {
-                if (playlistAdding) {
-                    val toastMessage = "Трек уже добавлен в плейлист $playlistName"
-                    Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
-                        .show()
-                    trackIsAdded = true
-                } else {
-                    val tracklist = playlist.trackArray.toString()
-                    Log.d("Запись в плейлист", "!trackIsAdded $tracklist")
-                    val toastMessage = "Добавлено в плейлист $playlistName"
-                    Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
-                        .show()
-                    trackIsAdded = true
+        lifecycleScope.launch {
+            delay(300)
+            playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
+
+                val playlistName = playlist.playlistName
+                if (!trackIsAdded) {
+                    if (playlistAdding) {
+
+                        Log.d("Запись в плейлист", "Уже есть ")
+                        val toastMessage = "Трек уже добавлен в плейлист $playlistName"
+                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+                            .show()
+                        trackIsAdded = true
+                        return@observe
+                    } else {
+
+                        Log.d("Запись в плейлист", "Добавлено  $playlistAdding")
+                        val toastMessage = "Добавлено в плейлист $playlistName"
+                        Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+                            .show()
+                        trackIsAdded = true
+                        return@observe
+                    }
                 }
             }
         }

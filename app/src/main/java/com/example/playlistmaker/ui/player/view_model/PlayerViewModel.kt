@@ -112,11 +112,15 @@ class PlayerViewModel(
     fun addTrack(track: Track, playlist: Playlist) {
         if (playlist.trackArray.contains(track.trackId)) {
             playlistAdding.postValue(true)
+
+            Log.d("Запись в плейлист", "ВМ уже есть ")
         } else {
             playlistAdding.postValue(false)
             playlist.trackArray = (playlist.trackArray + track.trackId)!!
             playlist.arrayNumber = (playlist.arrayNumber?.plus(1))!!
             playlistInteractor.update(track, playlist)
+
+            Log.d("Запись в плейлист", "ВМ Добавлено ")
         }
     }
 
