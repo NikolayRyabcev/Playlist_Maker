@@ -14,7 +14,13 @@ class PlaylistBottomSheetViewHolder(
     fun bind(item: Playlist) {
         binding.PlaylistName.text = item.playlistName
         val innerNumber = item.arrayNumber.toString()
-        val text = if (innerNumber.toInt() % 10 == 1 && innerNumber.toInt() % 100 != 11) " трек" else " треков"
+        val text = if (innerNumber.toInt() % 10 == 1 && innerNumber.toInt() % 100 != 11) {
+            " трек"
+        } else if (innerNumber.toInt() % 10 == 2 || innerNumber.toInt() % 10 == 3 || innerNumber.toInt() % 10 == 4) {
+            " трека"
+        } else {
+            " треков"
+        }
         val number = "$innerNumber $text"
         binding.playlistNumber.text = number
 

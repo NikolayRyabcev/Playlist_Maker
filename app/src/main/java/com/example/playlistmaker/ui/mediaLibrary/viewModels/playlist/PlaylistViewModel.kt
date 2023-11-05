@@ -13,14 +13,14 @@ class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel(
     val playlistList: MutableLiveData<List<Playlist>> = MutableLiveData<List<Playlist>>()
     fun playlistMaker(): LiveData<List<Playlist>> {
         viewModelScope.launch {
-                interactor.queryPlaylist()
-                    .collect {
-                        if (it.isNotEmpty()) {
-                            playlistList.postValue(it)
-                        } else {
-                            playlistList.postValue(emptyList())
-                        }
+            interactor.queryPlaylist()
+                .collect {
+                    if (it.isNotEmpty()) {
+                        playlistList.postValue(it)
+                    } else {
+                        playlistList.postValue(emptyList())
                     }
+                }
         }
         return playlistList
     }
