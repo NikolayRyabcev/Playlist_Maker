@@ -64,7 +64,7 @@ class PlayerViewModel(
 
     fun putTime(): LiveData<String> {
         getTimeFromInteractor()
-       // timer.value?.let { Log.d("время в модели", it) }
+        // timer.value?.let { Log.d("время в модели", it) }
         return timer
     }
 
