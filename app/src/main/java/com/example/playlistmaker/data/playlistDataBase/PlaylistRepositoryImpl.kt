@@ -50,5 +50,7 @@ class PlaylistRepositoryImpl(
         Log.d("Запись в плейлист", "пишем в репозиторий  $tracklist")
         playistDataBase.playlistDao().updatePlaylist(converter.mapplaylistClassToEntity(playlist))
         trackInDataBase.trackListingDao().insertTrack(track)
+        val entityTrackList = converter.mapplaylistClassToEntity(playlist).trackList.toString()
+        Log.d("Запись в плейлист", "в таблицу  $entityTrackList")
     }
 }

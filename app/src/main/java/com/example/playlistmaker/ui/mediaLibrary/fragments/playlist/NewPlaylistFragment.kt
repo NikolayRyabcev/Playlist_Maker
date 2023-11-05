@@ -112,8 +112,8 @@ class NewPlaylistFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     val radius = 8
-                    val width = 45
-                    val height = 45
+                    val width = 312
+                    val height = 312
                     Glide.with(requireActivity())
                         .load(uri)
                         .centerCrop()
