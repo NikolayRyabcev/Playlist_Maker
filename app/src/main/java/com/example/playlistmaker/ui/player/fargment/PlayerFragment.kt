@@ -252,20 +252,20 @@ class PlayerFragment : Fragment() {
         playerViewModel.addTrack(track, playlist)
         playerViewModel.playlistAdding.observe(viewLifecycleOwner) { playlistAdding ->
             val playlistName = playlist.playlistName
-            if (playlistAdding && !trackIsAdded) {
-                val toastMessage = "Трек уже добавлен в плейлист $playlistName"
-                Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
-                    .show()
-                trackIsAdded = true
-            } else {
-                 if (!trackIsAdded) {
-                     val tracklist = playlist.trackArray.toString()
+            if (!trackIsAdded) {
+                if (playlistAdding) {
+                    val toastMessage = "Трек уже добавлен в плейлист $playlistName"
+                    Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
+                        .show()
+                    trackIsAdded = true
+                } else {
+                    val tracklist = playlist.trackArray.toString()
                     Log.d("Запись в плейлист", "!trackIsAdded $tracklist")
                     val toastMessage = "Добавлено в плейлист $playlistName"
                     Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT)
                         .show()
+                    trackIsAdded = true
                 }
-                trackIsAdded = true
             }
         }
     }
