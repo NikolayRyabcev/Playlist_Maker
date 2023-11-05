@@ -11,11 +11,8 @@ import kotlinx.coroutines.launch
 
 class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel() {
     val playlistList: MutableLiveData<List<Playlist>> = MutableLiveData<List<Playlist>>()
-
     fun playlistMaker(): LiveData<List<Playlist>> {
         viewModelScope.launch {
-            /*while (true) {
-                delay(300)*/
                 interactor.queryPlaylist()
                     .collect {
                         if (it.isNotEmpty()) {
@@ -24,7 +21,6 @@ class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel(
                             playlistList.postValue(emptyList())
                         }
                     }
-           // }
         }
         return playlistList
     }

@@ -12,7 +12,8 @@ class PlaylistViewHolder(private val binding: PlaylistLayoutBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Playlist) {
         binding.playlistlittleName.text = item.playlistName
-        val number= item.arrayNumber.toString() + " треков"
+        val innerNumber = item.arrayNumber.toString()
+        val number= innerNumber + " треков"
         binding.playlistlittleSongNumber.text = number
 
         val radius = itemView.resources.getDimensionPixelSize(R.dimen.trackCornerRadius)

@@ -28,16 +28,11 @@ class PlaylistAdapter(
         holder.bind(plalists[position])
         holder.itemView.setOnClickListener {
             clickListener.onClick(plalists[position])
-            notifyDataSetChanged()
+            //notifyDataSetChanged()
         }
     }
 
     fun interface PlaylistClick {
         fun onClick(playlist: Playlist)
-    }
-
-    fun setItems(items: List<Playlist>) {
-        plalists = items
-        notifyDataSetChanged()
     }
 }
