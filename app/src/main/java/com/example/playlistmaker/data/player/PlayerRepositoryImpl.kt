@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat
 class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
     private var playerState = PlayerState.STATE_DEFAULT
-    private var timePlayed =  MutableStateFlow("00:00")
 
     private lateinit var listener: PlayerStateListener
     private var playerJob: Job? = null
