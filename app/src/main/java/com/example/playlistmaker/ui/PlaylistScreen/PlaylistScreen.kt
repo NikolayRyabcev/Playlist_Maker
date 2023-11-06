@@ -71,13 +71,8 @@ class PlaylistScreen : Fragment() {
             else -> " треков"
         }
         binding.trackNumber.text = "$trackCounter $text"
-        /*binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
-        binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
-        binding.time.text = track?.trackTimeMillis ?: "00:00"
-        binding.album.text = track?.collectionName ?: "Unknown Album"
-        binding.year.text = (track?.releaseDate ?: "Year").take(4)
-        binding.genre.text = track?.primaryGenreName ?: "Unknown Genre"
-        binding.country.text = track?.country ?: "Unknown Country"
+        /*
+
         val getImage = (track?.artworkUrl100 ?: "Unknown Cover").replace(
             "100x100bb.jpg",
             "512x512bb.jpg"
