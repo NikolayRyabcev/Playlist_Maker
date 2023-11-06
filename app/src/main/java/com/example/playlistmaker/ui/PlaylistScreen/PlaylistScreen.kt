@@ -1,11 +1,14 @@
 package com.example.playlistmaker.ui.PlaylistScreen
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -15,6 +18,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistScreenFragmentBinding
+import com.example.playlistmaker.domain.models.Track
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tbruyelle.rxpermissions3.RxPermissions
 
 class PlaylistScreen : Fragment() {
@@ -27,6 +32,15 @@ class PlaylistScreen : Fragment() {
     ): View? {
         binding = PlaylistScreenFragmentBinding.inflate(inflater, container, false)
 
+        //отработка на кнопку назад
+        binding.playlistBackButtonArrow.setOnClickListener {
+            onBackClick()
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            onBackClick()
+        }
+
+
 
 
         return binding.root
@@ -36,6 +50,33 @@ class PlaylistScreen : Fragment() {
     @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+TODO(){
+        //принятие и отрисовка данных трека
+        val track = arguments?.getParcelable<Track>("track")
+        binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
+        binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
+        binding.time.text = track?.trackTimeMillis ?: "00:00"
+        binding.album.text = track?.collectionName ?: "Unknown Album"
+        binding.year.text = (track?.releaseDate ?: "Year").take(4)
+        binding.genre.text = track?.primaryGenreName ?: "Unknown Genre"
+        binding.country.text = track?.country ?: "Unknown Country"
+        val getImage = (track?.artworkUrl100 ?: "Unknown Cover").replace(
+            "100x100bb.jpg",
+            "512x512bb.jpg"
+        )
+        val radius = 8
+        if (getImage != "Unknown Cover") {
+            getImage.replace("100x100bb.jpg", "512x512bb.jpg")
+            Glide.with(this)
+                .load(getImage)
+                .placeholder(R.drawable.bfplaceholder)
+                .transform(RoundedCorners(radius))
+                .into(binding.trackCover)
+        }
+        url = track?.previewUrl ?: return
+    }
+
+
         val rxPermissions = RxPermissions(this)
 
         //переменеая с лямбдой, которая берет изображение и сохраняет его в ханилище
@@ -74,4 +115,10 @@ class PlaylistScreen : Fragment() {
                 }
         }
     }
+
+    private fun onBackClick() {
+        val fragmentmanager = requireActivity().supportFragmentManager
+        fragmentmanager.popBackStack()
+    }
+
 }

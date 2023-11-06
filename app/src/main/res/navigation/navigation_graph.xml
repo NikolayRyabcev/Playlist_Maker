@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_playlistFragment_to_newPlaylistFragment"
             app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_playlistFragment_to_playlistScreen"
+            app:destination="@id/playlistScreen" />
     </fragment>
     <fragment
         android:id="@+id/playerFragment"
@@ -74,5 +77,13 @@
         <action
             android:id="@+id/action_favouritesFragment_to_playerFragment2"
             app:destination="@id/playerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistScreen"
+        android:name="com.example.playlistmaker.ui.PlaylistScreen.PlaylistScreen"
+        android:label="PlaylistScreen" >
+        <action
+            android:id="@+id/action_playlistScreen_to_playlistFragment"
+            app:destination="@id/playlistFragment" />
     </fragment>
 </navigation>

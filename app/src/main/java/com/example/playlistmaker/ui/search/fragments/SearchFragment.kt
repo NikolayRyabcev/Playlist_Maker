@@ -47,7 +47,6 @@ class SearchFragment : Fragment() {
     private var latestSearchText: String? = null
 
     private var searchJob: Job? = null
-    var searchText = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
