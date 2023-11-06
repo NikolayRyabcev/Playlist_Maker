@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.search.ErrorType
 import com.example.playlistmaker.domain.search.history.SearchHistoryInteractor
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.search.searching_and_responding.SearchInteractor
 import com.example.playlistmaker.ui.search.viewModel.screen_states.SearchScreenState
 import kotlinx.coroutines.flow.collect

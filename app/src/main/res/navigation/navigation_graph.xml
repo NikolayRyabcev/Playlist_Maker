@@ -9,12 +9,20 @@
         android:id="@+id/mediaLibraryFragment"
         android:name="com.example.playlistmaker.ui.mediaLibrary.fragments.MediaLibraryFragment"
         android:label="MediaLibraryFragment"
-        tools:layout="@layout/fragment_media_library" />
+        tools:layout="@layout/fragment_media_library" >
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.playlistmaker.ui.search.fragments.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.playlistmaker.ui.settings.fragments.SettingsFragment"
@@ -25,4 +33,46 @@
         android:name="com.example.playlistmaker.BottomNavigation"
         android:label="fragment_bottom_navigation"
         tools:layout="@layout/fragment_bottom_navigation" />
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.PlaylistFragment"
+        android:label="PlaylistFragment" >
+        <action
+            android:id="@+id/action_playlistFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.example.playlistmaker.ui.player.fargment.PlayerFragment"
+        android:label="player_activity"
+        tools:layout="@layout/player_activity" >
+        <action
+            android:id="@+id/action_playerFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_playerFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment" />
+        <action
+            android:id="@+id/action_playerFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPlaylistFragment"
+        android:name="com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment"
+        android:label="newPlaylistFragment" />
+    <activity
+        android:id="@+id/rootActivity"
+        android:name="com.example.playlistmaker.ui.root.RootActivity"
+        android:label="RootActivity" />
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.example.playlistmaker.ui.mediaLibrary.fragments.FavouritesFragment"
+        android:label="FavouritesFragment" >
+        <action
+            android:id="@+id/action_favouritesFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_favouritesFragment_to_playerFragment2"
+            app:destination="@id/playerFragment" />
+    </fragment>
 </navigation>

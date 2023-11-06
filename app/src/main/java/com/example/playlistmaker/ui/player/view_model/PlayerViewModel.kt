@@ -4,28 +4,29 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favourites.FavouritesInteractor
+import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerStateListener
-import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.ui.player.activity.PlayerActivity
+import com.example.playlistmaker.domain.playlist.PlaylistInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val favouritesInteractor: FavouritesInteractor
+    private val favouritesInteractor: FavouritesInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
-    var timeJob: Job? = null
+    private var timeJob: Job? = null
     var stateLiveData = MutableLiveData<PlayerState>()
-    var timer = MutableLiveData("00:00")
-    val favouritesIndicator = MutableLiveData<Boolean>()
-    var favouritesJob:Job?=null
+    private var timer = MutableLiveData("00:00")
+    private val favouritesIndicator = MutableLiveData<Boolean>()
+    private var favouritesJob: Job? = null
+    val playlistList: MutableLiveData<List<Playlist>> = MutableLiveData<List<Playlist>>(emptyList())
 
     fun createPlayer(url: String) {
         playerInteractor.createPlayer(url, listener = object : PlayerStateListener {
@@ -63,13 +64,11 @@ class PlayerViewModel(
 
     fun putTime(): LiveData<String> {
         getTimeFromInteractor()
-        timer.value?.let { Log.d("время в модели", it) }
+        // timer.value?.let { Log.d("время в модели", it) }
         return timer
     }
 
     fun onFavoriteClicked(track: Track) {
-        Log.d("PlayerViewModel", "onFavoriteClicked")
-        Log.d("PlayerViewModel", "$track")
         if (track.isFavorite) {
             track.trackId?.let { favouritesInteractor.favouritesDelete(track) }
         } else track.trackId?.let {
@@ -79,16 +78,13 @@ class PlayerViewModel(
         }
     }
 
-    fun favouritesChecker (track: Track) : LiveData<Boolean> {
-
-        favouritesJob=viewModelScope.launch{
-
+    fun favouritesChecker(track: Track): LiveData<Boolean> {
+        favouritesJob = viewModelScope.launch {
             while (true) {
                 delay(PLAYER_BUTTON_PRESSING_DELAY)
                 track.trackId?.let { id ->
                     favouritesInteractor.favouritesCheck(id)
-                        .collect {value ->
-                            Log.d("Hueta", "$value")
+                        .collect { value ->
                             favouritesIndicator.postValue(value)
                         }
                 }
@@ -97,6 +93,36 @@ class PlayerViewModel(
         return favouritesIndicator
     }
 
+    fun playlistMaker(): LiveData<List<Playlist>> {
+        viewModelScope.launch {
+            playlistInteractor.queryPlaylist()
+                .collect {
+                    if (it.isNotEmpty()) {
+                        playlistList.postValue(it)
+                    } else {
+                        playlistList.postValue(emptyList())
+                    }
+                }
+        }
+        return playlistList
+    }
+
+    val playlistAdding =MutableLiveData(false)
+
+    fun addTrack(track: Track, playlist: Playlist) {
+        if (playlist.trackArray.contains(track.trackId)) {
+            playlistAdding.postValue(true)
+
+            Log.d("Запись в плейлист", "ВМ уже есть ")
+        } else {
+            playlistAdding.postValue(false)
+            playlist.trackArray = (playlist.trackArray + track.trackId)!!
+            playlist.arrayNumber = (playlist.arrayNumber?.plus(1))!!
+            playlistInteractor.update(track, playlist)
+
+            Log.d("Запись в плейлист", "ВМ Добавлено ")
+        }
+    }
 
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L

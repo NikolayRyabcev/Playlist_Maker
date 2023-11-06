@@ -1,6 +1,6 @@
 package com.example.playlistmaker.ui.search.viewModel.screen_states
 
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 
 sealed class SearchScreenState {
     object DefaultSearch : SearchScreenState()

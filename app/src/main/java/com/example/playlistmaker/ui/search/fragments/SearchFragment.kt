@@ -2,13 +2,9 @@ package com.example.playlistmaker.ui.search.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -18,11 +14,12 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.ui.player.activity.PlayerActivity
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.player.fargment.PlayerFragment
 import com.example.playlistmaker.ui.search.adapter.TrackAdapter
 import com.example.playlistmaker.ui.search.viewModel.SearchViewModel
 import com.example.playlistmaker.ui.search.viewModel.screen_states.SearchScreenState
@@ -148,9 +145,10 @@ class SearchFragment : Fragment() {
 
     private fun clickAdapting(item: Track) {
         searchViewModel.addItem(item)
-        val intent = Intent(requireContext(), PlayerActivity::class.java)
-        intent.putExtra("track", item)
-        this.startActivity(intent)
+        val bundle = Bundle()
+        bundle.putParcelable("track", item)
+        val navController = findNavController()
+        navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
     }
 
     //видимость кнопки удаления введенной строки (крестик)
@@ -327,6 +325,8 @@ class SearchFragment : Fragment() {
         binding.trackRecycler.visibility = GONE
         binding.refreshButton.setOnClickListener { search() }
         binding.progressBar.visibility = GONE
+        binding.nothingfoundPict.visibility = GONE
+        binding.nothingfoundText.visibility = GONE
         historyInVisible()
         binding.searchBlock.visibility = VISIBLE
     }

@@ -2,7 +2,7 @@ package com.example.playlistmaker.domain.search.searching_and_responding
 
 import com.example.playlistmaker.data.search.requestAndResponse.Resource
 import com.example.playlistmaker.domain.search.TracksRepository
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

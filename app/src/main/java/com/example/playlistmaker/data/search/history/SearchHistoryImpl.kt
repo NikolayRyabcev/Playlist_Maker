@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.example.playlistmaker.domain.favourites.FavouritesRepository
 import com.example.playlistmaker.domain.search.history.SearchHistory
-import com.example.playlistmaker.domain.search.models.Track
+import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
