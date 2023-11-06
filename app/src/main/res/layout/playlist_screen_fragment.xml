@@ -87,7 +87,7 @@
         app:layout_constraintTop_toBottomOf="@+id/descriptionOfPlaylist">
 
         <TextView
-            android:id="@+id/groupName"
+            android:id="@+id/playlistTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -109,7 +109,7 @@
             app:tint="#1A1B22" />
 
         <TextView
-            android:id="@+id/trackTime"
+            android:id="@+id/trackNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"

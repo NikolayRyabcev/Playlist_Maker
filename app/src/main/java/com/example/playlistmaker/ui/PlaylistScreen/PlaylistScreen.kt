@@ -18,12 +18,15 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistScreenFragmentBinding
+import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tbruyelle.rxpermissions3.RxPermissions
 
 class PlaylistScreen : Fragment() {
     lateinit var binding: PlaylistScreenFragmentBinding
+    private lateinit var bottomNavigator: BottomNavigationView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +34,9 @@ class PlaylistScreen : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = PlaylistScreenFragmentBinding.inflate(inflater, container, false)
+        //Нижний навигатор
+        bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavigator.visibility = View.GONE
 
         //отработка на кнопку назад
         binding.playlistBackButtonArrow.setOnClickListener {
@@ -47,13 +53,25 @@ class PlaylistScreen : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    @SuppressLint("CheckResult")
+    @SuppressLint("CheckResult", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-TODO(){
         //принятие и отрисовка данных трека
-        val track = arguments?.getParcelable<Track>("track")
-        binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
+        val playlist = arguments?.getParcelable<Playlist>("playlist")
+        binding.PlaylistName.text = playlist?.playlistName?: "Unknown Playlist"
+        binding.descriptionOfPlaylist.text = playlist?.description?: ""
+        binding.playlistTime.text = "" //посчитать и дописвть
+        //сколько треков в плейлисте
+        val trackCounter = (playlist?.arrayNumber).toString()
+        val text = when {
+            trackCounter.toInt() % 10 == 1 && trackCounter.toInt() % 100 != 11 -> " трек"
+            trackCounter.toInt() % 10 == 2 && trackCounter.toInt() % 100 != 12 -> " трека"
+            trackCounter.toInt() % 10 == 3 && trackCounter.toInt() % 100 != 13 -> " трека"
+            trackCounter.toInt() % 10 == 4 && trackCounter.toInt() % 100 != 14 -> " трека"
+            else -> " треков"
+        }
+        binding.trackNumber.text = "$trackCounter $text"
+        /*binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
         binding.playerArtistName.text = track?.artistName ?: "Unknown Artist"
         binding.time.text = track?.trackTimeMillis ?: "00:00"
         binding.album.text = track?.collectionName ?: "Unknown Album"
@@ -73,8 +91,8 @@ TODO(){
                 .transform(RoundedCorners(radius))
                 .into(binding.trackCover)
         }
-        url = track?.previewUrl ?: return
-    }
+        url = track?.previewUrl ?: return*/
+
 
 
         val rxPermissions = RxPermissions(this)
@@ -118,6 +136,7 @@ TODO(){
 
     private fun onBackClick() {
         val fragmentmanager = requireActivity().supportFragmentManager
+        bottomNavigator.visibility = View.VISIBLE
         fragmentmanager.popBackStack()
     }
 

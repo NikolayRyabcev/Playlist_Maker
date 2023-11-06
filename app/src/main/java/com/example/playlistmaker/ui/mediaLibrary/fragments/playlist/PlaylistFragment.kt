@@ -41,6 +41,7 @@ class PlaylistFragment : Fragment() {
         val recyclerView = nullablePlaylistBinding.playlistList
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = playlistViewModel.playlistList.value?.let { playlist ->
+            //переход к экрану плеера
             PlaylistAdapter(playlist) {
                 val bundle = Bundle()
                 bundle.putParcelable("playlist", it)
@@ -48,6 +49,7 @@ class PlaylistFragment : Fragment() {
                 navController.navigate(R.id.action_playlistFragment_to_playlistScreen, bundle)
             }
         }
+
         if (playlistViewModel.playlistList.value.isNullOrEmpty()) nullablePlaylistBinding.playlistList.visibility =
             GONE
 

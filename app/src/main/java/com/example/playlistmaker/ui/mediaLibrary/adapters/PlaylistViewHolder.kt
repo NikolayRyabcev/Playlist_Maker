@@ -13,12 +13,12 @@ class PlaylistViewHolder(private val binding: PlaylistLayoutBinding) :
     fun bind(item: Playlist) {
         binding.playlistlittleName.text = item.playlistName
         val innerNumber = item.arrayNumber.toString()
-        val text = if (innerNumber.toInt() % 10 == 1 && innerNumber.toInt() % 100 != 11) {
-            " трек"
-        } else if (innerNumber.toInt() % 10 == 2 || innerNumber.toInt() % 10 == 3 || innerNumber.toInt() % 10 == 4) {
-            " трека"
-        } else {
-            " треков"
+        val text = when {
+            innerNumber.toInt() % 10 == 1 && innerNumber.toInt() % 100 != 11 -> " трек"
+            innerNumber.toInt() % 10 == 2 && innerNumber.toInt() % 100 != 12 -> " трека"
+            innerNumber.toInt() % 10 == 3 && innerNumber.toInt() % 100 != 13 -> " трека"
+            innerNumber.toInt() % 10 == 4 && innerNumber.toInt() % 100 != 14 -> " трека"
+            else -> " треков"
         }
         val number = "$innerNumber $text"
         binding.playlistlittleSongNumber.text = number
