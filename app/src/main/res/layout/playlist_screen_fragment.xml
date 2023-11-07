@@ -72,13 +72,13 @@
         android:maxLines="1"
         android:textColor="#1A1B22"
         android:textSize="18sp"
-        tools:text="Описание плейлиста"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PlaylistName"/>
+        app:layout_constraintTop_toBottomOf="@+id/PlaylistName"
+        tools:text="Описание плейлиста" />
 
 
     <LinearLayout
-        android:id = "@+id/playlistCharacteristics"
+        android:id="@+id/playlistCharacteristics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -127,9 +127,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:src = "@drawable/share"
+        android:src="@drawable/share"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playlistCharacteristics"  />
+        app:layout_constraintTop_toBottomOf="@+id/playlistCharacteristics" />
 
     <ImageView
         android:id="@+id/more"
@@ -137,8 +137,51 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:src = "@drawable/more"
-         app:layout_constraintStart_toEndOf="@id/share"
-        app:layout_constraintTop_toBottomOf="@+id/playlistCharacteristics"  />
+        android:src="@drawable/more"
+        app:layout_constraintStart_toEndOf="@id/share"
+        app:layout_constraintTop_toBottomOf="@+id/playlistCharacteristics" />
 
+    <LinearLayout
+        android:id="@+id/trackInPlaylistContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corners_16"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        app:behavior_hideable="false"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:behavior_peekHeight="266dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="?attr/color" />
+
+
+        <Button
+            android:id="@+id/newPlaylistButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="28dp"
+            android:backgroundTint="?attr/colorError"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/newPlaylist"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorSecondary"
+            android:textSize="14sp"
+            app:cornerRadius="54dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/trackInPlaylistRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:reverseLayout="true" />
+
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

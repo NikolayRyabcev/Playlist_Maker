@@ -26,7 +26,13 @@ class FavouritesFragment : Fragment() {
 
     private var isClickAllowed = true
     private val favouritesAdapter: TrackAdapter by lazy {
-        TrackAdapter { clickAdapting(it) }
+        TrackAdapter(
+            clickListener = {
+                if (isClickAllowed) {
+                    clickAdapting(it)
+                }
+            },
+            longClickListener = {})
     }
 
     @SuppressLint("NotifyDataSetChanged")

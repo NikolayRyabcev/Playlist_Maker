@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_playerFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_playerFragment_to_playlistScreen"
+            app:destination="@id/playlistScreen" />
     </fragment>
     <fragment
         android:id="@+id/newPlaylistFragment"
@@ -85,5 +88,8 @@
         <action
             android:id="@+id/action_playlistScreen_to_playlistFragment"
             app:destination="@id/playlistFragment" />
+        <action
+            android:id="@+id/action_playlistScreen_to_playerFragment"
+            app:destination="@id/playerFragment" />
     </fragment>
 </navigation>

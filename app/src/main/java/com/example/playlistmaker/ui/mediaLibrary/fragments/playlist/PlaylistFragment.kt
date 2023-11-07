@@ -50,7 +50,7 @@ class PlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //список плейлистов и переход на экраны плейлистов
 
-        playlistAdapter = PlaylistAdapter { playlist -> clickAdapting(playlist) }
+        playlistAdapter = PlaylistAdapter { clickAdapting(it) }
         val recyclerView = nullablePlaylistBinding.playlistList
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = playlistAdapter
@@ -68,8 +68,6 @@ class PlaylistFragment : Fragment() {
                 return@observe
             }
         }
-
-
     }
 
     private fun noPlaylist() {

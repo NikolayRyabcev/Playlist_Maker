@@ -13,6 +13,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -20,13 +21,21 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistScreenFragmentBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.search.adapter.TrackAdapter
+import com.example.playlistmaker.ui.search.fragments.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tbruyelle.rxpermissions3.RxPermissions
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlaylistScreen : Fragment() {
     lateinit var binding: PlaylistScreenFragmentBinding
     private lateinit var bottomNavigator: BottomNavigationView
+    private lateinit var trackAdapter: TrackAdapter
+    private var isClickAllowed = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,8 +67,8 @@ class PlaylistScreen : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //принятие и отрисовка данных трека
         val playlist = arguments?.getParcelable<Playlist>("playlist")
-        binding.PlaylistName.text = playlist?.playlistName?: "Unknown Playlist"
-        binding.descriptionOfPlaylist.text = playlist?.description?: ""
+        binding.PlaylistName.text = playlist?.playlistName ?: "Unknown Playlist"
+        binding.descriptionOfPlaylist.text = playlist?.description ?: ""
         binding.playlistTime.text = "" //посчитать и дописвть
         //сколько треков в плейлисте
         val trackCounter = (playlist?.arrayNumber).toString()
@@ -120,6 +129,61 @@ class PlaylistScreen : Fragment() {
                     }
                 }
         }
+
+        //BottomSheet
+        val bottomSheetContainer = binding.trackInPlaylistContainer
+        //val overlay = binding.overlay
+        val bottomSheetBehavior = BottomSheetBehavior
+            .from(bottomSheetContainer)
+            .apply {
+                state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        val screenHeight = binding.root.height
+        bottomSheetBehavior.peekHeight = screenHeight - binding.more.bottom
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        /*bottomSheetBehavior
+            .addBottomSheetCallback(
+                object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        when (newState) {
+                            BottomSheetBehavior.STATE_HIDDEN -> {
+                                overlay.visibility = View.GONE
+                            }
+
+                            else -> {
+                                overlay.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+                }
+            )*/
+
+        //список треков в плейлисте
+        trackAdapter = TrackAdapter (
+            clickListener = {
+                if (isClickAllowed) {
+                    clickAdapting(it)
+                }
+            },
+            longClickListener = {deleteByClick (it)})
+        trackAdapter.setItems(trackListMaker())
+    }
+
+    private fun clickAdapting(item: Track) {
+        val bundle = Bundle()
+        bundle.putParcelable("track", item)
+        val navController = findNavController()
+        navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
+    }
+
+    private fun trackListMaker(): List<Track> { //добавить запрос треков из базы
+        return emptyList()
+    }
+
+    private fun deleteByClick(item:Track){
+
     }
 
     private fun onBackClick() {

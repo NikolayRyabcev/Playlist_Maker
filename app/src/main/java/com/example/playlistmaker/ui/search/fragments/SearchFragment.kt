@@ -82,21 +82,25 @@ class SearchFragment : Fragment() {
         startSearchByEnterPress()
 
         //поиск
-        trackAdapter = TrackAdapter {
-            if (isClickAllowed) {
-                clickAdapting(it)
-            }
-        }
+        trackAdapter = TrackAdapter(
+            clickListener = {
+                if (isClickAllowed) {
+                    clickAdapting(it)
+                }
+            },
+            longClickListener = {})
 
         binding.trackRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.trackRecycler.adapter = trackAdapter
 
         //история
-        historyAdapter = TrackAdapter {
-            if (isClickAllowed) {
-                clickAdapting(it)
-            }
-        }
+        historyAdapter = TrackAdapter(
+            clickListener = {
+                if (isClickAllowed) {
+                    clickAdapting(it)
+                }
+            },
+            longClickListener = {})
 
         binding.historyRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.historyRecycler.adapter = historyAdapter
