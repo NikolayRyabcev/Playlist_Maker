@@ -85,6 +85,7 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun clickAdapting(item: Playlist) {
+        Log.d ("плейлист", "clickAdapting")
         val bundle = Bundle()
         bundle.putParcelable("playlist", item)
         val navController = findNavController()
