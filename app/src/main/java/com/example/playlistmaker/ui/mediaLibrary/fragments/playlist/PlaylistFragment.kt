@@ -11,8 +11,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.mediaLibrary.adapters.PlaylistAdapter
 import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.PlaylistViewModel
+import com.example.playlistmaker.ui.search.adapter.TrackAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -20,7 +23,7 @@ class PlaylistFragment : Fragment() {
     private val playlistViewModel by viewModel<PlaylistViewModel>()
     private lateinit var nullablePlaylistBinding: FragmentPlaylistsBinding
     private lateinit var bottomNavigator: BottomNavigationView
-
+    private lateinit var playlistAdapter :PlaylistAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,17 +41,14 @@ class PlaylistFragment : Fragment() {
         }
 
         //список плейлистов и переход на экраны плейлистов
+        var playlistList = playlistViewModel.playlistList.value
+        if (playlistList.isNullOrEmpty()) playlistList = emptyList()
+        playlistAdapter = PlaylistAdapter(playlistList, clickAdapting(playlistList))
         val recyclerView = nullablePlaylistBinding.playlistList
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-        recyclerView.adapter = playlistViewModel.playlistList.value?.let { playlist ->
-            //переход к экрану плеера
-            PlaylistAdapter(playlist) {
-                val bundle = Bundle()
-                bundle.putParcelable("playlist", it)
-                val navController = findNavController()
-                navController.navigate(R.id.action_playlistFragment_to_playlistScreen, bundle)
-            }
-        }
+
+        recyclerView.adapter = playlistAdapter
+
 
         if (playlistViewModel.playlistList.value.isNullOrEmpty()) nullablePlaylistBinding.playlistList.visibility =
             GONE
@@ -81,6 +81,13 @@ class PlaylistFragment : Fragment() {
         nullablePlaylistBinding.emptyPlaylist.visibility = GONE
         nullablePlaylistBinding.emptyPlaylistText.visibility = GONE
         nullablePlaylistBinding.playlistList.visibility = VISIBLE
+    }
+
+    private fun clickAdapting(item: Playlist) {
+        val bundle = Bundle()
+        bundle.putParcelable("playlist", item)
+        val navController = findNavController()
+        navController.navigate(R.id.action_playlistFragment_to_playlistScreen, bundle)
     }
 
     companion object {

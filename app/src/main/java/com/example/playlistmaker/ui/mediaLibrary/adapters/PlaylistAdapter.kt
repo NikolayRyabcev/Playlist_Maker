@@ -15,6 +15,7 @@ class PlaylistAdapter(
     private val clickListener: PlaylistClick
 ) :
     RecyclerView.Adapter<PlaylistViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)
         return PlaylistViewHolder(PlaylistLayoutBinding.inflate(layoutInspector, parent, false))

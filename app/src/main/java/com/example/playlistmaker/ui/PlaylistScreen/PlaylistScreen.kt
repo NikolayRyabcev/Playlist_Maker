@@ -71,24 +71,17 @@ class PlaylistScreen : Fragment() {
             else -> " треков"
         }
         binding.trackNumber.text = "$trackCounter $text"
-        /*
 
-        val getImage = (track?.artworkUrl100 ?: "Unknown Cover").replace(
-            "100x100bb.jpg",
-            "512x512bb.jpg"
-        )
-        val radius = 8
+        val baseWidth = 312
+        val baseHeight = 312
+        val getImage = (playlist?.uri ?: "Unknown Cover")
         if (getImage != "Unknown Cover") {
-            getImage.replace("100x100bb.jpg", "512x512bb.jpg")
             Glide.with(this)
                 .load(getImage)
                 .placeholder(R.drawable.bfplaceholder)
-                .transform(RoundedCorners(radius))
-                .into(binding.trackCover)
+                .override(baseWidth, baseHeight)
+                .into(binding.playlistCover)
         }
-        url = track?.previewUrl ?: return*/
-
-
 
         val rxPermissions = RxPermissions(this)
 

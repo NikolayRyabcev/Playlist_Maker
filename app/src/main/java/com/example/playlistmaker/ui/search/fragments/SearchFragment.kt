@@ -92,7 +92,7 @@ class SearchFragment : Fragment() {
         binding.trackRecycler.adapter = trackAdapter
 
         //история
-        historyAdapter = TrackAdapter() {
+        historyAdapter = TrackAdapter {
             if (isClickAllowed) {
                 clickAdapting(it)
             }
