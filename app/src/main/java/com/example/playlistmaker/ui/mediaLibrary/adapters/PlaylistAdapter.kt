@@ -11,10 +11,10 @@ import com.example.playlistmaker.ui.search.adapter.TrackAdapter
 import com.example.playlistmaker.ui.search.adapter.TrackViewHolder
 
 class PlaylistAdapter(
-    private var plalists: List<Playlist>,
     private val clickListener: PlaylistClick
-) :
-    RecyclerView.Adapter<PlaylistViewHolder>() {
+) : RecyclerView.Adapter<PlaylistViewHolder>() {
+
+    private var plalists: List<Playlist> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)
@@ -35,5 +35,10 @@ class PlaylistAdapter(
 
     fun interface PlaylistClick {
         fun onClick(playlist: Playlist)
+    }
+
+    fun setItems(items: List<Playlist>) {
+        plalists = items
+        notifyDataSetChanged()
     }
 }

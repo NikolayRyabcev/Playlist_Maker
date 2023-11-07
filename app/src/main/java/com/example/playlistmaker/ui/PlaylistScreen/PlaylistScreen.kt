@@ -71,7 +71,7 @@ class PlaylistScreen : Fragment() {
             else -> " треков"
         }
         binding.trackNumber.text = "$trackCounter $text"
-
+        ///обложка
         val baseWidth = 312
         val baseHeight = 312
         val getImage = (playlist?.uri ?: "Unknown Cover")

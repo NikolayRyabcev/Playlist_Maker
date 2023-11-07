@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.mediaLibrary.fragments.playlist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -23,7 +24,7 @@ class PlaylistFragment : Fragment() {
     private val playlistViewModel by viewModel<PlaylistViewModel>()
     private lateinit var nullablePlaylistBinding: FragmentPlaylistsBinding
     private lateinit var bottomNavigator: BottomNavigationView
-    private lateinit var playlistAdapter :PlaylistAdapter
+    private lateinit var playlistAdapter: PlaylistAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,18 +41,6 @@ class PlaylistFragment : Fragment() {
             navController.navigate(R.id.newPlaylistFragment)
         }
 
-        //список плейлистов и переход на экраны плейлистов
-        var playlistList = playlistViewModel.playlistList.value
-        if (playlistList.isNullOrEmpty()) playlistList = emptyList()
-        playlistAdapter = PlaylistAdapter(playlistList, clickAdapting(playlistList))
-        val recyclerView = nullablePlaylistBinding.playlistList
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-
-        recyclerView.adapter = playlistAdapter
-
-
-        if (playlistViewModel.playlistList.value.isNullOrEmpty()) nullablePlaylistBinding.playlistList.visibility =
-            GONE
 
         nullablePlaylistBinding.playlistList.visibility = VISIBLE
         return nullablePlaylistBinding.root
@@ -59,16 +48,28 @@ class PlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //список плейлистов и переход на экраны плейлистов
+
+        playlistAdapter = PlaylistAdapter { playlist -> clickAdapting(playlist) }
+        val recyclerView = nullablePlaylistBinding.playlistList
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        recyclerView.adapter = playlistAdapter
+
+        if (playlistViewModel.playlistList.value.isNullOrEmpty()) nullablePlaylistBinding.playlistList.visibility =
+            GONE
+
         playlistViewModel.playlistMaker().observe(viewLifecycleOwner) { playlistList ->
             if (playlistViewModel.playlistMaker().value.isNullOrEmpty()) {
                 noPlaylist()
                 return@observe
             } else {
-                nullablePlaylistBinding.playlistList.adapter = PlaylistAdapter(playlistList) {}
+                playlistAdapter.setItems(playlistList)
                 existPlaylist()
                 return@observe
             }
         }
+
+
     }
 
     private fun noPlaylist() {
