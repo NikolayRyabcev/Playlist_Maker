@@ -4,11 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.PlaylistLayoutBinding
-import com.example.playlistmaker.databinding.TrackLayoutBinding
 import com.example.playlistmaker.domain.models.Playlist
-import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.search.adapter.TrackAdapter
-import com.example.playlistmaker.ui.search.adapter.TrackViewHolder
 
 class PlaylistAdapter(
     private val clickListener: PlaylistClick
@@ -29,7 +25,7 @@ class PlaylistAdapter(
         holder.bind(plalists[position])
         holder.itemView.setOnClickListener {
             clickListener.onClick(plalists[position])
-            //notifyDataSetChanged()
+            notifyDataSetChanged()
         }
     }
 

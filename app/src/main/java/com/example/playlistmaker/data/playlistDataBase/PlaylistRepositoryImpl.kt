@@ -46,13 +46,10 @@ class PlaylistRepositoryImpl(
                 .map { converter.mapplaylistEntityToClass(it) }
         emit(playlistConverted)
         return@flow
-
     }
 
     override fun update(track: Track, playlist: Playlist) {
-
         playistDataBase.playlistDao().updatePlaylist(converter.mapplaylistClassToEntity(playlist))
         trackInDataBase.trackListingDao().insertTrack(track)
-
     }
 }

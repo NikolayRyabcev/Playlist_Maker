@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.domain.models.Playlist
-import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.mediaLibrary.adapters.PlaylistAdapter
 import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.PlaylistViewModel
-import com.example.playlistmaker.ui.search.adapter.TrackAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -50,7 +48,10 @@ class PlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //список плейлистов и переход на экраны плейлистов
 
-        playlistAdapter = PlaylistAdapter { clickAdapting(it) }
+        playlistAdapter = PlaylistAdapter {
+            clickAdapting(it)
+            Log.d ("плейлист", "click")
+        }
         val recyclerView = nullablePlaylistBinding.playlistList
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = playlistAdapter
@@ -58,12 +59,12 @@ class PlaylistFragment : Fragment() {
         if (playlistViewModel.playlistList.value.isNullOrEmpty()) nullablePlaylistBinding.playlistList.visibility =
             GONE
 
-        playlistViewModel.playlistMaker().observe(viewLifecycleOwner) { playlistList ->
+        playlistViewModel.playlistMaker().observe(viewLifecycleOwner) { it ->
             if (playlistViewModel.playlistMaker().value.isNullOrEmpty()) {
                 noPlaylist()
                 return@observe
             } else {
-                playlistAdapter.setItems(playlistList)
+                playlistAdapter.setItems(it)
                 existPlaylist()
                 return@observe
             }

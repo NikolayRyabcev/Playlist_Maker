@@ -17,6 +17,7 @@ class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel(
                 .collect {
                     if (it.isNotEmpty()) {
                         playlistList.postValue(it)
+                        return@collect
                     } else {
                         playlistList.postValue(emptyList())
                     }
