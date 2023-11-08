@@ -31,8 +31,10 @@ import com.tbruyelle.rxpermissions3.RxPermissions
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistScreen : Fragment() {
+    private val playlistScreenViewModel  by viewModel<PlaylistScreenViewModel>()
     lateinit var binding: PlaylistScreenFragmentBinding
     private lateinit var bottomNavigator: BottomNavigationView
     private lateinit var trackAdapter: TrackAdapter
@@ -55,10 +57,6 @@ class PlaylistScreen : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             onBackClick()
         }
-
-
-
-
         return binding.root
     }
 
@@ -86,7 +84,7 @@ class PlaylistScreen : Fragment() {
         val baseHeight = 312
         val getImage = (playlist?.uri ?: "Unknown Cover")
         if (getImage != "Unknown Cover") {
-            binding.playlistPlaceHolder.visibility=GONE
+            binding.playlistPlaceHolder.visibility = GONE
             Glide.with(this)
                 .load(getImage)
                 .centerCrop()
@@ -97,45 +95,8 @@ class PlaylistScreen : Fragment() {
         }
 
         val rxPermissions = RxPermissions(this)
-
-        //переменеая с лямбдой, которая берет изображение и сохраняет его в ханилище
-        val pickMedia =
-            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                if (uri != null) {
-                    val width = 236
-                    val height = 236
-                    Glide.with(requireActivity())
-                        .load(uri)
-                        .centerCrop()
-                        .placeholder(R.drawable.add_photo)
-                        .transform(CenterCrop())
-                        .override(width, height)
-                        .into(binding.playlistCover)
-                    //saveImageToPrivateStorage(uri)
-
-                } else {
-                    //ничего не делаем
-                }
-            }
-        //обработка нажатия на область обложки
-        binding.playlistCover.setOnClickListener {
-            rxPermissions.request(android.Manifest.permission.READ_MEDIA_IMAGES)
-                .subscribe { granted: Boolean ->
-                    if (granted) {
-                        pickMedia.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    } else {
-                        // Пользователь отказал, ничего не делаем
-                        pickMedia.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    }
-                }
-        }
-
         //BottomSheet
-        //  val bottomSheetContainer = binding.trackInPlaylistContainer
+
         //val overlay = binding.overlay
         val bottomSheetBehavior = BottomSheetBehavior
             .from(binding.trackInPlaylistContainer)
@@ -144,13 +105,13 @@ class PlaylistScreen : Fragment() {
             }
         val screenHeight = binding.root.height
         bottomSheetBehavior.peekHeight = screenHeight - binding.more.bottom
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        bottomSheetBehavior
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        /*bottomSheetBehavior
             .addBottomSheetCallback(
                 object : BottomSheetBehavior.BottomSheetCallback() {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
                         when (newState) {
-                            BottomSheetBehavior.STATE_HIDDEN -> {
+                            BottomSheetBehavior.STATE_COLLAPSED -> {
 
                             }
 
@@ -162,7 +123,7 @@ class PlaylistScreen : Fragment() {
 
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {}
                 }
-            )
+            )*/
 
         //список треков в плейлисте
         trackAdapter = TrackAdapter(
@@ -173,6 +134,9 @@ class PlaylistScreen : Fragment() {
             },
             longClickListener = { deleteByClick(it) })
         trackAdapter.setItems(trackListMaker())
+
+        //кнопка поделиться
+        binding.share.setOnClickListener{sharePlaylist ()}
     }
 
     private fun clickAdapting(item: Track) {
@@ -188,6 +152,10 @@ class PlaylistScreen : Fragment() {
 
     private fun deleteByClick(item: Track) {
 
+    }
+
+    private fun sharePlaylist () {
+        playlistScreenViewModel.sharePlaylist ()
     }
 
     private fun onBackClick() {
