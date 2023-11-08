@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
@@ -85,8 +86,11 @@ class PlaylistScreen : Fragment() {
         val baseHeight = 312
         val getImage = (playlist?.uri ?: "Unknown Cover")
         if (getImage != "Unknown Cover") {
+            binding.playlistPlaceHolder.visibility=GONE
             Glide.with(this)
                 .load(getImage)
+                .centerCrop()
+                .transform(CenterCrop())
                 .placeholder(R.drawable.bfplaceholder)
                 .override(baseWidth, baseHeight)
                 .into(binding.playlistCover)
@@ -131,7 +135,7 @@ class PlaylistScreen : Fragment() {
         }
 
         //BottomSheet
-      //  val bottomSheetContainer = binding.trackInPlaylistContainer
+        //  val bottomSheetContainer = binding.trackInPlaylistContainer
         //val overlay = binding.overlay
         val bottomSheetBehavior = BottomSheetBehavior
             .from(binding.trackInPlaylistContainer)
@@ -141,33 +145,33 @@ class PlaylistScreen : Fragment() {
         val screenHeight = binding.root.height
         bottomSheetBehavior.peekHeight = screenHeight - binding.more.bottom
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        /*bottomSheetBehavior
+        bottomSheetBehavior
             .addBottomSheetCallback(
                 object : BottomSheetBehavior.BottomSheetCallback() {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
                         when (newState) {
                             BottomSheetBehavior.STATE_HIDDEN -> {
-                                overlay.visibility = View.GONE
+
                             }
 
                             else -> {
-                                overlay.visibility = View.VISIBLE
+
                             }
                         }
                     }
 
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {}
                 }
-            )*/
+            )
 
         //список треков в плейлисте
-        trackAdapter = TrackAdapter (
+        trackAdapter = TrackAdapter(
             clickListener = {
                 if (isClickAllowed) {
                     clickAdapting(it)
                 }
             },
-            longClickListener = {deleteByClick (it)})
+            longClickListener = { deleteByClick(it) })
         trackAdapter.setItems(trackListMaker())
     }
 
@@ -182,7 +186,7 @@ class PlaylistScreen : Fragment() {
         return emptyList()
     }
 
-    private fun deleteByClick(item:Track){
+    private fun deleteByClick(item: Track) {
 
     }
 
