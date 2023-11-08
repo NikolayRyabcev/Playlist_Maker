@@ -8,12 +8,9 @@ import com.example.playlistmaker.ui.PlaylistScreen.PlaylistScreenViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val playlistScreenModule  = module{
-    viewModel {
-        PlaylistScreenViewModel(get())
-    }
+val playlistScreenModule = module {
 
-    single <PlaylistScreenInteractor>  { PlaylistScreenInteractorImpl(get()) }
-
-    single <PlaylistScreenRepository> { PlaylistScreenRepositoryImpl (get(), get()) }
+    single<PlaylistScreenInteractor> { PlaylistScreenInteractorImpl(get()) }
+    single<PlaylistScreenRepository> { PlaylistScreenRepositoryImpl(get()) }
+    viewModel { PlaylistScreenViewModel(get()) }
 }

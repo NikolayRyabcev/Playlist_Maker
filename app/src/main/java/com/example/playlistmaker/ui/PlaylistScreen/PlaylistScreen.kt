@@ -34,8 +34,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistScreen : Fragment() {
-    private val playlistScreenViewModel  by viewModel<PlaylistScreenViewModel>()
-    lateinit var binding: PlaylistScreenFragmentBinding
+
+    private lateinit var binding: PlaylistScreenFragmentBinding
+    private val playlistScreenViewModel by viewModel<PlaylistScreenViewModel>()
     private lateinit var bottomNavigator: BottomNavigationView
     private lateinit var trackAdapter: TrackAdapter
     private var isClickAllowed = true
@@ -48,7 +49,7 @@ class PlaylistScreen : Fragment() {
         binding = PlaylistScreenFragmentBinding.inflate(inflater, container, false)
         //Нижний навигатор
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
-        bottomNavigator.visibility = View.GONE
+        bottomNavigator.visibility = GONE
 
         //отработка на кнопку назад
         binding.playlistBackButtonArrow.setOnClickListener {
@@ -136,7 +137,12 @@ class PlaylistScreen : Fragment() {
         trackAdapter.setItems(trackListMaker())
 
         //кнопка поделиться
-        binding.share.setOnClickListener{sharePlaylist ()}
+
+        binding.share.setOnClickListener {
+            if (playlist != null) {
+                sharePlaylist(playlist)
+            }
+        }
     }
 
     private fun clickAdapting(item: Track) {
@@ -154,8 +160,8 @@ class PlaylistScreen : Fragment() {
 
     }
 
-    private fun sharePlaylist () {
-        playlistScreenViewModel.sharePlaylist ()
+    private fun sharePlaylist(playlist: Playlist) {
+        playlistScreenViewModel.sharePlaylist(playlist)
     }
 
     private fun onBackClick() {
