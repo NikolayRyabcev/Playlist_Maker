@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_mediaLibraryFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_playlistScreen"
+            app:destination="@id/playlistScreen" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -91,5 +94,8 @@
         <action
             android:id="@+id/action_playlistScreen_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_playlistScreen_to_mediaLibraryFragment"
+            app:destination="@id/mediaLibraryFragment" />
     </fragment>
 </navigation>

@@ -131,10 +131,10 @@ class PlaylistScreen : Fragment() {
         }
 
         //BottomSheet
-        val bottomSheetContainer = binding.trackInPlaylistContainer
+      //  val bottomSheetContainer = binding.trackInPlaylistContainer
         //val overlay = binding.overlay
         val bottomSheetBehavior = BottomSheetBehavior
-            .from(bottomSheetContainer)
+            .from(binding.trackInPlaylistContainer)
             .apply {
                 state = BottomSheetBehavior.STATE_HIDDEN
             }

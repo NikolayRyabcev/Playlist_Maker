@@ -50,7 +50,7 @@ class PlaylistFragment : Fragment() {
 
         playlistAdapter = PlaylistAdapter {
             clickAdapting(it)
-            Log.d ("плейлист", "click")
+            Log.d("плейлист", "click")
         }
         val recyclerView = nullablePlaylistBinding.playlistList
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -58,9 +58,10 @@ class PlaylistFragment : Fragment() {
 
         if (playlistViewModel.playlistList.value.isNullOrEmpty()) nullablePlaylistBinding.playlistList.visibility =
             GONE
+        playlistViewModel.getPlaylists()
 
-        playlistViewModel.playlistMaker().observe(viewLifecycleOwner) { it ->
-            if (playlistViewModel.playlistMaker().value.isNullOrEmpty()) {
+        playlistViewModel.playlistList.observe(viewLifecycleOwner) { it ->
+            if (it.isNullOrEmpty()) {
                 noPlaylist()
                 return@observe
             } else {
@@ -85,11 +86,11 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun clickAdapting(item: Playlist) {
-        Log.d ("плейлист", "clickAdapting")
+        Log.d("плейлист", "clickAdapting")
         val bundle = Bundle()
         bundle.putParcelable("playlist", item)
         val navController = findNavController()
-        navController.navigate(R.id.action_playlistFragment_to_playlistScreen, bundle)
+        navController.navigate(R.id.action_mediaLibraryFragment_to_playlistScreen, bundle)
     }
 
     companion object {
