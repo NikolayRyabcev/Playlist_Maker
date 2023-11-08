@@ -64,6 +64,7 @@ class PlaylistFragment : Fragment() {
                 noPlaylist()
                 return@observe
             } else {
+                recyclerView.adapter = playlistAdapter
                 playlistAdapter.setItems(it)
                 existPlaylist()
                 return@observe
