@@ -12,5 +12,5 @@ val playlistScreenModule = module {
 
     single<PlaylistScreenInteractor> { PlaylistScreenInteractorImpl(get()) }
     single<PlaylistScreenRepository> { PlaylistScreenRepositoryImpl(get()) }
-    viewModel { PlaylistScreenViewModel(get()) }
+    viewModel { PlaylistScreenViewModel(get(), get()) }
 }

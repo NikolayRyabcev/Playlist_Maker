@@ -11,7 +11,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(private val interactor: PlaylistInteractor, private val settingsInteractor: SettingsInteractor) : ViewModel() {
+class NewPlaylistViewModel(
+    private val interactor: PlaylistInteractor,
+    private val settingsInteractor: SettingsInteractor
+) : ViewModel() {
 
     fun addPlayList(
         playlistName: String,
@@ -25,7 +28,7 @@ class NewPlaylistViewModel(private val interactor: PlaylistInteractor, private v
         interactor.deletePlaylist(item)
     }
 
-    fun isAppThemeDark() :Boolean{
+    fun isAppThemeDark(): Boolean {
         return settingsInteractor.isAppThemeDark()
     }
 }

@@ -10,27 +10,20 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlaylistScreenFragmentBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.search.adapter.TrackAdapter
-import com.example.playlistmaker.ui.search.fragments.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tbruyelle.rxpermissions3.RxPermissions
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistScreen : Fragment() {
@@ -133,15 +126,26 @@ class PlaylistScreen : Fragment() {
                     clickAdapting(it)
                 }
             },
-            longClickListener = { deleteByClick(it) })
+            longClickListener = { deleteTrackByClick(it) })
         trackAdapter.setItems(trackListMaker())
 
-        //кнопка поделиться
+        //кнопки
 
         binding.share.setOnClickListener {
             if (playlist != null) {
                 sharePlaylist(playlist)
             }
+        }
+        binding.shareText.setOnClickListener {
+            if (playlist != null) {
+                sharePlaylist(playlist)
+            }
+        }
+        binding.editInfo.setOnClickListener {
+            //ТУДУ()
+        }
+        binding.deletePlaylistInfo.setOnClickListener {
+            suggestDeleting()
         }
 
         //BottomSheet от кнопки Меню
@@ -187,8 +191,33 @@ class PlaylistScreen : Fragment() {
         return emptyList()
     }
 
-    private fun deleteByClick(item: Track) {
+    private fun deleteTrackByClick(item: Track) {
+        //Туду
+    }
 
+    private fun deletePlaylist() {
+        //ТУДУ()
+    }
+
+    private fun suggestDeleting() {
+        val textColor: Int
+        val isDarkTheme = playlistScreenViewModel.isAppThemeDark()
+        if (isDarkTheme) {
+            textColor = Color.BLACK
+        } else {
+            textColor = Color.WHITE
+        }
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Хотите удалить плейлист?")
+            .setNegativeButton("Нет") { dialog, which ->
+                return@setNegativeButton
+            }
+            .setPositiveButton("Да") { dialog, which ->
+                deletePlaylist()
+            }
+            .show()
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textColor)
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(textColor)
     }
 
     private fun sharePlaylist(playlist: Playlist) {
