@@ -98,7 +98,7 @@ class PlaylistScreen : Fragment() {
         val rxPermissions = RxPermissions(this)
         //BottomSheet
 
-        //val overlay = binding.overlay
+
         val bottomSheetBehavior = BottomSheetBehavior
             .from(binding.trackInPlaylistContainer)
             .apply {
@@ -142,6 +142,37 @@ class PlaylistScreen : Fragment() {
             if (playlist != null) {
                 sharePlaylist(playlist)
             }
+        }
+
+        //BottomSheet от кнопки Меню
+        val menuBottomSheetContainer = binding.menuContainer
+        val overlay = binding.overlay
+        val menuBottomSheetBehavior = BottomSheetBehavior
+            .from(menuBottomSheetContainer)
+            .apply {
+                state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        menuBottomSheetBehavior
+            .addBottomSheetCallback(
+                object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        when (newState) {
+                            BottomSheetBehavior.STATE_HIDDEN -> {
+                                overlay.visibility = View.GONE
+                            }
+
+                            else -> {
+                                overlay.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+                }
+            )
+
+        binding.more.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
