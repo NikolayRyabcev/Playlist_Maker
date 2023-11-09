@@ -23,6 +23,7 @@ class PlaylistScreenRepositoryImpl(
             val duration = track.trackTimeMillis
             trackInfo = "$trackInfo $i. $name  - ($duration)"
         }
+        if (trackNumber==0) trackInfo = "В этом плейлисте нет списка треков, которым можно поделиться"
 
         val intentSend = Intent(Intent.ACTION_SEND)
         intentSend.type = "text/plain"
