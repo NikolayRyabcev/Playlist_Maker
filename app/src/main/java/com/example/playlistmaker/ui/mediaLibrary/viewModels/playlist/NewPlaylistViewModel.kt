@@ -21,6 +21,7 @@ class NewPlaylistViewModel(
         description: String?,
         uri: String
     ) {
+        //в базе данных onConflict = OnConflictStrategy.REPLACE; «Не следует множить сущее без необходимости» (У. Оккам):)))
         interactor.addPlaylist(playlistName, description, uri)
     }
 

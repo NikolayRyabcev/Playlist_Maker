@@ -23,4 +23,8 @@ class PlaylistViewModel(private val interactor: PlaylistInteractor) : ViewModel(
         }
     }
 
+    fun deletePlaylist (item:Playlist){
+        interactor.deletePlaylist(item)
+    }
+
 }

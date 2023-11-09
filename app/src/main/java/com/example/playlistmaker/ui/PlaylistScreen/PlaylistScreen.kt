@@ -145,7 +145,9 @@ class PlaylistScreen : Fragment() {
             //ТУДУ()
         }
         binding.deletePlaylistInfo.setOnClickListener {
-            suggestDeleting()
+            if (playlist != null) {
+                suggestDeleting(playlist)
+            }
         }
 
         //BottomSheet от кнопки Меню
@@ -195,11 +197,11 @@ class PlaylistScreen : Fragment() {
         //Туду
     }
 
-    private fun deletePlaylist() {
-        //ТУДУ()
+    private fun deletePlaylist(item:Playlist) {
+        deletePlaylist(item)
     }
 
-    private fun suggestDeleting() {
+    private fun suggestDeleting(playlist: Playlist) {
         val textColor: Int
         val isDarkTheme = playlistScreenViewModel.isAppThemeDark()
         if (isDarkTheme) {
@@ -213,7 +215,7 @@ class PlaylistScreen : Fragment() {
                 return@setNegativeButton
             }
             .setPositiveButton("Да") { dialog, which ->
-                deletePlaylist()
+                deletePlaylist(playlist)
             }
             .show()
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textColor)

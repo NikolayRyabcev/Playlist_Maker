@@ -10,7 +10,6 @@ interface PlaylistInteractor {
         description: String?,
         uri: String
     )
-
     fun deletePlaylist(item: Playlist)
     fun queryPlaylist(): Flow<List<Playlist>>
     fun update(track: Track, playlist: Playlist)
