@@ -1,10 +1,8 @@
 package com.example.playlistmaker.ui.mediaLibrary.fragments.playlist
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -27,11 +25,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.EditPlaylistBinding
-import com.example.playlistmaker.databinding.NewPlaylistBinding
 import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.EditPlaylistViewModel
-import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.NewPlaylistViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tbruyelle.rxpermissions3.RxPermissions
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File

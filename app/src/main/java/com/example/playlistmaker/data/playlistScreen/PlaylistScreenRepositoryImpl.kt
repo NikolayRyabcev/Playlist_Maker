@@ -2,13 +2,19 @@ package com.example.playlistmaker.data.playlistScreen
 
 import android.app.Application
 import android.content.Intent
+import com.example.playlistmaker.App.TrackInPlaylistDataBase
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.favouritesDataBase.TrackConverter
+import com.example.playlistmaker.data.trackInPlaylist.TrackInPlaylistDAO
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.playlistScreen.PlaylistScreenRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class PlaylistScreenRepositoryImpl(
-    private val application: Application
+    private val application: Application,
+    private val base:TrackInPlaylistDataBase
 ) : PlaylistScreenRepository {
 
     override fun sharePlaylist(playlist: Playlist) {
@@ -30,5 +36,13 @@ class PlaylistScreenRepositoryImpl(
         intentSend.putExtra(Intent.EXTRA_TEXT, trackInfo)
         intentSend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         application.startActivity(intentSend)
+    }
+
+    override fun getTrackList(playlist: Playlist): Flow<List<Track>> = flow {
+        playlist.trackArray.map {id ->
+            val trackId = id ?: return@map
+            val entity = base.trackListingDao().queryTrackId(searchId = trackId) ?: return@map
+            TrackConverter().mapTrackEntityToTrack(entity)
+        }
     }
 }

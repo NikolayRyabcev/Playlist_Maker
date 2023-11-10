@@ -97,5 +97,16 @@
         <action
             android:id="@+id/action_playlistScreen_to_mediaLibraryFragment"
             app:destination="@id/mediaLibraryFragment" />
+        <action
+            android:id="@+id/action_playlistScreen_to_editPlaylist"
+            app:destination="@id/editPlaylist" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPlaylist"
+        android:name="com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.EditPlaylist"
+        android:label="EditPlaylist" >
+        <action
+            android:id="@+id/action_editPlaylist_to_playlistScreen"
+            app:destination="@id/playlistScreen" />
     </fragment>
 </navigation>

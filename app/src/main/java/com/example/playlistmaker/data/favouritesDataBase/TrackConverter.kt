@@ -1,5 +1,6 @@
 package com.example.playlistmaker.data.favouritesDataBase
 
+import com.example.playlistmaker.data.trackInPlaylist.TrackInPlaylistEntity
 import com.example.playlistmaker.domain.models.Track
 
 class TrackConverter {
@@ -33,6 +34,22 @@ class TrackConverter {
             track.primaryGenreName,
             track.country,
             track.previewUrl
+        )
+    }
+
+    fun mapTrackEntityToTrack(entity: TrackInPlaylistEntity): Track {
+        return Track(
+            entity.trackName,
+            entity.addTime,
+            entity.artistName,
+            entity.trackTimeMillis,
+            entity.artworkUrl100,
+            entity.trackId,
+            entity.collectionName,
+            entity.releaseDate,
+            entity.primaryGenreName,
+            entity.country,
+            entity.previewUrl
         )
     }
 }

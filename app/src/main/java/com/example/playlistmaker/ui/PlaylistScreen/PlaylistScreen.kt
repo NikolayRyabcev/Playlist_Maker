@@ -127,8 +127,10 @@ class PlaylistScreen : Fragment() {
                 }
             },
             longClickListener = { deleteTrackByClick(it) })
-        trackAdapter.setItems(trackListMaker())
-
+        if (playlist != null) {
+            playlistScreenViewModel.getTrackList(playlist)
+        }
+        trackListMaker()
         //кнопки
 
         binding.share.setOnClickListener {
@@ -142,7 +144,11 @@ class PlaylistScreen : Fragment() {
             }
         }
         binding.editInfo.setOnClickListener {
-            //ТУДУ()
+            val bundle = Bundle()
+            bundle.putParcelable("playlist", playlist)
+            val navController = findNavController()
+            navController.navigate(R.id.action_playlistScreen_to_editPlaylist, bundle)
+
         }
         binding.deletePlaylistInfo.setOnClickListener {
             if (playlist != null) {
@@ -189,15 +195,18 @@ class PlaylistScreen : Fragment() {
         navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
     }
 
-    private fun trackListMaker(): List<Track> { //добавить запрос треков из базы
-        return emptyList()
+    private fun trackListMaker() { //добавить запрос треков из базы
+        playlistScreenViewModel.trackList.observe(viewLifecycleOwner) { trackList ->
+            trackAdapter.setItems(trackList)
+            return@observe
+        }
     }
 
     private fun deleteTrackByClick(item: Track) {
         //Туду
     }
 
-    private fun deletePlaylist(item:Playlist) {
+    private fun deletePlaylist(item: Playlist) {
         deletePlaylist(item)
     }
 
