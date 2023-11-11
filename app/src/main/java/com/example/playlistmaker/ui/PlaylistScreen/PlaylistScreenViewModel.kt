@@ -11,13 +11,13 @@ import com.example.playlistmaker.domain.settings.SettingsInteractor
 import kotlinx.coroutines.launch
 
 class PlaylistScreenViewModel(
-    private val interactor: PlaylistScreenInteractor,
+    private val playlistScreenInteractor: PlaylistScreenInteractor,
     private val settingsInteractor: SettingsInteractor,
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     fun sharePlaylist(playlist: Playlist) {
-        interactor.sharePlaylist(playlist)
+        playlistScreenInteractor.sharePlaylist(playlist)
     }
 
     fun isAppThemeDark() :Boolean{
@@ -27,7 +27,7 @@ class PlaylistScreenViewModel(
     val trackList : MutableLiveData <List <Track>> = MutableLiveData(emptyList())
     fun getTrackList (playlist: Playlist) {
         viewModelScope.launch {
-            interactor.getTrackList(playlist).collect {
+            playlistScreenInteractor.getTrackList(playlist).collect {
                 list -> trackList.postValue(list)
             }
         }
@@ -35,5 +35,11 @@ class PlaylistScreenViewModel(
 
     fun deletePlaylist (playlist: Playlist) {
         playlistInteractor.deletePlaylist(playlist)
+    }
+
+    fun deleteTrack (track: Track, playlist: Playlist){
+        playlist.trackArray = playlist.trackArray.filter { it != track.trackId }
+        playlist.arrayNumber = playlist.arrayNumber?.minus(1)
+        playlistInteractor.update(track, playlist)
     }
 }

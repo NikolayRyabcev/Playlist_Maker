@@ -2,13 +2,18 @@ package com.example.playlistmaker.ui.PlaylistScreen
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -89,15 +94,20 @@ class PlaylistScreen : Fragment() {
         }
 
         val rxPermissions = RxPermissions(this)
+
+
+
         //BottomSheet
-
-
         val bottomSheetBehavior = BottomSheetBehavior
             .from(binding.trackInPlaylistContainer)
             .apply {
                 state = BottomSheetBehavior.STATE_HIDDEN
             }
-        val screenHeight = binding.root.height
+        val displayMetrics = DisplayMetrics()
+        val windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val screenHeight = displayMetrics.heightPixels
+        Log.d ("БоттомШит", screenHeight.toString())
         bottomSheetBehavior.peekHeight = screenHeight - binding.more.bottom
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
@@ -109,11 +119,16 @@ class PlaylistScreen : Fragment() {
                     clickAdapting(it)
                 }
             },
-            longClickListener = { deleteTrackByClick(it) })
+            longClickListener = {
+                if (playlist != null) {
+                    deleteTrackByClick(it, playlist)
+                }
+            })
         if (playlist != null) {
             playlistScreenViewModel.getTrackList(playlist)
         }
         trackListMaker()
+
         //кнопки
 
         binding.share.setOnClickListener {
@@ -179,14 +194,19 @@ class PlaylistScreen : Fragment() {
     }
 
     private fun trackListMaker() { //добавить запрос треков из базы
+        Log.d ("БоттомШит", "юи запрос")
         playlistScreenViewModel.trackList.observe(viewLifecycleOwner) { trackList ->
-            trackAdapter.setItems(trackList)
-            return@observe
+            if (trackList.isNullOrEmpty()) binding.emptyList.visibility= VISIBLE else {
+                trackAdapter.setItems(trackList)
+                Log.d("БоттомШит", trackList.toString())
+                binding.emptyList.visibility= GONE
+                return@observe
+            }
         }
     }
 
-    private fun deleteTrackByClick(item: Track) {
-        //Туду
+    private fun deleteTrackByClick(item: Track, playlist: Playlist) {
+        playlistScreenViewModel.deleteTrack(item, playlist)
     }
 
     private fun deletePlaylist(item: Playlist) {

@@ -2,6 +2,7 @@ package com.example.playlistmaker.data.playlistScreen
 
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import com.example.playlistmaker.App.TrackInPlaylistDataBase
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.favouritesDataBase.TrackConverter
@@ -39,10 +40,13 @@ class PlaylistScreenRepositoryImpl(
     }
 
     override fun getTrackList(playlist: Playlist): Flow<List<Track>> = flow {
+        var trackList :List<Track> = emptyList()
         playlist.trackArray.map {id ->
             val trackId = id ?: return@map
             val entity = base.trackListingDao().queryTrackId(searchId = trackId) ?: return@map
-            TrackConverter().mapTrackEntityToTrack(entity)
+            trackList = trackList + (TrackConverter().mapTrackEntityToTrack(entity))
         }
+        Log.d("БоттомШит", trackList.toString())
+        emit (trackList)
     }
 }
