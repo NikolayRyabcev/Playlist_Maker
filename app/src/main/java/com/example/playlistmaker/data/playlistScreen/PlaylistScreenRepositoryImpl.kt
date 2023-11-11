@@ -43,10 +43,10 @@ class PlaylistScreenRepositoryImpl(
         var trackList :List<Track> = emptyList()
         playlist.trackArray.map {id ->
             val trackId = id ?: return@map
-            val entity = base.trackListingDao().queryTrackId(searchId = trackId) ?: return@map
+            val entity = base.trackListingDao().queryTrackId(searchId = id) ?: return@map
             trackList = trackList + (TrackConverter().mapTrackEntityToTrack(entity))
         }
-        Log.d("БоттомШит", trackList.toString())
+        Log.d("Треки", trackList.toString())
         emit (trackList)
     }
 }

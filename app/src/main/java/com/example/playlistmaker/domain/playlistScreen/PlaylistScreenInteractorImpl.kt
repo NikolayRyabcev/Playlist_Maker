@@ -1,5 +1,6 @@
 package com.example.playlistmaker.domain.playlistScreen
 
+import android.util.Log
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +12,8 @@ class PlaylistScreenInteractorImpl(private val repository: PlaylistScreenReposit
         repository.sharePlaylist(playlist)
     }
 
-    override fun getTrackList(playlist: Playlist): Flow<List<Track>> = flow {
-        repository.getTrackList(playlist)
+    override fun getTrackList(playlist: Playlist): Flow<List<Track>> {
+        Log.d("Треки интерактор", playlist.toString())
+        return repository.getTrackList(playlist)
     }
 }

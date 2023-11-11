@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
+import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -103,13 +104,18 @@ class PlaylistScreen : Fragment() {
             .apply {
                 state = BottomSheetBehavior.STATE_HIDDEN
             }
-        val displayMetrics = DisplayMetrics()
-        val windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        val screenHeight = displayMetrics.heightPixels
-        Log.d ("БоттомШит", screenHeight.toString())
-        bottomSheetBehavior.peekHeight = screenHeight - binding.more.bottom
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+//        val displayMetrics = DisplayMetrics()
+//        val windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+//        windowManager.defaultDisplay.getMetrics(displayMetrics)
+//        val screenHeight = displayMetrics.heightPixels
+        binding.root.doOnLayout {
+            val screenHeight = binding.root.height
+            Log.d("БоттомШит", screenHeight.toString())
+            val peekHeight = screenHeight - binding.share.bottom
+            Log.d("БоттомШит", peekHeight.toString())
+            bottomSheetBehavior.peekHeight = peekHeight
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
 
 
         //список треков в плейлисте
@@ -194,11 +200,11 @@ class PlaylistScreen : Fragment() {
     }
 
     private fun trackListMaker() { //добавить запрос треков из базы
-        Log.d ("БоттомШит", "юи запрос")
+
         playlistScreenViewModel.trackList.observe(viewLifecycleOwner) { trackList ->
             if (trackList.isNullOrEmpty()) binding.emptyList.visibility= VISIBLE else {
                 trackAdapter.setItems(trackList)
-                Log.d("БоттомШит", trackList.toString())
+
                 binding.emptyList.visibility= GONE
                 return@observe
             }
