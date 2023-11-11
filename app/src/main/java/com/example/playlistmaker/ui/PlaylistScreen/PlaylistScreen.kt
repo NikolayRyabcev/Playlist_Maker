@@ -100,24 +100,7 @@ class PlaylistScreen : Fragment() {
         val screenHeight = binding.root.height
         bottomSheetBehavior.peekHeight = screenHeight - binding.more.bottom
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        /*bottomSheetBehavior
-            .addBottomSheetCallback(
-                object : BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        when (newState) {
-                            BottomSheetBehavior.STATE_COLLAPSED -> {
 
-                            }
-
-                            else -> {
-
-                            }
-                        }
-                    }
-
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-                }
-            )*/
 
         //список треков в плейлисте
         trackAdapter = TrackAdapter(
@@ -170,7 +153,7 @@ class PlaylistScreen : Fragment() {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
                         when (newState) {
                             BottomSheetBehavior.STATE_HIDDEN -> {
-                                overlay.visibility = View.GONE
+                                overlay.visibility = GONE
                             }
 
                             else -> {
@@ -207,7 +190,9 @@ class PlaylistScreen : Fragment() {
     }
 
     private fun deletePlaylist(item: Playlist) {
-        deletePlaylist(item)
+        playlistScreenViewModel.deletePlaylist(item)
+        val navController = findNavController()
+        navController.navigate(R.id.action_playlistScreen_to_mediaLibraryFragment2)
     }
 
     private fun suggestDeleting(playlist: Playlist) {

@@ -100,6 +100,9 @@
         <action
             android:id="@+id/action_playlistScreen_to_editPlaylist"
             app:destination="@id/editPlaylist" />
+        <action
+            android:id="@+id/action_playlistScreen_to_mediaLibraryFragment2"
+            app:destination="@id/mediaLibraryFragment" />
     </fragment>
     <fragment
         android:id="@+id/editPlaylist"
