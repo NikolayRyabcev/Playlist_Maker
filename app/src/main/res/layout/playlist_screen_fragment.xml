@@ -155,14 +155,13 @@
     <LinearLayout
         android:id="@+id/trackInPlaylistContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="24dp"
+        android:layout_height="150dp"
         android:background="@drawable/rounded_corners_16"
         android:backgroundTint="?attr/colorSecondary"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="383dp"
+        app:behavior_peekHeight="150dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <ImageView

@@ -2,23 +2,20 @@ package com.example.playlistmaker.ui.PlaylistScreen
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
-import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.example.playlistmaker.R
@@ -29,7 +26,6 @@ import com.example.playlistmaker.ui.search.adapter.TrackAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.tbruyelle.rxpermissions3.RxPermissions
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistScreen : Fragment() {
@@ -44,7 +40,7 @@ class PlaylistScreen : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = PlaylistScreenFragmentBinding.inflate(inflater, container, false)
         //Нижний навигатор
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
@@ -94,28 +90,22 @@ class PlaylistScreen : Fragment() {
                 .into(binding.playlistCover)
         }
 
-        val rxPermissions = RxPermissions(this)
-
-
-
         //BottomSheet
         val bottomSheetBehavior = BottomSheetBehavior
             .from(binding.trackInPlaylistContainer)
             .apply {
                 state = BottomSheetBehavior.STATE_HIDDEN
             }
-//        val displayMetrics = DisplayMetrics()
-//        val windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-//        windowManager.defaultDisplay.getMetrics(displayMetrics)
-//        val screenHeight = displayMetrics.heightPixels
-        binding.root.doOnLayout {
+
+       /* binding.share.post {
             val screenHeight = binding.root.height
             Log.d("БоттомШит", screenHeight.toString())
             val peekHeight = screenHeight - binding.share.bottom
             Log.d("БоттомШит", peekHeight.toString())
             bottomSheetBehavior.peekHeight = peekHeight
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }*/
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
 
         //список треков в плейлисте
@@ -127,13 +117,15 @@ class PlaylistScreen : Fragment() {
             },
             longClickListener = {
                 if (playlist != null) {
-                    deleteTrackByClick(it, playlist)
+                    suggestTrackDeleting(it, playlist)
                 }
             })
         if (playlist != null) {
             playlistScreenViewModel.getTrackList(playlist)
         }
         trackListMaker()
+        binding.trackInPlaylistRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.trackInPlaylistRecycler.adapter = trackAdapter
 
         //кнопки
 
@@ -156,7 +148,7 @@ class PlaylistScreen : Fragment() {
         }
         binding.deletePlaylistInfo.setOnClickListener {
             if (playlist != null) {
-                suggestDeleting(playlist)
+                suggestPlaylistDeleting(playlist)
             }
         }
 
@@ -178,7 +170,7 @@ class PlaylistScreen : Fragment() {
                             }
 
                             else -> {
-                                overlay.visibility = View.VISIBLE
+                                overlay.visibility = VISIBLE
                             }
                         }
                     }
@@ -199,20 +191,23 @@ class PlaylistScreen : Fragment() {
         navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
     }
 
-    private fun trackListMaker() { //добавить запрос треков из базы
-
+    private fun trackListMaker() {
+        Log.d ("Заброшено во вью", "trackListMaker")
         playlistScreenViewModel.trackList.observe(viewLifecycleOwner) { trackList ->
             if (trackList.isNullOrEmpty()) binding.emptyList.visibility= VISIBLE else {
                 trackAdapter.setItems(trackList)
-
+                Log.d ("Заброшено во вью", trackList.toString())
+                trackAdapter.notifyDataSetChanged()
                 binding.emptyList.visibility= GONE
                 return@observe
             }
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun deleteTrackByClick(item: Track, playlist: Playlist) {
         playlistScreenViewModel.deleteTrack(item, playlist)
+        trackAdapter.notifyDataSetChanged()
     }
 
     private fun deletePlaylist(item: Playlist) {
@@ -221,21 +216,42 @@ class PlaylistScreen : Fragment() {
         navController.navigate(R.id.action_playlistScreen_to_mediaLibraryFragment2)
     }
 
-    private fun suggestDeleting(playlist: Playlist) {
+    private fun suggestPlaylistDeleting(playlist: Playlist) {
         val textColor: Int
         val isDarkTheme = playlistScreenViewModel.isAppThemeDark()
-        if (isDarkTheme) {
-            textColor = Color.BLACK
+        textColor = if (isDarkTheme) {
+            Color.BLACK
         } else {
-            textColor = Color.WHITE
+            Color.WHITE
         }
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Хотите удалить плейлист?")
-            .setNegativeButton("Нет") { dialog, which ->
+            .setNegativeButton("Нет") { _, _ ->
                 return@setNegativeButton
             }
-            .setPositiveButton("Да") { dialog, which ->
+            .setPositiveButton("Да") { _, _ ->
                 deletePlaylist(playlist)
+            }
+            .show()
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textColor)
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(textColor)
+    }
+
+    private fun suggestTrackDeleting(track: Track, playlist: Playlist) {
+        val textColor: Int
+        val isDarkTheme = playlistScreenViewModel.isAppThemeDark()
+        textColor = if (isDarkTheme) {
+            Color.BLACK
+        } else {
+            Color.WHITE
+        }
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Вы уверены, что хотите удалить трек из плейлиста??")
+            .setNegativeButton("Нет") { _, _ ->
+                return@setNegativeButton
+            }
+            .setPositiveButton("Да") { _, _ ->
+                deleteTrackByClick(track, playlist)
             }
             .show()
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textColor)
@@ -248,7 +264,7 @@ class PlaylistScreen : Fragment() {
 
     private fun onBackClick() {
         val fragmentmanager = requireActivity().supportFragmentManager
-        bottomNavigator.visibility = View.VISIBLE
+        bottomNavigator.visibility = VISIBLE
         fragmentmanager.popBackStack()
     }
 
