@@ -50,7 +50,6 @@ class PlaylistFragment : Fragment() {
 
         playlistAdapter = PlaylistAdapter {
             clickAdapting(it)
-            Log.d("плейлист", "click")
         }
         val recyclerView = nullablePlaylistBinding.playlistList
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -86,7 +85,6 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun clickAdapting(item: Playlist) {
-        Log.d("плейлист", "clickAdapting")
         val bundle = Bundle()
         bundle.putParcelable("playlist", item)
         val navController = findNavController()

@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -155,6 +157,7 @@ class EditPlaylist: Fragment() {
             ) return@setOnClickListener
             if (playlist != null) {
                 savePlaylist(playlist)
+                Log.d("Редактирование", "click")
             }
         }
 
@@ -200,12 +203,23 @@ class EditPlaylist: Fragment() {
     }
 
     private fun savePlaylist(playlist: Playlist) {
+        val newPlaylist = Playlist(
+            0,
+            editPlaylistBinding.playlistNameEditText.text.toString(),
+            editPlaylistBinding.playlistDescriptEditText.text.toString(),
+            selectedUri.toString(),
+            playlist.trackArray,
+            playlist.arrayNumber
+        )
         viewModel.savePlayList(
             editPlaylistBinding.playlistNameEditText.text.toString(),
             editPlaylistBinding.playlistDescriptEditText.text.toString(),
             selectedUri.toString(),
         )
         viewModel.deletePlaylist(playlist)
-        closer()
+        val bundle = Bundle()
+        bundle.putParcelable("playlist", newPlaylist)
+        val navController = findNavController()
+        navController.navigate(R.id.action_editPlaylist_to_playlistScreen, bundle)
     }
 }
