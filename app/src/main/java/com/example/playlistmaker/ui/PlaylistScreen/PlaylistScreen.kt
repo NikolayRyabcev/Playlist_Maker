@@ -64,7 +64,10 @@ class PlaylistScreen : Fragment() {
         val playlist = arguments?.getParcelable<Playlist>("playlist")
         binding.PlaylistName.text = playlist?.playlistName ?: "Unknown Playlist"
         binding.descriptionOfPlaylist.text = playlist?.description ?: ""
-        binding.playlistTime.text = "" //посчитать и дописвть
+        if (playlist != null) {
+            playlistTime(playlist)
+        }
+
         //сколько треков в плейлисте
         val trackCounter = (playlist?.arrayNumber).toString()
         val text = when {
@@ -188,9 +191,10 @@ class PlaylistScreen : Fragment() {
         val bundle = Bundle()
         bundle.putParcelable("track", item)
         val navController = findNavController()
-        navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
+        navController.navigate(R.id.action_playlistScreen_to_playerFragment, bundle)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun trackListMaker() {
         Log.d ("Заброшено во вью", "trackListMaker")
         playlistScreenViewModel.trackList.observe(viewLifecycleOwner) { trackList ->
@@ -207,7 +211,10 @@ class PlaylistScreen : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun deleteTrackByClick(item: Track, playlist: Playlist) {
         playlistScreenViewModel.deleteTrack(item, playlist)
+        playlistScreenViewModel.getTrackList (playlist)
+        trackListMaker()
         trackAdapter.notifyDataSetChanged()
+
     }
 
     private fun deletePlaylist(item: Playlist) {
@@ -268,4 +275,11 @@ class PlaylistScreen : Fragment() {
         fragmentmanager.popBackStack()
     }
 
+    fun playlistTime(playlist:Playlist) {
+        playlistScreenViewModel.getPlaylistTime(playlist)
+        playlistScreenViewModel.playlistTime.observe(viewLifecycleOwner) {
+            playlistTime -> binding.playlistTime.text = playlistTime
+            Log.d("Время ui", playlistTime)
+        }
+    }
 }

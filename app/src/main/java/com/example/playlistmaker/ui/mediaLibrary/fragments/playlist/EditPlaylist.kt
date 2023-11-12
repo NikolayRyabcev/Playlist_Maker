@@ -25,6 +25,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.EditPlaylistBinding
+import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.EditPlaylistViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tbruyelle.rxpermissions3.RxPermissions
@@ -48,12 +49,7 @@ class EditPlaylist: Fragment() {
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = View.GONE
 
-        editPlaylistBinding.saveButton.setOnClickListener {
-            if (editPlaylistBinding.playlistNameEditText.text.toString()
-                    .isEmpty()
-            ) return@setOnClickListener
-            savePlaylist()
-        }
+
         return editPlaylistBinding.root
     }
 
@@ -62,6 +58,30 @@ class EditPlaylist: Fragment() {
     @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val playlist = arguments?.getParcelable<Playlist>("playlist")
+        val name = editPlaylistBinding.playlistNameEditText
+        if (playlist != null) {
+            name.setText( playlist.playlistName)
+        }
+        if (playlist != null) {
+            editPlaylistBinding.playlistDescriptEditText.setText(playlist.description)
+        }
+        ///обложка
+        val baseWidth = 312
+        val baseHeight = 312
+        val getImage = (playlist?.uri ?: "Unknown Cover")
+        if (getImage != "Unknown Cover") {
+            editPlaylistBinding.playlistPlaceHolder.visibility = View.GONE
+            Glide.with(this)
+                .load(getImage)
+                .centerCrop()
+                .transform(CenterCrop())
+                .placeholder(R.drawable.bfplaceholder)
+                .override(baseWidth, baseHeight)
+                .into(editPlaylistBinding.playlistCover)
+        }
+
+
         val rxPermissions = RxPermissions(this)
 
         //отработка на кнопку назад
@@ -129,6 +149,14 @@ class EditPlaylist: Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             onBackClick()
         }
+        editPlaylistBinding.saveButton.setOnClickListener {
+            if (editPlaylistBinding.playlistNameEditText.text.toString()
+                    .isEmpty()
+            ) return@setOnClickListener
+            if (playlist != null) {
+                savePlaylist(playlist)
+            }
+        }
 
     }
     private fun onBackClick() {
@@ -171,11 +199,13 @@ class EditPlaylist: Fragment() {
         editPlaylistBinding.saveButton.isEnabled = true
     }
 
-    private fun savePlaylist() {
+    private fun savePlaylist(playlist: Playlist) {
         viewModel.savePlayList(
             editPlaylistBinding.playlistNameEditText.text.toString(),
             editPlaylistBinding.playlistDescriptEditText.text.toString(),
             selectedUri.toString(),
         )
+        viewModel.deletePlaylist(playlist)
+        closer()
     }
 }

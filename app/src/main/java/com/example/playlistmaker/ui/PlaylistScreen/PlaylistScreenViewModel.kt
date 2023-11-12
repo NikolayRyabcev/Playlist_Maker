@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.PlaylistScreen
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.playlistScreen.PlaylistScreenInteractor
 import com.example.playlistmaker.domain.settings.SettingsInteractor
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PlaylistScreenViewModel(
@@ -41,5 +43,15 @@ class PlaylistScreenViewModel(
         playlist.trackArray = playlist.trackArray.filter { it != track.trackId }
         playlist.arrayNumber = playlist.arrayNumber?.minus(1)
         playlistInteractor.update(track, playlist)
+    }
+
+    val playlistTime: MutableLiveData <String> = MutableLiveData("")
+    fun getPlaylistTime (playlist: Playlist) {
+        viewModelScope.launch {
+            playlistScreenInteractor.timeCounting(playlist).collect{
+                readyTime -> playlistTime.postValue(readyTime)
+                Log.d("Время vm", readyTime)
+            }
+        }
     }
 }

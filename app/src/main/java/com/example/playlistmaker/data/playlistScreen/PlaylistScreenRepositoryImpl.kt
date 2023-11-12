@@ -50,21 +50,30 @@ class PlaylistScreenRepositoryImpl(
     }
 
     override fun timeCounting(playlist: Playlist): Flow<String> = flow {
-        var generalTime = ""
+        var generalTime = 0
         var trackSeconds = 0
+        Log.d("Время массив", playlist.trackArray.toString())
         playlist.trackArray.forEach {
             val entity = it?.let { it1 -> base.trackListingDao().queryTrackId(searchId = it1) }
             val track = (entity?.let { it1 -> TrackConverter().mapTrackEntityToTrack(it1) })
             val time = track?.trackTimeMillis
+            Log.d("Время время трека", time.toString())
             trackSeconds =
                 (time?.split(":")?.get(0)?.toInt() ?: 0) * 60 + (time?.split(":")?.get(1)
                     ?.toInt()
                     ?: 0)
             generalTime += trackSeconds
+            Log.d("Время rep", generalTime.toString())
         }
-        val minutes = trackSeconds / 60
-        val seconds = trackSeconds % 60
-        val readyTime = String.format("%02d:%02d", minutes, seconds)
+        val hours = generalTime / (60 * 60)
+        val minutes = generalTime / 60
+        val seconds = generalTime % 60
+        val readyTime = if (hours == 0){
+            String.format("%02d:%02d", minutes, seconds)
+        } else {
+            String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        }
+        Log.d("Время rep", readyTime)
         emit(readyTime)
     }
 }
