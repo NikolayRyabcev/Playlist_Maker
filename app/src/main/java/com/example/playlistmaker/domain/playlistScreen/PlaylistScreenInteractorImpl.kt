@@ -16,4 +16,8 @@ class PlaylistScreenInteractorImpl(private val repository: PlaylistScreenReposit
         Log.d("Треки интерактор", playlist.toString())
         return repository.getTrackList(playlist)
     }
+
+    override fun timeCounting(playlist: Playlist): Flow<String> {
+        return  repository.timeCounting(playlist)
+    }
 }

@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface PlaylistScreenRepository {
     fun sharePlaylist (playlist: Playlist)
     fun getTrackList(playlist: Playlist) : Flow<List<Track>>
+    fun timeCounting (playlist: Playlist) : Flow<String>
 }

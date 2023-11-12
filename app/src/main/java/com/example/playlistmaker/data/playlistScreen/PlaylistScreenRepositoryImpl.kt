@@ -4,9 +4,7 @@ import android.app.Application
 import android.content.Intent
 import android.util.Log
 import com.example.playlistmaker.App.TrackInPlaylistDataBase
-import com.example.playlistmaker.R
 import com.example.playlistmaker.data.favouritesDataBase.TrackConverter
-import com.example.playlistmaker.data.trackInPlaylist.TrackInPlaylistDAO
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.playlistScreen.PlaylistScreenRepository
@@ -15,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 
 class PlaylistScreenRepositoryImpl(
     private val application: Application,
-    private val base:TrackInPlaylistDataBase
+    private val base: TrackInPlaylistDataBase
 ) : PlaylistScreenRepository {
 
     override fun sharePlaylist(playlist: Playlist) {
@@ -30,7 +28,8 @@ class PlaylistScreenRepositoryImpl(
             val duration = track.trackTimeMillis
             trackInfo = "$trackInfo $i. $name  - ($duration)"
         }
-        if (trackNumber==0) trackInfo = "В этом плейлисте нет списка треков, которым можно поделиться"
+        if (trackNumber == 0) trackInfo =
+            "В этом плейлисте нет списка треков, которым можно поделиться"
 
         val intentSend = Intent(Intent.ACTION_SEND)
         intentSend.type = "text/plain"
@@ -40,13 +39,32 @@ class PlaylistScreenRepositoryImpl(
     }
 
     override fun getTrackList(playlist: Playlist): Flow<List<Track>> = flow {
-        var trackList :List<Track> = emptyList()
-        playlist.trackArray.map {id ->
+        var trackList: List<Track> = emptyList()
+        playlist.trackArray.map { id ->
             val trackId = id ?: return@map
             val entity = base.trackListingDao().queryTrackId(searchId = id) ?: return@map
             trackList = trackList + (TrackConverter().mapTrackEntityToTrack(entity))
         }
         Log.d("Треки", trackList.toString())
-        emit (trackList)
+        emit(trackList)
+    }
+
+    override fun timeCounting(playlist: Playlist): Flow<String> = flow {
+        var generalTime = ""
+        var trackSeconds = 0
+        playlist.trackArray.forEach {
+            val entity = it?.let { it1 -> base.trackListingDao().queryTrackId(searchId = it1) }
+            val track = (entity?.let { it1 -> TrackConverter().mapTrackEntityToTrack(it1) })
+            val time = track?.trackTimeMillis
+            trackSeconds =
+                (time?.split(":")?.get(0)?.toInt() ?: 0) * 60 + (time?.split(":")?.get(1)
+                    ?.toInt()
+                    ?: 0)
+            generalTime += trackSeconds
+        }
+        val minutes = trackSeconds / 60
+        val seconds = trackSeconds % 60
+        val readyTime = String.format("%02d:%02d", minutes, seconds)
+        emit(readyTime)
     }
 }
