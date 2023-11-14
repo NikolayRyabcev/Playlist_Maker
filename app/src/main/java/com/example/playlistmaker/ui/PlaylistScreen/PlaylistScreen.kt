@@ -175,10 +175,8 @@ class PlaylistScreen : Fragment() {
         val intentSend = Intent(Intent.ACTION_SEND)
         intentSend.type = "text/plain"
         intentSend.putExtra(Intent.EXTRA_TEXT, trackInfo)
-        intentSend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        val resultIntent = Intent()
-        requireActivity().setResult(RESULT_OK, resultIntent)
-        requireActivity().startActivity(intentSend)
+        val chooser = Intent.createChooser(intentSend, "Share Track Info")
+        requireActivity().startActivityForResult(chooser, 1)
     }
 
     private fun onBackClick() {
