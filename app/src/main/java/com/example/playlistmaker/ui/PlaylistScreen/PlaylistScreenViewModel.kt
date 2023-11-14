@@ -18,10 +18,6 @@ class PlaylistScreenViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
-    fun sharePlaylist(playlist: Playlist) {
-        playlistScreenInteractor.sharePlaylist(playlist)
-    }
-
     fun isAppThemeDark() :Boolean{
         return settingsInteractor.isAppThemeDark()
     }

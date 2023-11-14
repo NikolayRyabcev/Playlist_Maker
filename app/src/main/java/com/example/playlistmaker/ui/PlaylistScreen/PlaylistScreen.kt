@@ -1,6 +1,8 @@
 package com.example.playlistmaker.ui.PlaylistScreen
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
@@ -90,7 +92,7 @@ class PlaylistScreen : Fragment() {
                 trackAdapter.notifyDataSetChanged()
                 binding.emptyList.visibility = GONE
                 binding.trackInPlaylistRecycler.visibility = VISIBLE
-                return@observe
+                //return@observe
             }
         }
     }
@@ -152,7 +154,6 @@ class PlaylistScreen : Fragment() {
     }
 
     private fun sharePlaylist(playlist: Playlist) {
-        val trackList: List<Track> = emptyList()
         val nameOfPlaylist = playlist.playlistName
         val desriptionOfPlaylist = playlist.description
         val trackNumber = playlist.arrayNumber
@@ -162,17 +163,21 @@ class PlaylistScreen : Fragment() {
             return
         }
         var trackInfo = "$nameOfPlaylist \n $desriptionOfPlaylist \n $trackNumber треков \n"
+        val trackList: List<Track> = playlistScreenViewModel.trackList.value!!
+        var i=0
         trackList.forEach { track ->
-            val i = trackList.indexOf(track)
+            i += 1
             val name = track.trackName
             val duration = track.trackTimeMillis
-            trackInfo = "$trackInfo $i. $name  - ($duration)"
+            trackInfo = "$trackInfo $i. $name  - ($duration) \n"
         }
 
         val intentSend = Intent(Intent.ACTION_SEND)
         intentSend.type = "text/plain"
         intentSend.putExtra(Intent.EXTRA_TEXT, trackInfo)
         intentSend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val resultIntent = Intent()
+        requireActivity().setResult(RESULT_OK, resultIntent)
         requireActivity().startActivity(intentSend)
     }
 
@@ -186,7 +191,6 @@ class PlaylistScreen : Fragment() {
         playlistScreenViewModel.getPlaylistTime(playlist)
         playlistScreenViewModel.playlistTime.observe(viewLifecycleOwner) { playlistTime ->
             binding.playlistTime.text = playlistTime
-            Log.d("Время ui", playlistTime)
         }
     }
 
