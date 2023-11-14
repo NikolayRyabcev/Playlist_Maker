@@ -12,7 +12,7 @@ import org.koin.dsl.module
 val playlistScreenModule = module {
 
     single<PlaylistScreenInteractor> { PlaylistScreenInteractorImpl(get()) }
-    single<PlaylistScreenRepository> { PlaylistScreenRepositoryImpl(get(), get()) }
+    single<PlaylistScreenRepository> { PlaylistScreenRepositoryImpl(get()) }
     viewModel { PlaylistScreenViewModel(get(), get(), get()) }
     viewModel {EditPlaylistViewModel(get(), get())}
 }

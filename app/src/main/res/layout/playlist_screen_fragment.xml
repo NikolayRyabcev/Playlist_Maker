@@ -201,6 +201,8 @@
         android:layout_height="match_parent"
         android:background="#99000000"
         android:visibility="gone" />
+
+
     <!-- Меню -->
     <LinearLayout
         android:id="@+id/menuContainer"

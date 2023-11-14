@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.PlaylistScreen
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -62,128 +64,11 @@ class PlaylistScreen : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //принятие и отрисовка данных трека
         val playlist = arguments?.getParcelable<Playlist>("playlist")
-        binding.PlaylistName.text = playlist?.playlistName ?: "Unknown Playlist"
-        binding.descriptionOfPlaylist.text = playlist?.description ?: ""
         if (playlist != null) {
-            playlistTime(playlist)
-        }
-
-        //сколько треков в плейлисте
-        val trackCounter = (playlist?.arrayNumber).toString()
-        val text = when {
-            trackCounter.toInt() % 10 == 1 && trackCounter.toInt() % 100 != 11 -> " трек"
-            trackCounter.toInt() % 10 == 2 && trackCounter.toInt() % 100 != 12 -> " трека"
-            trackCounter.toInt() % 10 == 3 && trackCounter.toInt() % 100 != 13 -> " трека"
-            trackCounter.toInt() % 10 == 4 && trackCounter.toInt() % 100 != 14 -> " трека"
-            else -> " треков"
-        }
-        binding.trackNumber.text = "$trackCounter $text"
-        ///обложка
-        val baseWidth = 312
-        val baseHeight = 312
-        val getImage = (playlist?.uri ?: "Unknown Cover")
-        if (getImage != "Unknown Cover") {
-            binding.playlistPlaceHolder.visibility = GONE
-            Glide.with(this)
-                .load(getImage)
-                .centerCrop()
-                .transform(CenterCrop())
-                .placeholder(R.drawable.bfplaceholder)
-                .override(baseWidth, baseHeight)
-                .into(binding.playlistCover)
-        }
-
-        //BottomSheet
-        val bottomSheetBehavior = BottomSheetBehavior
-            .from(binding.trackInPlaylistContainer)
-            .apply {
-                state = BottomSheetBehavior.STATE_HIDDEN
-            }
-
-       /* binding.share.post {
-            val screenHeight = binding.root.height
-            Log.d("БоттомШит", screenHeight.toString())
-            val peekHeight = screenHeight - binding.share.bottom
-            Log.d("БоттомШит", peekHeight.toString())
-            bottomSheetBehavior.peekHeight = peekHeight
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }*/
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
-
-        //список треков в плейлисте
-        trackAdapter = TrackAdapter(
-            clickListener = {
-                if (isClickAllowed) {
-                    clickAdapting(it)
-                }
-            },
-            longClickListener = {
-                if (playlist != null) {
-                    suggestTrackDeleting(it, playlist)
-                }
-            })
-        if (playlist != null) {
-            playlistScreenViewModel.getTrackList(playlist)
-        }
-        trackListMaker()
-        binding.trackInPlaylistRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.trackInPlaylistRecycler.adapter = trackAdapter
-
-        //кнопки
-
-        binding.share.setOnClickListener {
-            if (playlist != null) {
-                sharePlaylist(playlist)
-            }
-        }
-        binding.shareText.setOnClickListener {
-            if (playlist != null) {
-                sharePlaylist(playlist)
-            }
-        }
-        binding.editInfo.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putParcelable("playlist", playlist)
-            val navController = findNavController()
-            navController.navigate(R.id.action_playlistScreen_to_editPlaylist, bundle)
-
-        }
-        binding.deletePlaylistInfo.setOnClickListener {
-            if (playlist != null) {
-                suggestPlaylistDeleting(playlist)
-            }
-        }
-
-        //BottomSheet от кнопки Меню
-        val menuBottomSheetContainer = binding.menuContainer
-        val overlay = binding.overlay
-        val menuBottomSheetBehavior = BottomSheetBehavior
-            .from(menuBottomSheetContainer)
-            .apply {
-                state = BottomSheetBehavior.STATE_HIDDEN
-            }
-        menuBottomSheetBehavior
-            .addBottomSheetCallback(
-                object : BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        when (newState) {
-                            BottomSheetBehavior.STATE_HIDDEN -> {
-                                overlay.visibility = GONE
-                            }
-
-                            else -> {
-                                overlay.visibility = VISIBLE
-                            }
-                        }
-                    }
-
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-                }
-            )
-
-        binding.more.setOnClickListener {
-            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            drawPlaylist(playlist)
+            drawCover(playlist)
+            drawPlaylistDataBottomSheet(playlist)
+            drawMenuBottomSheet(playlist)
         }
     }
 
@@ -196,13 +81,15 @@ class PlaylistScreen : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun trackListMaker() {
-        Log.d ("Заброшено во вью", "trackListMaker")
         playlistScreenViewModel.trackList.observe(viewLifecycleOwner) { trackList ->
-            if (trackList.isNullOrEmpty()) binding.emptyList.visibility= VISIBLE else {
+            if (trackList.isNullOrEmpty()) {
+                binding.emptyList.visibility = VISIBLE
+                binding.trackInPlaylistRecycler.visibility = GONE
+            } else {
                 trackAdapter.setItems(trackList)
-                Log.d ("Заброшено во вью", trackList.toString())
                 trackAdapter.notifyDataSetChanged()
-                binding.emptyList.visibility= GONE
+                binding.emptyList.visibility = GONE
+                binding.trackInPlaylistRecycler.visibility = VISIBLE
                 return@observe
             }
         }
@@ -211,10 +98,9 @@ class PlaylistScreen : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun deleteTrackByClick(item: Track, playlist: Playlist) {
         playlistScreenViewModel.deleteTrack(item, playlist)
-        playlistScreenViewModel.getTrackList (playlist)
+        playlistScreenViewModel.getTrackList(playlist)
         trackListMaker()
-        trackAdapter.notifyDataSetChanged()
-
+        drawPlaylist(playlist)
     }
 
     private fun deletePlaylist(item: Playlist) {
@@ -266,7 +152,28 @@ class PlaylistScreen : Fragment() {
     }
 
     private fun sharePlaylist(playlist: Playlist) {
-        playlistScreenViewModel.sharePlaylist(playlist)
+        val trackList: List<Track> = emptyList()
+        val nameOfPlaylist = playlist.playlistName
+        val desriptionOfPlaylist = playlist.description
+        val trackNumber = playlist.arrayNumber
+        if (trackNumber == 0) {
+            val message = "В данном плейлисте нет списка треков, которым можно поделиться."
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            return
+        }
+        var trackInfo = "$nameOfPlaylist \n $desriptionOfPlaylist \n $trackNumber треков \n"
+        trackList.forEach { track ->
+            val i = trackList.indexOf(track)
+            val name = track.trackName
+            val duration = track.trackTimeMillis
+            trackInfo = "$trackInfo $i. $name  - ($duration)"
+        }
+
+        val intentSend = Intent(Intent.ACTION_SEND)
+        intentSend.type = "text/plain"
+        intentSend.putExtra(Intent.EXTRA_TEXT, trackInfo)
+        intentSend.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        requireActivity().startActivity(intentSend)
     }
 
     private fun onBackClick() {
@@ -275,11 +182,120 @@ class PlaylistScreen : Fragment() {
         fragmentmanager.popBackStack()
     }
 
-    fun playlistTime(playlist:Playlist) {
+    private fun playlistTime(playlist: Playlist) {
         playlistScreenViewModel.getPlaylistTime(playlist)
-        playlistScreenViewModel.playlistTime.observe(viewLifecycleOwner) {
-            playlistTime -> binding.playlistTime.text = playlistTime
+        playlistScreenViewModel.playlistTime.observe(viewLifecycleOwner) { playlistTime ->
+            binding.playlistTime.text = playlistTime
             Log.d("Время ui", playlistTime)
         }
     }
+
+    private fun drawPlaylist(playlist: Playlist) {
+        binding.PlaylistName.text = playlist.playlistName ?: "Unknown Playlist"
+        binding.descriptionOfPlaylist.text = playlist.description ?: ""
+        playlistTime(playlist)
+
+        //сколько треков в плейлисте
+        val trackCounter = (playlist.arrayNumber).toString()
+        val text = when {
+            trackCounter.toInt() % 10 == 1 && trackCounter.toInt() % 100 != 11 -> " трек"
+            trackCounter.toInt() % 10 == 2 && trackCounter.toInt() % 100 != 12 -> " трека"
+            trackCounter.toInt() % 10 == 3 && trackCounter.toInt() % 100 != 13 -> " трека"
+            trackCounter.toInt() % 10 == 4 && trackCounter.toInt() % 100 != 14 -> " трека"
+            else -> " треков"
+        }
+        binding.trackNumber.text = "$trackCounter $text"
+    }
+
+    private fun drawCover(playlist: Playlist) {
+        val baseWidth = 312
+        val baseHeight = 312
+        val getImage = (playlist.uri ?: "Unknown Cover")
+        if (getImage != "Unknown Cover") {
+            binding.playlistPlaceHolder.visibility = GONE
+            Glide.with(this)
+                .load(getImage)
+                .centerCrop()
+                .transform(CenterCrop())
+                .placeholder(R.drawable.bfplaceholder)
+                .override(baseWidth, baseHeight)
+                .into(binding.playlistCover)
+        }
+    }
+
+    private fun drawPlaylistDataBottomSheet(playlist: Playlist) {
+        val bottomSheetBehavior = BottomSheetBehavior
+            .from(binding.trackInPlaylistContainer)
+            .apply {
+                state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        //список треков в плейлисте
+        trackAdapter = TrackAdapter(
+            clickListener = {
+                if (isClickAllowed) {
+                    clickAdapting(it)
+                }
+            },
+            longClickListener = {
+                suggestTrackDeleting(it, playlist)
+            })
+        playlistScreenViewModel.getTrackList(playlist)
+        trackListMaker()
+        binding.trackInPlaylistRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.trackInPlaylistRecycler.adapter = trackAdapter
+
+        //кнопки
+
+        binding.share.setOnClickListener {
+            sharePlaylist(playlist)
+        }
+        binding.shareText.setOnClickListener {
+            sharePlaylist(playlist)
+        }
+        binding.editInfo.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putParcelable("playlist", playlist)
+            val navController = findNavController()
+            navController.navigate(R.id.action_playlistScreen_to_editPlaylist, bundle)
+
+        }
+        binding.deletePlaylistInfo.setOnClickListener {
+            suggestPlaylistDeleting(playlist)
+        }
+    }
+
+    private fun drawMenuBottomSheet(playlist: Playlist) {
+        val menuBottomSheetContainer = binding.menuContainer
+        val overlay = binding.overlay
+        val menuBottomSheetBehavior = BottomSheetBehavior
+            .from(menuBottomSheetContainer)
+            .apply {
+                state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        menuBottomSheetBehavior
+            .addBottomSheetCallback(
+                object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        when (newState) {
+                            BottomSheetBehavior.STATE_HIDDEN -> {
+                                overlay.visibility = GONE
+                            }
+
+                            else -> {
+                                overlay.visibility = VISIBLE
+                            }
+                        }
+                    }
+
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+                }
+            )
+
+        binding.more.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
+
 }

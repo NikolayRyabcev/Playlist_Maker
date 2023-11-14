@@ -8,9 +8,6 @@ import kotlinx.coroutines.flow.flow
 
 class PlaylistScreenInteractorImpl(private val repository: PlaylistScreenRepository) :
     PlaylistScreenInteractor {
-    override fun sharePlaylist(playlist: Playlist) {
-        repository.sharePlaylist(playlist)
-    }
 
     override fun getTrackList(playlist: Playlist): Flow<List<Track>> {
         Log.d("Треки интерактор", playlist.toString())
