@@ -88,17 +88,16 @@ class EditPlaylist: Fragment() {
 
         //отработка на кнопку назад
         editPlaylistBinding.playlistBackButtonArrow.setOnClickListener {
-            onBackClick()
+            closer()
         }
 
         //устанавливаем цвет кнопки "Создать"
+        turnOnCreateButton()
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                turnOffCreateButton()
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                turnOnCreateButton()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -149,7 +148,7 @@ class EditPlaylist: Fragment() {
                 }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            onBackClick()
+            closer()
         }
         editPlaylistBinding.saveButton.setOnClickListener {
             if (editPlaylistBinding.playlistNameEditText.text.toString()
@@ -161,11 +160,6 @@ class EditPlaylist: Fragment() {
             }
         }
 
-    }
-    private fun onBackClick() {
-        val name = editPlaylistBinding.playlistNameEditText.text
-        val descr = editPlaylistBinding.playlistDescriptEditText.text
-        closer()
     }
 
     private fun closer() {
