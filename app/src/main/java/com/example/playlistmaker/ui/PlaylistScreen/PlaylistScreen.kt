@@ -92,7 +92,6 @@ class PlaylistScreen : Fragment() {
                 trackAdapter.notifyDataSetChanged()
                 binding.emptyList.visibility = GONE
                 binding.trackInPlaylistRecycler.visibility = VISIBLE
-                //return@observe
             }
         }
     }
@@ -164,7 +163,7 @@ class PlaylistScreen : Fragment() {
         }
         var trackInfo = "$nameOfPlaylist \n $desriptionOfPlaylist \n $trackNumber треков \n"
         val trackList: List<Track> = playlistScreenViewModel.trackList.value!!
-        var i=0
+        var i = 0
         trackList.forEach { track ->
             i += 1
             val name = track.trackName
@@ -193,7 +192,7 @@ class PlaylistScreen : Fragment() {
     }
 
     private fun drawPlaylist(playlist: Playlist) {
-        binding.PlaylistName.text = playlist.playlistName ?: "Unknown Playlist"
+        binding.PlaylistName.text = playlist.playlistName
         binding.descriptionOfPlaylist.text = playlist.description ?: ""
         playlistTime(playlist)
 
@@ -212,16 +211,20 @@ class PlaylistScreen : Fragment() {
     private fun drawCover(playlist: Playlist) {
         val baseWidth = 312
         val baseHeight = 312
-        val getImage = (playlist.uri ?: "Unknown Cover")
-        if (getImage != "Unknown Cover") {
+        val getImage = playlist.uri
+        Log.d("юри", getImage)
+        if (getImage.isNullOrEmpty()) {
+            binding.playlistCover.visibility = VISIBLE
             binding.playlistPlaceHolder.visibility = GONE
             Glide.with(this)
                 .load(getImage)
                 .centerCrop()
                 .transform(CenterCrop())
-                .placeholder(R.drawable.bfplaceholder)
                 .override(baseWidth, baseHeight)
                 .into(binding.playlistCover)
+        } else {
+            binding.playlistPlaceHolder.visibility = VISIBLE
+            binding.playlistCover.visibility = GONE
         }
     }
 

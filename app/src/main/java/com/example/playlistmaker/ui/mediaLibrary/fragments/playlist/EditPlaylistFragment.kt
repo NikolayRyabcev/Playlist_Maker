@@ -35,7 +35,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class EditPlaylist: Fragment() {
+class EditPlaylistFragment: Fragment() {
     private lateinit var editPlaylistBinding: EditPlaylistBinding
     private lateinit var bottomNavigator: BottomNavigationView
     private val viewModel: EditPlaylistViewModel by viewModel()

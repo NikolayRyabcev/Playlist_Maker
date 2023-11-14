@@ -106,7 +106,7 @@
     </fragment>
     <fragment
         android:id="@+id/editPlaylist"
-        android:name="com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.EditPlaylist"
+        android:name="com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.EditPlaylistFragment"
         android:label="EditPlaylist" >
         <action
             android:id="@+id/action_editPlaylist_to_playlistScreen"

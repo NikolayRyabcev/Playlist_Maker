@@ -10,7 +10,6 @@ class PlaylistScreenInteractorImpl(private val repository: PlaylistScreenReposit
     PlaylistScreenInteractor {
 
     override fun getTrackList(playlist: Playlist): Flow<List<Track>> {
-        Log.d("Треки интерактор", playlist.toString())
         return repository.getTrackList(playlist)
     }
 

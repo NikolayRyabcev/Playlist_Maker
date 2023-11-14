@@ -4,7 +4,6 @@ import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-
 interface PlaylistScreenInteractor {
     fun getTrackList (playlist: Playlist) : Flow<List<Track>>
     fun timeCounting (playlist: Playlist) : Flow<String>

@@ -46,7 +46,6 @@ class PlaylistScreenViewModel(
         viewModelScope.launch {
             playlistScreenInteractor.timeCounting(playlist).collect{
                 readyTime -> playlistTime.postValue(readyTime)
-                Log.d("Время vm", readyTime)
             }
         }
     }
