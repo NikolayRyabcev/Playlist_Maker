@@ -23,7 +23,8 @@
             android:src="@drawable/arrow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#1A1B22" />
+            app:tint="#1A1B22"
+            android:elevation="8dp"/>
 
         <!--Обертка плейлиста-->
         <ImageView
