@@ -171,11 +171,14 @@ class PlaylistScreen : Fragment() {
             trackInfo = "$trackInfo $i. $name  - ($duration) \n"
         }
 
-        val intentSend = Intent(Intent.ACTION_SEND)
-        intentSend.type = "text/plain"
-        intentSend.putExtra(Intent.EXTRA_TEXT, trackInfo)
-        val chooser = Intent.createChooser(intentSend, "Share Track Info")
-        requireActivity().startActivityForResult(chooser, 1)
+        val intentSend = Intent().apply {
+            action = Intent.ACTION_SEND
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, trackInfo)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            Intent.createChooser(this, null)
+        }
+        requireContext().startActivity(intentSend, null)
     }
 
     private fun onBackClick() {
@@ -212,9 +215,8 @@ class PlaylistScreen : Fragment() {
         val baseWidth = 312
         val baseHeight = 312
         val getImage = playlist.uri
-        Log.d("юри", getImage)
-        if (getImage.isNullOrEmpty()) {
-            binding.playlistCover.visibility = VISIBLE
+        if (getImage=="null") {
+            //binding.playlistCover.visibility = VISIBLE
             binding.playlistPlaceHolder.visibility = GONE
             Glide.with(this)
                 .load(getImage)
@@ -224,7 +226,7 @@ class PlaylistScreen : Fragment() {
                 .into(binding.playlistCover)
         } else {
             binding.playlistPlaceHolder.visibility = VISIBLE
-            binding.playlistCover.visibility = GONE
+            //binding.playlistCover.visibility = GONE
         }
     }
 
