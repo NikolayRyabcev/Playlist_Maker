@@ -60,10 +60,10 @@ class NewPlaylistFragment : Fragment() {
             createPlaylist()
             val textColor: Int
             val isDarkTheme = viewModel.isAppThemeDark()
-            if (isDarkTheme) {
-                textColor = Color.BLACK
+            textColor = if (isDarkTheme) {
+                Color.BLACK
             } else {
-                textColor = Color.WHITE
+                Color.WHITE
             }
             val dialogPlaylistName = newPlaylistBinding.playlistNameEditText.text
             val dialog = MaterialAlertDialogBuilder(requireContext())
