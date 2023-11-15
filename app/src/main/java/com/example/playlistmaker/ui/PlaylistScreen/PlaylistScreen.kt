@@ -215,7 +215,8 @@ class PlaylistScreen : Fragment() {
         val baseWidth = 312
         val baseHeight = 312
         val getImage = playlist.uri
-        if (getImage=="null") {
+        if (getImage != "null") {
+            Log.d("картинко", "есть")
             //binding.playlistCover.visibility = VISIBLE
             binding.playlistPlaceHolder.visibility = GONE
             Glide.with(this)
