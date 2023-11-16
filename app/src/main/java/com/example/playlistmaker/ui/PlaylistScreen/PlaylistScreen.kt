@@ -216,8 +216,6 @@ class PlaylistScreen : Fragment() {
         val baseHeight = 312
         val getImage = playlist.uri
         if (getImage != "null") {
-            Log.d("картинко", "есть")
-            //binding.playlistCover.visibility = VISIBLE
             binding.playlistPlaceHolder.visibility = GONE
             Glide.with(this)
                 .load(getImage)
@@ -227,7 +225,6 @@ class PlaylistScreen : Fragment() {
                 .into(binding.playlistCover)
         } else {
             binding.playlistPlaceHolder.visibility = VISIBLE
-            //binding.playlistCover.visibility = GONE
         }
     }
 
@@ -304,6 +301,4 @@ class PlaylistScreen : Fragment() {
             menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
-
-
 }

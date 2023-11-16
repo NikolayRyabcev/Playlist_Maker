@@ -54,8 +54,8 @@ class NewPlaylistFragment : Fragment() {
         bottomNavigator.visibility = GONE
 
         newPlaylistBinding.createButton.setOnClickListener {
-            if (newPlaylistBinding.playlistNameEditText.text.toString()
-                    .isEmpty()
+            val name = newPlaylistBinding.playlistNameEditText.text.toString()
+            if (name.trim().isEmpty()
             ) return@setOnClickListener
             createPlaylist()
             val textColor: Int

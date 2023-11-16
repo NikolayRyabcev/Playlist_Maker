@@ -156,7 +156,6 @@ class EditPlaylistFragment: Fragment() {
             ) return@setOnClickListener
             if (playlist != null) {
                 savePlaylist(playlist)
-                Log.d("Редактирование", "click")
             }
         }
 
@@ -197,23 +196,12 @@ class EditPlaylistFragment: Fragment() {
     }
 
     private fun savePlaylist(playlist: Playlist) {
-        val newPlaylist = Playlist(
-            0,
-            editPlaylistBinding.playlistNameEditText.text.toString(),
-            editPlaylistBinding.playlistDescriptEditText.text.toString(),
-            selectedUri.toString(),
-            playlist.trackArray,
-            playlist.arrayNumber
-        )
-        viewModel.savePlayList(
-            editPlaylistBinding.playlistNameEditText.text.toString(),
-            editPlaylistBinding.playlistDescriptEditText.text.toString(),
-            selectedUri.toString(),
-        )
-        viewModel.deletePlaylist(playlist)
-        val bundle = Bundle()
-        bundle.putParcelable("playlist", newPlaylist)
-        val navController = findNavController()
-        navController.navigate(R.id.action_editPlaylist_to_playlistScreen, bundle)
+            viewModel.savePlayList(
+                playlist,
+                editPlaylistBinding.playlistNameEditText.text.toString(),
+                editPlaylistBinding.playlistDescriptEditText.text.toString(),
+                selectedUri.toString(),
+            )
+        closer()
     }
 }

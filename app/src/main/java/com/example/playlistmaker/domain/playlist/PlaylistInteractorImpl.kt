@@ -24,4 +24,18 @@ class PlaylistInteractorImpl(val repository: PlaylistRepository) : PlaylistInter
     override fun update(track: Track, playlist: Playlist) {
         repository.update(track, playlist)
     }
+
+    override fun savePlaylist(
+        playlist: Playlist,
+        playlistName: String,
+        description: String?,
+        uri: String
+    ) {
+        repository.savePlaylist(
+            playlist,
+            playlistName,
+            description,
+            uri
+        )
+    }
 }

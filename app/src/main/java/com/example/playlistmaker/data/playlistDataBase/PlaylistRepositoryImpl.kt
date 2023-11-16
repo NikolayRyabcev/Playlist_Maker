@@ -52,4 +52,23 @@ class PlaylistRepositoryImpl(
         playistDataBase.playlistDao().updatePlaylist(converter.mapplaylistClassToEntity(playlist))
         trackInDataBase.trackListingDao().insertTrack(track)
     }
+
+    override fun savePlaylist(
+        playlist:Playlist,
+        playlistName: String,
+        description: String?,
+        uri: String
+    ) {
+        val newPlaylist = Playlist(
+            playlist.playlistId,
+            playlistName,
+            description,
+            uri,
+            playlist.trackArray,
+            playlist.arrayNumber
+        )
+        playistDataBase.playlistDao().updatePlaylist(
+            converter.mapplaylistClassToEntity(newPlaylist)
+        )
+    }
 }

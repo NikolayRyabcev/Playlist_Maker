@@ -22,8 +22,6 @@ class PlaylistConverter {
     }
 
     fun mapplaylistClassToEntity(item: Playlist): PlaylistEntity {
-        val tracklist = item.trackArray.toString()
-        Log.d("Запись в плейлист", "пишем в конвертер  $tracklist")
         return PlaylistEntity(
             item.playlistId,
             item.playlistName,
