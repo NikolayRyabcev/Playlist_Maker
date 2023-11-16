@@ -35,7 +35,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class EditPlaylistFragment: Fragment() {
+class EditPlaylistFragment : Fragment() {
     private lateinit var editPlaylistBinding: EditPlaylistBinding
     private lateinit var bottomNavigator: BottomNavigationView
     private val viewModel: EditPlaylistViewModel by viewModel()
@@ -63,7 +63,7 @@ class EditPlaylistFragment: Fragment() {
         val playlist = arguments?.getParcelable<Playlist>("playlist")
         val name = editPlaylistBinding.playlistNameEditText
         if (playlist != null) {
-            name.setText( playlist.playlistName)
+            name.setText(playlist.playlistName)
         }
         if (playlist != null) {
             editPlaylistBinding.playlistDescriptEditText.setText(playlist.description)
@@ -196,12 +196,22 @@ class EditPlaylistFragment: Fragment() {
     }
 
     private fun savePlaylist(playlist: Playlist) {
-            viewModel.savePlayList(
-                playlist,
-                editPlaylistBinding.playlistNameEditText.text.toString(),
-                editPlaylistBinding.playlistDescriptEditText.text.toString(),
-                selectedUri.toString(),
-            )
+        viewModel.savePlayList(
+            playlist,
+            editPlaylistBinding.playlistNameEditText.text.toString(),
+            editPlaylistBinding.playlistDescriptEditText.text.toString(),
+            selectedUri.toString(),
+        )
+        val newPlaylist = Playlist(
+            playlist.playlistId,
+            editPlaylistBinding.playlistNameEditText.text.toString(),
+            editPlaylistBinding.playlistDescriptEditText.text.toString(),
+            selectedUri.toString(),
+            playlist.trackArray,
+            playlist.arrayNumber
+        )
+        val bundle = Bundle()
+        bundle.putParcelable("playlist", newPlaylist)
         closer()
     }
 }

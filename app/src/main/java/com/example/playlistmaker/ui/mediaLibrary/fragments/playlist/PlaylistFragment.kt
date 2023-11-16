@@ -39,7 +39,6 @@ class PlaylistFragment : Fragment() {
             navController.navigate(R.id.newPlaylistFragment)
         }
 
-
         nullablePlaylistBinding.playlistList.visibility = VISIBLE
         return nullablePlaylistBinding.root
     }

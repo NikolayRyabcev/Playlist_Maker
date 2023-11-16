@@ -1,14 +1,11 @@
 package com.example.playlistmaker.ui.PlaylistScreen
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -70,9 +67,10 @@ class PlaylistScreen : Fragment() {
             drawPlaylist(playlist)
             drawCover(playlist)
             drawPlaylistDataBottomSheet(playlist)
-            drawMenuBottomSheet(playlist)
+            drawMenuBottomSheet()
         }
     }
+
 
     private fun clickAdapting(item: Track) {
         val bundle = Bundle()
@@ -270,7 +268,7 @@ class PlaylistScreen : Fragment() {
         }
     }
 
-    private fun drawMenuBottomSheet(playlist: Playlist) {
+    private fun drawMenuBottomSheet() {
         val menuBottomSheetContainer = binding.menuContainer
         val overlay = binding.overlay
         val menuBottomSheetBehavior = BottomSheetBehavior
