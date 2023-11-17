@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -62,6 +63,18 @@ class PlaylistScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //принятие и отрисовка данных трека
+        val playlist = arguments?.getParcelable<Playlist>("playlist")
+        if (playlist != null) {
+            drawPlaylist(playlist)
+            drawCover(playlist)
+            drawPlaylistDataBottomSheet(playlist)
+            drawMenuBottomSheet()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         val playlist = arguments?.getParcelable<Playlist>("playlist")
         if (playlist != null) {
             drawPlaylist(playlist)

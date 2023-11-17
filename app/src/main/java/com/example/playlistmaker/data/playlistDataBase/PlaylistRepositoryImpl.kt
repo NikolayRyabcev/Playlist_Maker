@@ -54,7 +54,7 @@ class PlaylistRepositoryImpl(
     }
 
     override fun savePlaylist(
-        playlist:Playlist,
+        playlist: Playlist,
         playlistName: String,
         description: String?,
         uri: String
@@ -70,5 +70,12 @@ class PlaylistRepositoryImpl(
         playistDataBase.playlistDao().updatePlaylist(
             converter.mapplaylistClassToEntity(newPlaylist)
         )
+    }
+
+    override fun findPlaylist(searchId: Int): Flow<Playlist> = flow {
+        val playlistConverted = playistDataBase.playlistDao().findPlaylist(searchId)
+        val playlist = converter.mapplaylistEntityToClass(playlistConverted)
+        emit(playlist)
+        return@flow
     }
 }

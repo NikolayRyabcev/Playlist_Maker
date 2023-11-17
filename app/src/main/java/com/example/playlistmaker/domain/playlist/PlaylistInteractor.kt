@@ -19,4 +19,5 @@ interface PlaylistInteractor {
         description: String?,
         uri: String
     )
+    fun findPlaylist(searchId:Int) : Playlist
 }

@@ -202,16 +202,6 @@ class EditPlaylistFragment : Fragment() {
             editPlaylistBinding.playlistDescriptEditText.text.toString(),
             selectedUri.toString(),
         )
-        val newPlaylist = Playlist(
-            playlist.playlistId,
-            editPlaylistBinding.playlistNameEditText.text.toString(),
-            editPlaylistBinding.playlistDescriptEditText.text.toString(),
-            selectedUri.toString(),
-            playlist.trackArray,
-            playlist.arrayNumber
-        )
-        val bundle = Bundle()
-        bundle.putParcelable("playlist", newPlaylist)
         closer()
     }
 }
