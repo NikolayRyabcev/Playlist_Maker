@@ -205,7 +205,7 @@ class PlaylistScreen : Fragment() {
             val text = when {
                 trackCounter.toInt() % 10 == 1 && trackCounter.toInt() % 100 != 11 -> " трек"
                 trackCounter.toInt() % 10 == 2 && trackCounter.toInt() % 100 != 12 -> " трека"
-                trackCounter.toInt() % 10 == 3 && trackCounter.toInt() % 100 != 13 -> " трека"
+                trackCounter.toInt() % 10 == 3 && trackCounter.toInt() % 100 != 13 ->  " трека"
                 trackCounter.toInt() % 10 == 4 && trackCounter.toInt() % 100 != 14 -> " трека"
                 else -> " треков"
             }
