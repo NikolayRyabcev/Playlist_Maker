@@ -192,12 +192,12 @@ class PlaylistScreen : Fragment() {
         }
     }
 
-    private fun drawPlaylist(playlist: Playlist) : Playlist {
+    private fun drawPlaylist(playlist: Playlist): Playlist {
         var checkedPlaylist = playlist
-        playlistScreenViewModel.updatedPlaylist.observe(viewLifecycleOwner) {
-                updatedPlaylist -> checkedPlaylist = updatedPlaylist
+        playlistScreenViewModel.updatedPlaylist.observe(viewLifecycleOwner) { updatedPlaylist ->
+            checkedPlaylist = updatedPlaylist
             binding.PlaylistName.text = checkedPlaylist.playlistName
-            binding.descriptionOfPlaylist.text = checkedPlaylist.description ?: ""
+            binding.descriptionOfPlaylist.text = checkedPlaylist.uri ?: ""
             playlistTime(checkedPlaylist)
 
             //сколько треков в плейлисте
@@ -216,10 +216,10 @@ class PlaylistScreen : Fragment() {
         return checkedPlaylist
     }
 
-    private fun drawCover(playlist: Playlist) {
+    private fun drawCover(item: Playlist) {
         val baseWidth = 312
         val baseHeight = 312
-        val getImage = playlist.uri
+        val getImage = item.uri
         if (getImage != "null") {
             binding.playlistPlaceHolder.visibility = GONE
             Glide.with(this)
