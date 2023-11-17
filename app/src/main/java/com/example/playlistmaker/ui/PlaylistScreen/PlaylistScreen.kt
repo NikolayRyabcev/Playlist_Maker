@@ -197,7 +197,7 @@ class PlaylistScreen : Fragment() {
         playlistScreenViewModel.updatedPlaylist.observe(viewLifecycleOwner) { updatedPlaylist ->
             checkedPlaylist = updatedPlaylist
             binding.PlaylistName.text = checkedPlaylist.playlistName
-            binding.descriptionOfPlaylist.text = checkedPlaylist.description ?: ""
+            binding.descriptionOfPlaylist.text = checkedPlaylist.description  ?: ""
             playlistTime(checkedPlaylist)
 
             //сколько треков в плейлисте
