@@ -67,8 +67,6 @@ class PlaylistScreen : Fragment() {
         val checkedPlaylist = playlist?.let { drawPlaylist(it) }
         if (checkedPlaylist != null) {
             drawPlaylist(checkedPlaylist)
-            drawCover(checkedPlaylist)
-            drawPlaylistDataBottomSheet(checkedPlaylist)
             drawMenuBottomSheet()
         }
     }
@@ -212,6 +210,8 @@ class PlaylistScreen : Fragment() {
                 else -> " треков"
             }
             binding.trackNumber.text = "$trackCounter $text"
+            drawCover(checkedPlaylist)
+            drawPlaylistDataBottomSheet(checkedPlaylist)
         }
         return checkedPlaylist
     }
