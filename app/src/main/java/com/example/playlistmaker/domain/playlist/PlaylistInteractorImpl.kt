@@ -38,4 +38,8 @@ class PlaylistInteractorImpl(val repository: PlaylistRepository) : PlaylistInter
             uri
         )
     }
+
+    override fun findPlaylist(searchId: Int): Flow<Playlist> {
+        return repository.findPlaylist(searchId)
+    }
 }

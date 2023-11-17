@@ -49,4 +49,13 @@ class PlaylistScreenViewModel(
             }
         }
     }
+
+    val updatedPlaylist :MutableLiveData<Playlist> = MutableLiveData()
+    fun getPlaylist (searchId: Int) {
+        viewModelScope.launch {
+            playlistInteractor.findPlaylist(searchId).collect{
+                updatedPlaylist.postValue(it)
+            }
+        }
+    }
 }

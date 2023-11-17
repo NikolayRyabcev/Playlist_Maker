@@ -58,28 +58,17 @@ class PlaylistScreen : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    @SuppressLint("CheckResult", "SetTextI18n")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //принятие и отрисовка данных трека
-        val playlist = arguments?.getParcelable<Playlist>("playlist")
-        if (playlist != null) {
-            drawPlaylist(playlist)
-            drawCover(playlist)
-            drawPlaylistDataBottomSheet(playlist)
-            drawMenuBottomSheet()
-        }
-    }
-
     override fun onResume() {
         super.onResume()
-
         val playlist = arguments?.getParcelable<Playlist>("playlist")
         if (playlist != null) {
-            drawPlaylist(playlist)
-            drawCover(playlist)
-            drawPlaylistDataBottomSheet(playlist)
+            playlist.playlistId?.let { playlistScreenViewModel.getPlaylist(it) }
+        }
+        val checkedPlaylist = playlist?.let { drawPlaylist(it) }
+        if (checkedPlaylist != null) {
+            drawPlaylist(checkedPlaylist)
+            drawCover(checkedPlaylist)
+            drawPlaylistDataBottomSheet(checkedPlaylist)
             drawMenuBottomSheet()
         }
     }
@@ -205,21 +194,26 @@ class PlaylistScreen : Fragment() {
         }
     }
 
-    private fun drawPlaylist(playlist: Playlist) {
-        binding.PlaylistName.text = playlist.playlistName
-        binding.descriptionOfPlaylist.text = playlist.description ?: ""
-        playlistTime(playlist)
+    private fun drawPlaylist(playlist: Playlist) : Playlist {
+        var checkedPlaylist = playlist
+        playlistScreenViewModel.updatedPlaylist.observe(viewLifecycleOwner) {
+                updatedPlaylist -> checkedPlaylist = updatedPlaylist
+            binding.PlaylistName.text = checkedPlaylist.playlistName
+            binding.descriptionOfPlaylist.text = checkedPlaylist.description ?: ""
+            playlistTime(checkedPlaylist)
 
-        //сколько треков в плейлисте
-        val trackCounter = (playlist.arrayNumber).toString()
-        val text = when {
-            trackCounter.toInt() % 10 == 1 && trackCounter.toInt() % 100 != 11 -> " трек"
-            trackCounter.toInt() % 10 == 2 && trackCounter.toInt() % 100 != 12 -> " трека"
-            trackCounter.toInt() % 10 == 3 && trackCounter.toInt() % 100 != 13 -> " трека"
-            trackCounter.toInt() % 10 == 4 && trackCounter.toInt() % 100 != 14 -> " трека"
-            else -> " треков"
+            //сколько треков в плейлисте
+            val trackCounter = (checkedPlaylist.arrayNumber).toString()
+            val text = when {
+                trackCounter.toInt() % 10 == 1 && trackCounter.toInt() % 100 != 11 -> " трек"
+                trackCounter.toInt() % 10 == 2 && trackCounter.toInt() % 100 != 12 -> " трека"
+                trackCounter.toInt() % 10 == 3 && trackCounter.toInt() % 100 != 13 -> " трека"
+                trackCounter.toInt() % 10 == 4 && trackCounter.toInt() % 100 != 14 -> " трека"
+                else -> " треков"
+            }
+            binding.trackNumber.text = "$trackCounter $text"
         }
-        binding.trackNumber.text = "$trackCounter $text"
+        return checkedPlaylist
     }
 
     private fun drawCover(playlist: Playlist) {

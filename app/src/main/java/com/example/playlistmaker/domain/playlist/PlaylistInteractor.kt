@@ -19,5 +19,5 @@ interface PlaylistInteractor {
         description: String?,
         uri: String
     )
-    fun findPlaylist(searchId:Int) : Playlist
+    fun findPlaylist(searchId:Int) : Flow<Playlist>
 }
