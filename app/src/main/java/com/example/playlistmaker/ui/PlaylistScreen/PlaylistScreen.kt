@@ -58,15 +58,15 @@ class PlaylistScreen : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val playlist = arguments?.getParcelable<Playlist>("playlist")
         if (playlist != null) {
             playlist.playlistId?.let { playlistScreenViewModel.getPlaylist(it) }
         }
         val checkedPlaylist = playlist?.let { drawPlaylist(it) }
         if (checkedPlaylist != null) {
-            drawPlaylist(checkedPlaylist)
+            drawCover(checkedPlaylist)
             drawMenuBottomSheet()
         }
     }
@@ -197,7 +197,7 @@ class PlaylistScreen : Fragment() {
         playlistScreenViewModel.updatedPlaylist.observe(viewLifecycleOwner) { updatedPlaylist ->
             checkedPlaylist = updatedPlaylist
             binding.PlaylistName.text = checkedPlaylist.playlistName
-            binding.descriptionOfPlaylist.text = checkedPlaylist.description  ?: ""
+            binding.descriptionOfPlaylist.text = checkedPlaylist.description ?: ""
             playlistTime(checkedPlaylist)
 
             //сколько треков в плейлисте
@@ -205,7 +205,7 @@ class PlaylistScreen : Fragment() {
             val text = when {
                 trackCounter.toInt() % 10 == 1 && trackCounter.toInt() % 100 != 11 -> " трек"
                 trackCounter.toInt() % 10 == 2 && trackCounter.toInt() % 100 != 12 -> " трека"
-                trackCounter.toInt() % 10 == 3 && trackCounter.toInt() % 100 != 13 ->  " трека"
+                trackCounter.toInt() % 10 == 3 && trackCounter.toInt() % 100 != 13 -> " трека"
                 trackCounter.toInt() % 10 == 4 && trackCounter.toInt() % 100 != 14 -> " трека"
                 else -> " треков"
             }
@@ -221,6 +221,7 @@ class PlaylistScreen : Fragment() {
         val baseHeight = 312
         val getImage = item.uri
         if (getImage != "null") {
+            Log.d("картинка", getImage)
             binding.playlistPlaceHolder.visibility = GONE
             Glide.with(this)
                 .load(getImage)

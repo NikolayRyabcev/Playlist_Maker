@@ -72,6 +72,7 @@ class EditPlaylistFragment : Fragment() {
         val baseWidth = 312
         val baseHeight = 312
         val getImage = (playlist?.uri ?: "Unknown Cover")
+
         if (getImage != "Unknown Cover") {
             editPlaylistBinding.playlistPlaceHolder.visibility = View.GONE
             Glide.with(this)
@@ -81,9 +82,8 @@ class EditPlaylistFragment : Fragment() {
                 .placeholder(R.drawable.bfplaceholder)
                 .override(baseWidth, baseHeight)
                 .into(editPlaylistBinding.playlistCover)
+            selectedUri= getImage.toUri()
         }
-
-
         val rxPermissions = RxPermissions(this)
 
         //отработка на кнопку назад
