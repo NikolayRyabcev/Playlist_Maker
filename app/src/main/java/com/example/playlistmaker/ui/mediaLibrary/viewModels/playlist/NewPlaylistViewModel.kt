@@ -11,13 +11,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(private val interactor: PlaylistInteractor, private val settingsInteractor: SettingsInteractor) : ViewModel() {
+class NewPlaylistViewModel(
+    private val interactor: PlaylistInteractor,
+    private val settingsInteractor: SettingsInteractor
+) : ViewModel() {
 
     fun addPlayList(
         playlistName: String,
         description: String?,
         uri: String
     ) {
+        //в базе данных onConflict = OnConflictStrategy.REPLACE; «Не следует множить сущее без необходимости» (У. Оккам):)))
         interactor.addPlaylist(playlistName, description, uri)
     }
 
@@ -25,7 +29,7 @@ class NewPlaylistViewModel(private val interactor: PlaylistInteractor, private v
         interactor.deletePlaylist(item)
     }
 
-    fun isAppThemeDark() :Boolean{
+    fun isAppThemeDark(): Boolean {
         return settingsInteractor.isAppThemeDark()
     }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "808420492616",
+    "project_id": "playlist-maker-70df8",
+    "storage_bucket": "playlist-maker-70df8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808420492616:android:2fbb90c8c186cf9f591f7d",
+        "android_client_info": {
+          "package_name": "com.example.playlistmaker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBQ1HkcwuNHnzHwMQLuFf9RWosYhgE0GQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,19 +1,17 @@
 package com.example.playlistmaker.ui.mediaLibrary.fragments.playlist
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.addCallback
@@ -23,24 +21,24 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.NewPlaylistBinding
-import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.NewPlaylistViewModel
+import com.example.playlistmaker.databinding.EditPlaylistBinding
+import com.example.playlistmaker.domain.models.Playlist
+import com.example.playlistmaker.ui.mediaLibrary.viewModels.playlist.EditPlaylistViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tbruyelle.rxpermissions3.RxPermissions
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class NewPlaylistFragment : Fragment() {
-    private lateinit var newPlaylistBinding: NewPlaylistBinding
+class EditPlaylistFragment : Fragment() {
+    private lateinit var editPlaylistBinding: EditPlaylistBinding
     private lateinit var bottomNavigator: BottomNavigationView
-    var isFileLoaded = false
-    private val viewModel: NewPlaylistViewModel by viewModel()
+    private val viewModel: EditPlaylistViewModel by viewModel()
     private var selectedUri: Uri? = null
 
     override fun onCreateView(
@@ -48,34 +46,13 @@ class NewPlaylistFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        newPlaylistBinding = NewPlaylistBinding.inflate(inflater, container, false)
+        editPlaylistBinding = EditPlaylistBinding.inflate(inflater, container, false)
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
-        bottomNavigator.visibility = GONE
+        bottomNavigator.visibility = View.GONE
 
-        newPlaylistBinding.createButton.setOnClickListener {
-            val name = newPlaylistBinding.playlistNameEditText.text.toString()
-            if (name.trim().isEmpty()
-            ) return@setOnClickListener
-            createPlaylist()
-            val textColor: Int
-            val isDarkTheme = viewModel.isAppThemeDark()
-            textColor = if (isDarkTheme) {
-                Color.BLACK
-            } else {
-                Color.WHITE
-            }
-            val dialogPlaylistName = newPlaylistBinding.playlistNameEditText.text
-            val dialog = MaterialAlertDialogBuilder(requireContext())
-                .setMessage("Плейлист $dialogPlaylistName создан")
-                .setNegativeButton("Оk") { dialog, which ->
-                    closer()
-                }
-                .show()
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textColor)
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(textColor)
-        }
-        return newPlaylistBinding.root
+
+        return editPlaylistBinding.root
     }
 
 
@@ -83,21 +60,44 @@ class NewPlaylistFragment : Fragment() {
     @SuppressLint("CheckResult")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val playlist = arguments?.getParcelable<Playlist>("playlist")
+        val name = editPlaylistBinding.playlistNameEditText
+        if (playlist != null) {
+            name.setText(playlist.playlistName)
+        }
+        if (playlist != null) {
+            editPlaylistBinding.playlistDescriptEditText.setText(playlist.description)
+        }
+        ///обложка
+        val baseWidth = 312
+        val baseHeight = 312
+        val getImage = (playlist?.uri ?: "Unknown Cover")
+
+        if (getImage != "Unknown Cover") {
+            editPlaylistBinding.playlistPlaceHolder.visibility = View.GONE
+            Glide.with(this)
+                .load(getImage)
+                .centerCrop()
+                .transform(CenterCrop())
+                .placeholder(R.drawable.bfplaceholder)
+                .override(baseWidth, baseHeight)
+                .into(editPlaylistBinding.playlistCover)
+            selectedUri= getImage.toUri()
+        }
         val rxPermissions = RxPermissions(this)
 
         //отработка на кнопку назад
-        newPlaylistBinding.playlistBackButtonArrow.setOnClickListener {
-            onBackClick()
+        editPlaylistBinding.playlistBackButtonArrow.setOnClickListener {
+            closer()
         }
 
         //устанавливаем цвет кнопки "Создать"
+        turnOnCreateButton()
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                turnOffCreateButton()
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                turnOnCreateButton()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -108,7 +108,7 @@ class NewPlaylistFragment : Fragment() {
                 }
             }
         }
-        newPlaylistBinding.playlistNameEditText.addTextChangedListener(simpleTextWatcher)
+        editPlaylistBinding.playlistNameEditText.addTextChangedListener(simpleTextWatcher)
 
         //переменеая с лямбдой, которая берет изображение и сохраняет его в ханилище
         val pickMedia =
@@ -123,7 +123,7 @@ class NewPlaylistFragment : Fragment() {
                         .placeholder(R.drawable.add_photo)
                         .transform(CenterCrop(), RoundedCorners(radius))
                         .override(width, height)
-                        .into(newPlaylistBinding.playlistCover)
+                        .into(editPlaylistBinding.playlistCover)
                     saveImageToPrivateStorage(uri)
 
                 } else {
@@ -132,7 +132,7 @@ class NewPlaylistFragment : Fragment() {
             }
 
         //обработка нажатия на область обложки
-        newPlaylistBinding.playlistCover.setOnClickListener {
+        editPlaylistBinding.playlistCover.setOnClickListener {
             rxPermissions.request(android.Manifest.permission.READ_MEDIA_IMAGES)
                 .subscribe { granted: Boolean ->
                     if (granted) {
@@ -148,9 +148,22 @@ class NewPlaylistFragment : Fragment() {
                 }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            onBackClick()
+            closer()
+        }
+        editPlaylistBinding.saveButton.setOnClickListener {
+            if (editPlaylistBinding.playlistNameEditText.text.toString()
+                    .isEmpty()
+            ) return@setOnClickListener
+            if (playlist != null) {
+                savePlaylist(playlist)
+            }
         }
 
+    }
+
+    private fun closer() {
+        val fragmentmanager = requireActivity().supportFragmentManager
+        fragmentmanager.popBackStack()
     }
 
     private fun saveImageToPrivateStorage(uri: Uri) {
@@ -166,62 +179,29 @@ class NewPlaylistFragment : Fragment() {
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-        newPlaylistBinding.playlistPlaceHolder.visibility = GONE
-        isFileLoaded = true
+        editPlaylistBinding.playlistPlaceHolder.visibility = View.GONE
         selectedUri = file.toUri()
     }
 
-    private fun onBackClick() {
-        val name = newPlaylistBinding.playlistNameEditText.text
-        val descr = newPlaylistBinding.playlistDescriptEditText.text
-
-        if (isFileLoaded || !(name.isNullOrEmpty()) || (!descr.isNullOrEmpty())) {
-            val textColor: Int
-            val isDarkTheme = viewModel.isAppThemeDark()
-            if (isDarkTheme) {
-                textColor = Color.BLACK
-            } else {
-                textColor = Color.WHITE
-            }
-            val dialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Завершить создание плейлиста?")
-                .setMessage("Все несохраненные данные будут потеряны")
-                .setNegativeButton("Отмена") { dialog, which ->
-                    return@setNegativeButton
-                }
-                .setPositiveButton("Завершить") { dialog, which ->
-                    closer()
-                }
-                .show()
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textColor)
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(textColor)
-        } else {
-            closer()
-        }
-    }
-
-    private fun closer() {
-        val fragmentmanager = requireActivity().supportFragmentManager
-        fragmentmanager.popBackStack()
-    }
-
     private fun turnOffCreateButton() {
-        newPlaylistBinding.createButton.backgroundTintList =
+        editPlaylistBinding.saveButton.backgroundTintList =
             (ContextCompat.getColorStateList(requireContext(), R.color.settingsIconGray))
-        newPlaylistBinding.createButton.isEnabled = false
+        editPlaylistBinding.saveButton.isEnabled = false
     }
 
     private fun turnOnCreateButton() {
-        newPlaylistBinding.createButton.backgroundTintList =
+        editPlaylistBinding.saveButton.backgroundTintList =
             (ContextCompat.getColorStateList(requireContext(), R.color.back1))
-        newPlaylistBinding.createButton.isEnabled = true
+        editPlaylistBinding.saveButton.isEnabled = true
     }
 
-    private fun createPlaylist() {
-        viewModel.addPlayList(
-            newPlaylistBinding.playlistNameEditText.text.toString(),
-            newPlaylistBinding.playlistDescriptEditText.text.toString(),
+    private fun savePlaylist(playlist: Playlist) {
+        viewModel.savePlayList(
+            playlist,
+            editPlaylistBinding.playlistNameEditText.text.toString(),
+            editPlaylistBinding.playlistDescriptEditText.text.toString(),
             selectedUri.toString(),
         )
+        closer()
     }
 }

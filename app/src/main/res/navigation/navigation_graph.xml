@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_mediaLibraryFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_playlistScreen"
+            app:destination="@id/playlistScreen" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -40,6 +43,9 @@
         <action
             android:id="@+id/action_playlistFragment_to_newPlaylistFragment"
             app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_playlistFragment_to_playlistScreen"
+            app:destination="@id/playlistScreen" />
     </fragment>
     <fragment
         android:id="@+id/playerFragment"
@@ -55,6 +61,9 @@
         <action
             android:id="@+id/action_playerFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_playerFragment_to_playlistScreen"
+            app:destination="@id/playlistScreen" />
     </fragment>
     <fragment
         android:id="@+id/newPlaylistFragment"
@@ -74,5 +83,33 @@
         <action
             android:id="@+id/action_favouritesFragment_to_playerFragment2"
             app:destination="@id/playerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistScreen"
+        android:name="com.example.playlistmaker.ui.PlaylistScreen.PlaylistScreen"
+        android:label="PlaylistScreen" >
+        <action
+            android:id="@+id/action_playlistScreen_to_playlistFragment"
+            app:destination="@id/playlistFragment" />
+        <action
+            android:id="@+id/action_playlistScreen_to_playerFragment"
+            app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_playlistScreen_to_mediaLibraryFragment"
+            app:destination="@id/mediaLibraryFragment" />
+        <action
+            android:id="@+id/action_playlistScreen_to_editPlaylist"
+            app:destination="@id/editPlaylist" />
+        <action
+            android:id="@+id/action_playlistScreen_to_mediaLibraryFragment2"
+            app:destination="@id/mediaLibraryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPlaylist"
+        android:name="com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.EditPlaylistFragment"
+        android:label="EditPlaylist" >
+        <action
+            android:id="@+id/action_editPlaylist_to_playlistScreen"
+            app:destination="@id/playlistScreen" />
     </fragment>
 </navigation>
