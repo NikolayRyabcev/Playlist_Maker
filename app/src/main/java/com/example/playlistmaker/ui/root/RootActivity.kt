@@ -1,34 +1,24 @@
 package com.example.playlistmaker.ui.root
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivityRootBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class RootActivity : ComponentActivity() {
+class RootActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityRootBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            Text("Hello world!")
-        }
-    }
-}
+        binding = ActivityRootBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-@Composable
-fun MyComposable() {
-    MaterialTheme {
-        Surface {
-            Text(text = "Hello, Compose!")
-        }
-    }
-}
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.rootContainer) as NavHostFragment
+        val navController = navHostFragment.navController
 
-@Preview
-@Composable
-fun PreviewMyComposable() {
-    MyComposable()
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.setupWithNavController(navController)
+    }
 }

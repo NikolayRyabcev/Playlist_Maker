@@ -9,20 +9,16 @@
     android:paddingStart="@dimen/settingsLeftMargin16dp"
     tools:context="com.example.playlistmaker.ui.settings.fragments.SettingsFragment">
 
-    <FrameLayout
+    <TextView
+        style="@style/SettingsText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/settingsTopString14dp">
-
-        <TextView
-            style="@style/SettingsText"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            android:fontFamily="@font/ys_display_medium"
-            android:text="@string/SettingsString"
-            android:textColor="?attr/colorOnSecondary"
-            android:textSize="@dimen/text1" />
-    </FrameLayout>
+        android:layout_marginTop="@dimen/settingsTopString14dp"
+        android:layout_marginBottom="0dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/SettingsString"
+        android:textColor="?attr/colorOnSecondary"
+        android:textSize="@dimen/text1" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -38,10 +34,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
+            android:layout_marginEnd="12dp"
+            android:checked="false"
             android:thumbTint="?attr/colorContainer"
             android:trackTint="?attr/colorAccent"
-            android:checked="false"
-            android:layout_marginEnd="12dp"
             tools:ignore="TouchTargetSizeCheck" />
 
     </FrameLayout>
