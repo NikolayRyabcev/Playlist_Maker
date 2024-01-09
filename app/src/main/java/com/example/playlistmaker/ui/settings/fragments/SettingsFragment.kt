@@ -4,24 +4,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -89,6 +96,9 @@ class SettingsFragment : Fragment() {
         ) {
             settingsText()
             darkTheme()
+            share()
+            support()
+            agreement()
         }
     }
 
@@ -132,7 +142,101 @@ class SettingsFragment : Fragment() {
             Switch(
                 checked = false,
                 onCheckedChange = {},
-                modifier = Modifier.align(Alignment.CenterEnd)
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 12.dp)
+            )
+        }
+    }
+
+    @Composable
+    fun share() {
+        val context = LocalContext.current
+        val textColor = ContextCompat.getColor(context, R.color.black)
+        val customFont = FontFamily(Font(resId = R.font.ys_display_regular))
+        Box(Modifier.padding(top = 20.dp)) {
+            Text(
+                text = stringResource(id = R.string.Share),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = dimensionResource(id = R.dimen.settingsTopString14dp),
+                        bottom = 0.dp,
+                    ),
+                color = Color(textColor),
+                fontFamily = customFont,
+                fontSize = 22.sp
+            )
+            Image(
+                painter = painterResource(id = R.drawable.share),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(16.dp, 18.dp)
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 16.dp)
+                    .clip(shape = CircleShape)
+                    .drawWithCache {
+                        val colorFilter = ColorFilter.tint(Color(textColor))
+                        onDrawBehind {
+                            drawImage(imageBitmap, colorFilter = colorFilter)
+                        }
+                    }
+            )
+        }
+    }
+
+    @Composable
+    fun support() {
+        val context = LocalContext.current
+        val textColor = ContextCompat.getColor(context, R.color.black)
+        val customFont = FontFamily(Font(resId = R.font.ys_display_regular))
+        Box(Modifier.padding(top = 20.dp)) {
+            Text(
+                text = stringResource(id = R.string.Support),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = dimensionResource(id = R.dimen.settingsTopString14dp),
+                        bottom = 0.dp,
+                    ),
+                color = Color(textColor),
+                fontFamily = customFont,
+                fontSize = 22.sp
+            )
+            Switch(
+                checked = false,
+                onCheckedChange = {},
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 12.dp)
+            )
+        }
+    }
+
+    @Composable
+    fun agreement() {
+        val context = LocalContext.current
+        val textColor = ContextCompat.getColor(context, R.color.black)
+        val customFont = FontFamily(Font(resId = R.font.ys_display_regular))
+        Box(Modifier.padding(top = 20.dp)) {
+            Text(
+                text = stringResource(id = R.string.Agreement),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = dimensionResource(id = R.dimen.settingsTopString14dp),
+                        bottom = 0.dp,
+                    ),
+                color = Color(textColor),
+                fontFamily = customFont,
+                fontSize = 22.sp
+            )
+            Switch(
+                checked = false,
+                onCheckedChange = {},
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 12.dp)
             )
         }
     }
