@@ -171,16 +171,10 @@ class SettingsFragment : Fragment() {
                 painter = painterResource(id = R.drawable.share),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(16.dp, 18.dp)
+                    .size(40.dp, 45.dp)
                     .align(Alignment.CenterEnd)
-                    .padding(end = 16.dp)
-                    .clip(shape = CircleShape)
-                    .drawWithCache {
-                        val colorFilter = ColorFilter.tint(Color(textColor))
-                        onDrawBehind {
-                            drawImage(imageBitmap, colorFilter = colorFilter)
-                        }
-                    }
+                    .padding(end = 12.dp),
+                colorFilter = ColorFilter.tint(Color.Gray)
             )
         }
     }
@@ -203,12 +197,14 @@ class SettingsFragment : Fragment() {
                 fontFamily = customFont,
                 fontSize = 22.sp
             )
-            Switch(
-                checked = false,
-                onCheckedChange = {},
+            Image(
+                painter = painterResource(id = R.drawable.girl),
+                contentDescription = null,
                 modifier = Modifier
+                    .size(40.dp, 45.dp)
                     .align(Alignment.CenterEnd)
-                    .padding(end = 12.dp)
+                    .padding(end = 12.dp),
+                colorFilter = ColorFilter.tint(Color.Gray)
             )
         }
     }
@@ -231,12 +227,14 @@ class SettingsFragment : Fragment() {
                 fontFamily = customFont,
                 fontSize = 22.sp
             )
-            Switch(
-                checked = false,
-                onCheckedChange = {},
+            Image(
+                painter = painterResource(id = R.drawable.go),
+                contentDescription = null,
                 modifier = Modifier
+                    .size(24.dp, 27.dp)
                     .align(Alignment.CenterEnd)
-                    .padding(end = 12.dp)
+                    .padding(end = 12.dp),
+                colorFilter = ColorFilter.tint(Color.Gray)
             )
         }
     }
