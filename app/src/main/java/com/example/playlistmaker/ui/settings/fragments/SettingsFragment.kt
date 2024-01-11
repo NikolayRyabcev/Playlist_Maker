@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,7 +53,7 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return ComposeView(requireContext()).apply{
+        return ComposeView(requireContext()).apply {
             setContent { settingsView() }
         }
     }
@@ -143,7 +144,7 @@ class SettingsFragment : Fragment() {
             )
             Switch(
                 checked = false,
-                onCheckedChange = {settingsViewModel.themeSwitch()},
+                onCheckedChange = { settingsViewModel.themeSwitch() },
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .padding(end = 12.dp)
@@ -175,7 +176,8 @@ class SettingsFragment : Fragment() {
                 modifier = Modifier
                     .size(40.dp, 45.dp)
                     .align(Alignment.CenterEnd)
-                    .padding(end = 12.dp),
+                    .padding(end = 12.dp)
+                    .clickable(onClick = { settingsViewModel.shareApp() }),
                 colorFilter = ColorFilter.tint(Color.Gray)
             )
         }
@@ -205,7 +207,8 @@ class SettingsFragment : Fragment() {
                 modifier = Modifier
                     .size(40.dp, 45.dp)
                     .align(Alignment.CenterEnd)
-                    .padding(end = 12.dp),
+                    .padding(end = 12.dp)
+                    .clickable(onClick = { settingsViewModel.writeSupport() }),
                 colorFilter = ColorFilter.tint(Color.Gray)
             )
         }
@@ -235,7 +238,8 @@ class SettingsFragment : Fragment() {
                 modifier = Modifier
                     .size(24.dp, 27.dp)
                     .align(Alignment.CenterEnd)
-                    .padding(end = 12.dp),
+                    .padding(end = 12.dp)
+                    .clickable(onClick = { settingsViewModel.readAgreement() }),
                 colorFilter = ColorFilter.tint(Color.Gray)
             )
         }
