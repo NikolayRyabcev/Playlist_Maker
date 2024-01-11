@@ -23,7 +23,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,37 +51,37 @@ class SettingsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
-        binding = FragmentSettingsBinding.inflate(layoutInflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        settingsViewModel.getOnBackLiveData()
-        // обновление темы
-        binding.simpleSwitch.isChecked = !(settingsViewModel.getThemeLiveData().value!!)
-        binding.simpleSwitch.setOnClickListener {
-            settingsViewModel.themeSwitch()
-            binding.simpleSwitch.isChecked = !(settingsViewModel.getThemeLiveData().value!!)
-        }
-
-        //Поделиться
-        binding.ShareAppText.setOnClickListener {
-            settingsViewModel.shareApp()
-        }
-
-        //Написать в поддержку
-        binding.WriteSupportText.setOnClickListener {
-            settingsViewModel.writeSupport()
-        }
-
-        //share
-        binding.AgreementText.setOnClickListener {
-            settingsViewModel.readAgreement()
+    ): View {
+        return ComposeView(requireContext()).apply{
+            setContent { settingsView() }
         }
     }
+
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        settingsViewModel.getOnBackLiveData()
+//        // обновление темы
+//        binding.simpleSwitch.isChecked = !(settingsViewModel.getThemeLiveData().value!!)
+//        binding.simpleSwitch.setOnClickListener {
+//            settingsViewModel.themeSwitch()
+//            binding.simpleSwitch.isChecked = !(settingsViewModel.getThemeLiveData().value!!)
+//        }
+//
+//        //Поделиться
+//        binding.ShareAppText.setOnClickListener {
+//            settingsViewModel.shareApp()
+//        }
+//
+//        //Написать в поддержку
+//        binding.WriteSupportText.setOnClickListener {
+//            settingsViewModel.writeSupport()
+//        }
+//
+//        //share
+//        binding.AgreementText.setOnClickListener {
+//            settingsViewModel.readAgreement()
+//        }
+//    }
 
     @Composable
     @Preview
@@ -141,7 +143,7 @@ class SettingsFragment : Fragment() {
             )
             Switch(
                 checked = false,
-                onCheckedChange = {},
+                onCheckedChange = {settingsViewModel.themeSwitch()},
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .padding(end = 12.dp)
