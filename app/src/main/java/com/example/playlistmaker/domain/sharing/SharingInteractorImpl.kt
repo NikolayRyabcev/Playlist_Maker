@@ -1,9 +1,11 @@
 package com.example.playlistmaker.domain.sharing
 
+import javax.inject.Inject
 
-class SharingInteractorImpl(
+
+class SharingInteractorImpl @Inject constructor(
     private var externalNavigator: ExternalNavigator,
-) :SharingInteractor {
+) : SharingInteractor {
 
     override fun shareApp() {
         externalNavigator.shareLink(getShareAppLink())
@@ -19,6 +21,6 @@ class SharingInteractorImpl(
 
     private fun getShareAppLink(): String {
 
-        return externalNavigator.getShareLink ()
+        return externalNavigator.getShareLink()
     }
 }

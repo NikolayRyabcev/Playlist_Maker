@@ -4,11 +4,11 @@ import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import com.example.playlistmaker.R
-import com.example.playlistmaker.App.App
 import com.example.playlistmaker.domain.sharing.ExternalNavigator
+import javax.inject.Inject
 
 
-class ExternalNavigatorImpl(private val application: Application): ExternalNavigator {
+class ExternalNavigatorImpl @Inject constructor (private val application: Application): ExternalNavigator {
 
     override fun shareLink(shareAppLink: String) {
 

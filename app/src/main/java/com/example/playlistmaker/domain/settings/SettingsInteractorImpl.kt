@@ -1,6 +1,8 @@
 package com.example.playlistmaker.domain.settings
 
-class SettingsInteractorImpl (private var themeSettings: ThemeSettings):SettingsInteractor {
+import javax.inject.Inject
+
+class SettingsInteractorImpl @Inject constructor (private var themeSettings: ThemeSettings):SettingsInteractor {
 
     var isDarkTheme = true
 

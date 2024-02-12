@@ -4,13 +4,13 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.util.Log
 import com.example.playlistmaker.App.App
 import com.example.playlistmaker.domain.settings.ThemeSettings
+import javax.inject.Inject
 
 const val THEME_KEY = "theme"
 
-class ThemeSettingsImpl(
+class ThemeSettingsImpl @Inject constructor(
     private val application: Application,
     private var themeSharedPrefs: SharedPreferences
 ) : ThemeSettings {
