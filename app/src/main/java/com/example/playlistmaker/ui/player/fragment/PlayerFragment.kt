@@ -1,8 +1,7 @@
-package com.example.playlistmaker.ui.player.fargment
+package com.example.playlistmaker.ui.player.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -20,14 +18,12 @@ import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -104,6 +100,7 @@ class PlayerFragment : Fragment() {
         playerViewModel.createPlayer(url)
 
         //переключение кнопок плэй/пауза
+
         binding.playButton.isEnabled = false
         binding.playButton.setOnClickListener {
             if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
