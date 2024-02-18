@@ -17,6 +17,21 @@ class PlaybackButtonView @JvmOverloads constructor(
     @StyleRes defStyleRes: Int = 0
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
+    init {
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.PlaybackButtonView,
+            defStyleAttr,
+            defStyleRes
+        ).apply {
+            try{
+                val image=getDrawable(R.styleable.PlaybackButtonView_imageResId)
+            } finally {
+                recycle()
+            }
+        }
+    }
+
     private val minSize = resources.getDimensionPixelSize(R.dimen.playbackButtonSize)
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
