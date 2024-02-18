@@ -106,13 +106,13 @@
 
             <!--Кнопка плэй/пауза-->
 
-            <com.example.playlistmaker.ui.player.playbackButtonView.PlaybackButtonView
+            <com.example.playlistmaker.ui.player.buttonView.PlaybackButtonView
                 android:id="@+id/playButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:background="@drawable/round_button2"
-                android:imageResId="@drawable/play"
+                app:imageResId="@drawable/play"
                 android:visibility="visible"
                 app:layout_constraintEnd_toStartOf="@+id/favourites"
                 app:layout_constraintHorizontal_bias="0.496"
@@ -333,7 +333,7 @@
                 app:layout_constraintTop_toBottomOf="@id/country" />
        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-    <!--
+
         <View
             android:id="@+id/overlay"
             android:layout_width="match_parent"
@@ -392,5 +392,5 @@
                 app:reverseLayout="true" />
 
 
-        </LinearLayout> -->
+        </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
