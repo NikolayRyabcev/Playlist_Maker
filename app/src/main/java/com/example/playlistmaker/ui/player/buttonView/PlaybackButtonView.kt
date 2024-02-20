@@ -19,11 +19,11 @@ class PlaybackButtonView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
     @StyleRes defStyleRes: Int = 0
-) : androidx.appcompat.widget.AppCompatImageView(context, attrs) {
+) : View(context, attrs, defStyleAttr, defStyleRes) {
 
     private val imageBitmap: Bitmap?
     private var imageRect = RectF(0f, 0f, 0f, 0f)
-    private var isPlaying=false
+    private var isPlaying = false
 
     init {
         context.theme.obtainStyledAttributes(
@@ -54,24 +54,34 @@ class PlaybackButtonView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (imageBitmap != null) {
-            canvas.drawBitmap(imageBitmap, null,imageRect,null)
+            canvas.drawBitmap(imageBitmap, null, imageRect, null)
         }
+    }
+
+    override fun performClick(): Boolean {
+        return super.performClick()
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event != null) {
             when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    return true
+                }
                 MotionEvent.ACTION_UP -> {
                     if (isPlaying) {
-                        imageBitmap= TODO()
-                        isPlaying=true
+                        imageBitmap = TODO()
+                        isPlaying = true
                     } else {
-                        imageBitmap= TODO()
-                        isPlaying=false
+                        imageBitmap = TODO()
+                        isPlaying = false
                     }
+                    return true
                 }
             }
         }
+        performClick()
         return super.onTouchEvent(event)
+
     }
 }
