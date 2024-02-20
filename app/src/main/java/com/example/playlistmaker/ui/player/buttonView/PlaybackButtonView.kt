@@ -7,9 +7,11 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.widget.ImageView
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.TypedArrayUtils.getResourceId
+
 import androidx.core.graphics.drawable.toBitmap
 import com.example.playlistmaker.R
 import kotlin.math.min
@@ -21,7 +23,7 @@ class PlaybackButtonView @JvmOverloads constructor(
     @StyleRes defStyleRes: Int = 0
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val imageBitmap: Bitmap?
+    private var imageBitmap: Bitmap?
     private var imageRect = RectF(0f, 0f, 0f, 0f)
     private var isPlaying = false
 
@@ -33,7 +35,7 @@ class PlaybackButtonView @JvmOverloads constructor(
             defStyleRes
         ).apply {
             try {
-                imageBitmap = getDrawable(R.styleable.PlaybackButtonView_imageResId)?.toBitmap()
+                imageBitmap = getDrawable(R.styleable.PlaybackButtonView_imagePlay)?.toBitmap()
             } finally {
                 recycle()
             }
@@ -54,7 +56,7 @@ class PlaybackButtonView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (imageBitmap != null) {
-            canvas.drawBitmap(imageBitmap, null, imageRect, null)
+            canvas.drawBitmap(imageBitmap!!, null, imageRect, null)
         }
     }
 
@@ -70,12 +72,10 @@ class PlaybackButtonView @JvmOverloads constructor(
                 }
                 MotionEvent.ACTION_UP -> {
                     if (isPlaying) {
-                        imageBitmap = TODO()
-                        isPlaying = true
+                        imageBitmap = getDrawable(R.styleable.PlaybackButtonView_imagePlay)?.toBitmap()
                     } else {
-                        imageBitmap = TODO()
-                        isPlaying = false
-                    }
+                        imageBitmap = getDrawable(R.styleable.PlaybackButtonView_imagePlay)?.toBitmap()
+                     }
                     return true
                 }
             }
