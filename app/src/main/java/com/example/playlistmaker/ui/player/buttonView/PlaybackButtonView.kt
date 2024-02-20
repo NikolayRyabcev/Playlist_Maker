@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageView
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import androidx.core.graphics.drawable.toBitmap
@@ -17,7 +18,7 @@ class PlaybackButtonView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
     @StyleRes defStyleRes: Int = 0
-) : View(context, attrs, defStyleAttr, defStyleRes) {
+) : androidx.appcompat.widget.AppCompatImageView(context, attrs) {
 
     private val imageBitmap: Bitmap?
     private var imageRect = RectF(0f, 0f, 0f, 0f)
