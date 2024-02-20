@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.AttrRes
@@ -22,6 +23,7 @@ class PlaybackButtonView @JvmOverloads constructor(
 
     private val imageBitmap: Bitmap?
     private var imageRect = RectF(0f, 0f, 0f, 0f)
+    private var isPlaying=false
 
     init {
         context.theme.obtainStyledAttributes(
@@ -54,5 +56,22 @@ class PlaybackButtonView @JvmOverloads constructor(
         if (imageBitmap != null) {
             canvas.drawBitmap(imageBitmap, null,imageRect,null)
         }
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event != null) {
+            when (event.action) {
+                MotionEvent.ACTION_UP -> {
+                    if (isPlaying) {
+                        imageBitmap= TODO()
+                        isPlaying=true
+                    } else {
+                        imageBitmap= TODO()
+                        isPlaying=false
+                    }
+                }
+            }
+        }
+        return super.onTouchEvent(event)
     }
 }
