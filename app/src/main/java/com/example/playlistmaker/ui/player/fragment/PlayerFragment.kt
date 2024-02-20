@@ -204,23 +204,23 @@ class PlayerFragment : Fragment() {
         playerViewModel.stateLiveData.observe(requireActivity()) {
             when (playerViewModel.stateLiveData.value) {
                 PlayerState.STATE_DEFAULT -> {
-                    binding.playButton.setImageResource(R.drawable.play)
+                    binding.playButton.setImageResId(R.drawable.play)
                     binding.playButton.alpha = 0.5f
                 }
 
                 PlayerState.STATE_PREPARED -> {
                     preparePlayer()
-                    binding.playButton.setImageResource(R.drawable.play)
+                    binding.playButton.setImageResId(R.drawable.play)
                     binding.playButton.alpha = 1f
                 }
 
                 PlayerState.STATE_PAUSED -> {
-                    binding.playButton.setImageResource(R.drawable.play)
+                    binding.playButton.setImageResId(R.drawable.play)
                     binding.playButton.alpha = 1f
                 }
 
                 PlayerState.STATE_PLAYING -> {
-                    binding.playButton.setImageResource(R.drawable.pause)
+                    binding.playButton.setImageResId(R.drawable.pause)
                 }
 
                 else -> {
