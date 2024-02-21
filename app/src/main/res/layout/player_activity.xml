@@ -114,7 +114,7 @@
                 android:background="@drawable/round_button2"
                 app:imagePlay="@drawable/play"
                 app:imagePause="@drawable/pause"
-                app:imageState="true"
+                app:imageState="false"
                 android:visibility="visible"
                 app:layout_constraintEnd_toStartOf="@+id/favourites"
                 app:layout_constraintHorizontal_bias="0.496"
