@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.AttrRes
@@ -74,13 +73,7 @@ class PlaybackButtonView @JvmOverloads constructor(
                     return true
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (!isPlaying) {
-                        imageToShow  = imagePlay
-                        isPlaying=true
-                    } else {
-                       imageToShow  = imagePause
-                        isPlaying=false
-                     }
+                    playerSwitch()
                     return true
                 }
             }
@@ -89,11 +82,13 @@ class PlaybackButtonView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-    fun play(){
-        isPlaying=true
-    }
-
-    fun pause(){
-        isPlaying=false
+    fun playerSwitch(){
+        if (!isPlaying) {
+            imageToShow  = imagePlay
+            isPlaying=true
+        } else {
+            imageToShow  = imagePause
+            isPlaying=false
+        }
     }
 }

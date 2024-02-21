@@ -204,23 +204,20 @@ class PlayerFragment : Fragment() {
         playerViewModel.stateLiveData.observe(requireActivity()) {
             when (playerViewModel.stateLiveData.value) {
                 PlayerState.STATE_DEFAULT -> {
-                    binding.playButton.pause()
                     binding.playButton.alpha = 0.5f
                 }
 
                 PlayerState.STATE_PREPARED -> {
                     preparePlayer()
-                    binding.playButton.pause()
+                    //binding.playButton.playerSwitch()
                     binding.playButton.alpha = 1f
                 }
 
                 PlayerState.STATE_PAUSED -> {
-                    binding.playButton.play()
                     binding.playButton.alpha = 1f
                 }
 
                 PlayerState.STATE_PLAYING -> {
-                    binding.playButton.pause()
                 }
 
                 else -> {
