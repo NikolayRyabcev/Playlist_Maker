@@ -103,7 +103,11 @@ class PlayerFragment : Fragment() {
 
         binding.playButton.isEnabled = false
         binding.playButton.setOnClickListener {
-            if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
+            if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) {
+                playerViewModel.pause()
+            } else {
+                playerViewModel.play()
+            }
         }
 
         updateButton()

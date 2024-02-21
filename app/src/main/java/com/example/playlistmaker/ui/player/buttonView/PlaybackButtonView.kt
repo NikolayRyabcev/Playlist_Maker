@@ -74,6 +74,7 @@ class PlaybackButtonView @JvmOverloads constructor(
                 }
                 MotionEvent.ACTION_UP -> {
                     playerSwitch()
+                    invalidate()
                     return true
                 }
             }
