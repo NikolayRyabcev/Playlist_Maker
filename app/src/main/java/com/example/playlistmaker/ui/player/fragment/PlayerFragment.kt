@@ -210,7 +210,7 @@ class PlayerFragment : Fragment() {
 
                 PlayerState.STATE_PREPARED -> {
                     preparePlayer()
-                    binding.playButton.play()
+                    binding.playButton.pause()
                     binding.playButton.alpha = 1f
                 }
 

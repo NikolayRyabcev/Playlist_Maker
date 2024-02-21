@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.AttrRes
@@ -36,7 +37,7 @@ class PlaybackButtonView @JvmOverloads constructor(
         ).apply {
             try {
                 imagePlay = getDrawable(R.styleable.PlaybackButtonView_imagePlay)?.toBitmap()
-                imagePause = getDrawable(R.styleable.PlaybackButtonView_imagePlay)?.toBitmap()
+                imagePause = getDrawable(R.styleable.PlaybackButtonView_imagePause)?.toBitmap()
                 imageToShow  = imagePlay
             } finally {
                 recycle()
