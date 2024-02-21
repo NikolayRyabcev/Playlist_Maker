@@ -26,6 +26,7 @@ class PlaybackButtonView @JvmOverloads constructor(
 
     private var imageRect = RectF(0f, 0f, 0f, 0f)
     private var isPlaying = false
+    var onTouchListener: (() -> Unit)? = null
 
     init {
         context.theme.obtainStyledAttributes(
@@ -84,6 +85,7 @@ class PlaybackButtonView @JvmOverloads constructor(
     }
 
     fun playerSwitch(){
+        onTouchListener?.invoke()
         if (!isPlaying) {
             imageToShow  = imagePlay
             isPlaying=true

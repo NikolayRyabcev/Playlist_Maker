@@ -57,21 +57,16 @@ class PlayerFragment : Fragment() {
             bottomNavigator.visibility = VISIBLE
             closer()
         }
-
-
         return binding.root
     }
 
     override fun onStop() {
         bottomNavigator.visibility = VISIBLE
         super.onStop()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         //принятие и отрисовка данных трека
         val track = arguments?.getParcelable<Track>("track")
         binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
@@ -100,15 +95,7 @@ class PlayerFragment : Fragment() {
         playerViewModel.createPlayer(url)
 
         //переключение кнопок плэй/пауза
-
         binding.playButton.isEnabled = false
-        binding.playButton.setOnClickListener {
-            if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) {
-                playerViewModel.pause()
-            } else {
-                playerViewModel.play()
-            }
-        }
 
         updateButton()
 
@@ -213,7 +200,7 @@ class PlayerFragment : Fragment() {
 
                 PlayerState.STATE_PREPARED -> {
                     preparePlayer()
-                    //binding.playButton.playerSwitch()
+                    binding.playButton.onTouchListener= { togglePlayer() }
                     binding.playButton.alpha = 1f
                 }
 
@@ -266,6 +253,14 @@ class PlayerFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    fun togglePlayer() {
+        if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) {
+            playerViewModel.pause()
+        } else {
+            playerViewModel.play()
         }
     }
 
