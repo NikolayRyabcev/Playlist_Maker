@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.player.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
@@ -35,7 +36,7 @@ class PlayerFragment : Fragment() {
     private var url = ""
     private lateinit var bottomNavigator: BottomNavigationView
     private lateinit var playlistAdapter: PlaylistBottomSheetAdapter
-
+    private var isFirstPlay = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -199,20 +200,22 @@ class PlayerFragment : Fragment() {
                 }
 
                 PlayerState.STATE_PREPARED -> {
-                    preparePlayer()
-                    binding.playButton.onTouchListener= { togglePlayer() }
-                    binding.playButton.alpha = 1f
+                    if (isFirstPlay) {
+                        preparePlayer()
+                        binding.playButton.onTouchListener = { togglePlayer() }
+                        isFirstPlay = false
+                        binding.playButton.alpha = 1f
+                    } else {
+                        binding.playButton.onStopped()
+                        Log.d("КастомВью", "STATE_PREPARED")
+                    }
                 }
 
                 PlayerState.STATE_PAUSED -> {
                     binding.playButton.alpha = 1f
                 }
 
-                PlayerState.STATE_PLAYING -> {
-                }
-
-                else -> {
-                }
+                else -> {}
             }
         }
     }
@@ -256,7 +259,7 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    fun togglePlayer() {
+    private fun togglePlayer() {
         if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) {
             playerViewModel.pause()
         } else {

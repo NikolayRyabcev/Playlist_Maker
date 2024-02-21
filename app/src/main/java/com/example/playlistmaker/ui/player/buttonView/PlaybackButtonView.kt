@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.AttrRes
@@ -38,7 +39,7 @@ class PlaybackButtonView @JvmOverloads constructor(
             try {
                 imagePlay = getDrawable(R.styleable.PlaybackButtonView_imagePlay)?.toBitmap()
                 imagePause = getDrawable(R.styleable.PlaybackButtonView_imagePause)?.toBitmap()
-                imageToShow  = imagePlay
+                imageToShow = imagePlay
             } finally {
                 recycle()
             }
@@ -73,6 +74,7 @@ class PlaybackButtonView @JvmOverloads constructor(
                 MotionEvent.ACTION_DOWN -> {
                     return true
                 }
+
                 MotionEvent.ACTION_UP -> {
                     playerSwitch()
                     invalidate()
@@ -84,14 +86,21 @@ class PlaybackButtonView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-    fun playerSwitch(){
+    private fun playerSwitch() {
         onTouchListener?.invoke()
         if (!isPlaying) {
-            imageToShow  = imagePlay
-            isPlaying=true
+            imageToShow = imagePause
+            isPlaying = true
         } else {
-            imageToShow  = imagePause
-            isPlaying=false
+            imageToShow = imagePlay
+            isPlaying = false
         }
+    }
+
+    fun onStopped() {
+        imageToShow = imagePlay
+        isPlaying = false
+        invalidate()
+        Log.d("КастомВью", "onStopped")
     }
 }
