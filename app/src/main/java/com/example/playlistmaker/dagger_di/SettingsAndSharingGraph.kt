@@ -6,6 +6,7 @@ import com.example.playlistmaker.domain.settings.SettingsInteractorImpl
 import com.example.playlistmaker.domain.sharing.SharingInteractorImpl
 import dagger.Component
 
+
 @Component
 interface SettingsAndSharingGraph {
 
@@ -17,3 +18,5 @@ interface SettingsAndSharingGraph {
 
     fun sharingInteractor(): SharingInteractorImpl
 }
+
+
