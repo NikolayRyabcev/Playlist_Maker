@@ -2,27 +2,28 @@ package com.example.playlistmaker.App
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.dagger_di.component.DaggerApplicationComponent
 import com.example.playlistmaker.di.PlayerModule.playerModule
 import com.example.playlistmaker.di.SearchModule.dataModule
 import com.example.playlistmaker.di.SearchModule.searchInteractorModule
 import com.example.playlistmaker.di.SearchModule.searchViewModelModule
 import com.example.playlistmaker.di.SearchModule.trackRepositoryModule
-import com.example.playlistmaker.di.SettingsSharingModule.settingsSharingModule
 import com.example.playlistmaker.di.favouritesDataModule
 import com.example.playlistmaker.di.mediaLibraryModule.mediaLibraryModule
 import com.example.playlistmaker.di.playlistModule
 import com.example.playlistmaker.di.playlistScreenModule
-import com.example.playlistmaker.domain.settings.SettingsInteractor
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.component.KoinComponent
-import org.koin.core.context.startKoin
 
 
-class App : Application(), KoinComponent {
+class App : Application() {
     private var appTheme: Boolean = false
+
+    val applicationComponent by lazy {
+        DaggerApplicationComponent.factory().create(this, Application())
+    }
 
     override fun onCreate() {
         super.onCreate()
+
         startKoin {
             androidContext(this@App)
             modules(
@@ -31,7 +32,7 @@ class App : Application(), KoinComponent {
                 searchViewModelModule,
                 trackRepositoryModule,
                 playerModule,
-                settingsSharingModule,
+
                 mediaLibraryModule,
                 favouritesDataModule,
                 playlistModule,
@@ -39,11 +40,7 @@ class App : Application(), KoinComponent {
             )
 
         }
-        val settingsInteractor = getKoin().get<SettingsInteractor>()
         instance = this
-
-        //выставляем тему экрана
-        appTheme = settingsInteractor.isAppThemeDark()
         makeTheme(appTheme)
     }
 

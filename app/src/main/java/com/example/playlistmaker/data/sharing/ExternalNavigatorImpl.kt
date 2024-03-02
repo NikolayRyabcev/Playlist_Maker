@@ -8,7 +8,9 @@ import com.example.playlistmaker.domain.sharing.ExternalNavigator
 import javax.inject.Inject
 
 
-class ExternalNavigatorImpl @Inject constructor (private val application: Application): ExternalNavigator {
+class ExternalNavigatorImpl @Inject constructor (
+    private val application: Application
+): ExternalNavigator {
 
     override fun shareLink(shareAppLink: String) {
 
