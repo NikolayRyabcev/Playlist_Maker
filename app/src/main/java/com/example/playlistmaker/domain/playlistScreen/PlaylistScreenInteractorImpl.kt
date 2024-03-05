@@ -5,8 +5,9 @@ import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class PlaylistScreenInteractorImpl(private val repository: PlaylistScreenRepository) :
+class PlaylistScreenInteractorImpl @Inject constructor(private val repository: PlaylistScreenRepository) :
     PlaylistScreenInteractor {
 
     override fun getTrackList(playlist: Playlist): Flow<List<Track>> {
@@ -14,6 +15,6 @@ class PlaylistScreenInteractorImpl(private val repository: PlaylistScreenReposit
     }
 
     override fun timeCounting(playlist: Playlist): Flow<String> {
-        return  repository.timeCounting(playlist)
+        return repository.timeCounting(playlist)
     }
 }

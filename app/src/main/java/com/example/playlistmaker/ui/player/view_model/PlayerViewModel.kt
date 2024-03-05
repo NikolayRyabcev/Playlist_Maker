@@ -15,8 +15,9 @@ import com.example.playlistmaker.domain.playlist.PlaylistInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PlayerViewModel(
+class PlayerViewModel @Inject constructor(
     private val playerInteractor: PlayerInteractor,
     private val favouritesInteractor: FavouritesInteractor,
     private val playlistInteractor: PlaylistInteractor
@@ -107,7 +108,7 @@ class PlayerViewModel(
         return playlistList
     }
 
-    val playlistAdding =MutableLiveData(false)
+    val playlistAdding = MutableLiveData(false)
 
     fun addTrack(track: Track, playlist: Playlist) {
         if (playlist.trackArray.contains(track.trackId)) {

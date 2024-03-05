@@ -8,8 +8,9 @@ import com.example.playlistmaker.domain.favourites.FavouritesRepository
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class FavouritesRepositoryImpl(
+class FavouritesRepositoryImpl @Inject constructor(
     private val dataBase: AppDataBase,
     private val converter: TrackConverter
 ) : FavouritesRepository {

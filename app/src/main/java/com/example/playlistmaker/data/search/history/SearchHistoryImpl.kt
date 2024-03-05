@@ -7,10 +7,11 @@ import com.example.playlistmaker.domain.search.history.SearchHistory
 import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import javax.inject.Inject
 
 const val SEARCH_SHARED_PREFS_KEY = "123"
 
-class SearchHistoryImpl(
+class SearchHistoryImpl @Inject constructor(
     private val savedHistory: SharedPreferences,
     private val gson: Gson,
     private val favourites: FavouritesRepository

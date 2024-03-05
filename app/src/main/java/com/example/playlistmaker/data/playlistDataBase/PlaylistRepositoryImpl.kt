@@ -10,8 +10,9 @@ import com.example.playlistmaker.domain.playlist.PlaylistRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PlaylistRepositoryImpl(
+class PlaylistRepositoryImpl @Inject constructor(
     private val playistDataBase: PlayistDataBase,
     private val converter: PlaylistConverter,
     private val trackInDataBase: TrackInPlaylistDataBase

@@ -8,8 +8,9 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.playlistScreen.PlaylistScreenRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class PlaylistScreenRepositoryImpl(
+class PlaylistScreenRepositoryImpl @Inject constructor(
     private val base: TrackInPlaylistDataBase
 ) : PlaylistScreenRepository {
 

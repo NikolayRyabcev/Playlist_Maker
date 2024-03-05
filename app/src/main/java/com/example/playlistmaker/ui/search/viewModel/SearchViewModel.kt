@@ -12,8 +12,9 @@ import com.example.playlistmaker.domain.search.searching_and_responding.SearchIn
 import com.example.playlistmaker.ui.search.viewModel.screen_states.SearchScreenState
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SearchViewModel(
+class SearchViewModel @Inject constructor(
     private var searchInteractor: SearchInteractor,
     private var searchHistoryInteractor: SearchHistoryInteractor,
 ) : ViewModel() {

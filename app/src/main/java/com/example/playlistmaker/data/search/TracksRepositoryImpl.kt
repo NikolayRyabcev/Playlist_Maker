@@ -4,7 +4,6 @@ import com.example.playlistmaker.data.search.requestAndResponse.NetworkClient
 import com.example.playlistmaker.data.search.requestAndResponse.Resource
 import com.example.playlistmaker.data.search.requestAndResponse.TrackResponse
 import com.example.playlistmaker.data.search.requestAndResponse.TrackSearchRequest
-import com.example.playlistmaker.domain.favourites.FavouritesRepository
 import com.example.playlistmaker.domain.search.ErrorType
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.domain.models.Track
@@ -12,8 +11,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient, private val favourites :FavouritesRepository) : TracksRepository {
+class TracksRepositoryImpl @Inject constructor(
+    private val networkClient: NetworkClient
+) : TracksRepository {
     override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
 
         try {
@@ -24,7 +26,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient, private val
                 }
 
                 200 -> {
-                    emit(Resource.Success((response as TrackResponse).results.map {track ->
+                    emit(Resource.Success((response as TrackResponse).results.map { track ->
                         Track(
                             track.trackName,
                             addTime = System.currentTimeMillis(),

@@ -3,8 +3,10 @@ package com.example.playlistmaker.domain.playlist
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class PlaylistInteractorImpl(val repository: PlaylistRepository) : PlaylistInteractor {
+class PlaylistInteractorImpl @Inject constructor(val repository: PlaylistRepository) :
+    PlaylistInteractor {
     override fun addPlaylist(
         playlistName: String,
         description: String?,

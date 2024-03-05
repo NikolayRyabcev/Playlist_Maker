@@ -1,8 +1,12 @@
 package com.example.playlistmaker.domain.player
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInteractor {
+class PlayerInteractorImpl @Inject constructor
+    (
+    private val repository: PlayerRepository
+) : PlayerInteractor {
 
     override fun play() {
         repository.play()

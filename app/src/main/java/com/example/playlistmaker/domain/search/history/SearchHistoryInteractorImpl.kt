@@ -1,9 +1,10 @@
 package com.example.playlistmaker.domain.search.history
 
 import com.example.playlistmaker.domain.models.Track
+import javax.inject.Inject
 
 
-class SearchHistoryInteractorImpl(private val historyRepository: SearchHistory) :
+class SearchHistoryInteractorImpl @Inject constructor(private val historyRepository: SearchHistory) :
     SearchHistoryInteractor {
 
     override fun addItem(item: Track) {

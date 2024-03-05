@@ -11,49 +11,50 @@ import com.example.playlistmaker.domain.playlistScreen.PlaylistScreenInteractor
 import com.example.playlistmaker.domain.settings.SettingsInteractor
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PlaylistScreenViewModel(
+class PlaylistScreenViewModel @Inject constructor(
     private val playlistScreenInteractor: PlaylistScreenInteractor,
     private val settingsInteractor: SettingsInteractor,
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
-    fun isAppThemeDark() :Boolean{
+    fun isAppThemeDark(): Boolean {
         return settingsInteractor.isAppThemeDark()
     }
 
-    val trackList : MutableLiveData <List <Track>> = MutableLiveData(emptyList())
-    fun getTrackList (playlist: Playlist) {
+    val trackList: MutableLiveData<List<Track>> = MutableLiveData(emptyList())
+    fun getTrackList(playlist: Playlist) {
         viewModelScope.launch {
-            playlistScreenInteractor.getTrackList(playlist).collect {
-                list -> trackList.postValue(list)
+            playlistScreenInteractor.getTrackList(playlist).collect { list ->
+                trackList.postValue(list)
             }
         }
     }
 
-    fun deletePlaylist (playlist: Playlist) {
+    fun deletePlaylist(playlist: Playlist) {
         playlistInteractor.deletePlaylist(playlist)
     }
 
-    fun deleteTrack (track: Track, playlist: Playlist){
+    fun deleteTrack(track: Track, playlist: Playlist) {
         playlist.trackArray = playlist.trackArray.filter { it != track.trackId }
         playlist.arrayNumber = playlist.arrayNumber?.minus(1)
         playlistInteractor.update(track, playlist)
     }
 
-    val playlistTime: MutableLiveData <String> = MutableLiveData("")
-    fun getPlaylistTime (playlist: Playlist) {
+    val playlistTime: MutableLiveData<String> = MutableLiveData("")
+    fun getPlaylistTime(playlist: Playlist) {
         viewModelScope.launch {
-            playlistScreenInteractor.timeCounting(playlist).collect{
-                readyTime -> playlistTime.postValue(readyTime)
+            playlistScreenInteractor.timeCounting(playlist).collect { readyTime ->
+                playlistTime.postValue(readyTime)
             }
         }
     }
 
-    val updatedPlaylist :MutableLiveData<Playlist> = MutableLiveData()
-    fun getPlaylist (searchId: Int) {
+    val updatedPlaylist: MutableLiveData<Playlist> = MutableLiveData()
+    fun getPlaylist(searchId: Int) {
         viewModelScope.launch {
-            playlistInteractor.findPlaylist(searchId).collect{
+            playlistInteractor.findPlaylist(searchId).collect {
                 updatedPlaylist.postValue(it)
             }
         }
