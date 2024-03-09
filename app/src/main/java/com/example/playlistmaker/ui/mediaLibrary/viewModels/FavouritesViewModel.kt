@@ -10,8 +10,9 @@ import com.example.playlistmaker.domain.search.history.SearchHistoryInteractor
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavouritesViewModel(
+class FavouritesViewModel @Inject constructor(
     private val favouritesInteractor: FavouritesInteractor,
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
