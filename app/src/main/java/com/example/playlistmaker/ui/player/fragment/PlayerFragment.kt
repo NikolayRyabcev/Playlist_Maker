@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.player.fragment
 
 import android.annotation.SuppressLint
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,12 +9,14 @@ import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.App.ConnectionBroadcastReciever
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.models.Playlist
@@ -37,6 +40,7 @@ class PlayerFragment : Fragment() {
     private lateinit var bottomNavigator: BottomNavigationView
     private lateinit var playlistAdapter: PlaylistBottomSheetAdapter
     private var isFirstPlay = true
+    private val connectionBroadcastReciever = ConnectionBroadcastReciever()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +62,13 @@ class PlayerFragment : Fragment() {
             bottomNavigator.visibility = VISIBLE
             closer()
         }
+
+        ContextCompat.registerReceiver(
+            requireContext(),
+            connectionBroadcastReciever,
+            IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
         return binding.root
     }
 
