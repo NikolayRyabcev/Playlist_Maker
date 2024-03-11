@@ -14,7 +14,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavouritesBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.mediaLibrary.viewModels.FavouritesViewModel
-import com.example.playlistmaker.ui.player.fargment.PlayerFragment
 import com.example.playlistmaker.ui.search.adapter.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

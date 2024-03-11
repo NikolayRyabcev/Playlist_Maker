@@ -28,7 +28,7 @@
         </activity>
 
         <activity
-            android:name=".ui.player.fargment.PlayerFragment"
+            android:name=".ui.player.fragment.PlayerFragment"
             android:exported="false"
             android:theme="@style/Theme.PlaylistMaker" />
     </application>

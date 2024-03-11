@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.player.fargment.PlayerFragment">
+    tools:context=".ui.player.fragment.PlayerFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -106,13 +106,15 @@
 
             <!--Кнопка плэй/пауза-->
 
-            <ImageButton
+            <com.example.playlistmaker.ui.player.buttonView.PlaybackButtonView
                 android:id="@+id/playButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_marginTop="40dp"
                 android:background="@drawable/round_button2"
-                android:src="@drawable/play"
+                app:imagePlay="@drawable/play"
+                app:imagePause="@drawable/pause"
+                app:imageState="false"
                 android:visibility="visible"
                 app:layout_constraintEnd_toStartOf="@+id/favourites"
                 app:layout_constraintHorizontal_bias="0.496"
@@ -334,63 +336,63 @@
        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <View
-        android:id="@+id/overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#99000000"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:id="@+id/standardBottomSheet"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/rounded_corners_16"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        app:behavior_hideable="true"
-        app:behavior_peekHeight="505dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="4dp"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="?attr/color" />
-
-        <TextView
+        <View
+            android:id="@+id/overlay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Добавить в плейлист"
-            android:textColor="?attr/colorOnSecondary"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:background="#99000000"
+            android:visibility="gone" />
 
-        <Button
-            android:id="@+id/newPlaylistButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="28dp"
-            android:backgroundTint="?attr/colorError"
-            android:fontFamily="@font/ys_display_medium"
-            android:text="@string/newPlaylist"
-            android:textAllCaps="false"
-            android:textColor="?attr/colorSecondary"
-            android:textSize="14sp"
-            app:cornerRadius="54dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/playlistRecycler"
+        <LinearLayout
+            android:id="@+id/standardBottomSheet"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:reverseLayout="true" />
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_corners_16"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="505dp"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="?attr/color" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Добавить в плейлист"
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/newPlaylistButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="28dp"
+                android:backgroundTint="?attr/colorError"
+                android:fontFamily="@font/ys_display_medium"
+                android:text="@string/newPlaylist"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorSecondary"
+                android:textSize="14sp"
+                app:cornerRadius="54dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/playlistRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:reverseLayout="true" />
 
 
-    </LinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>

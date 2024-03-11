@@ -1,6 +1,7 @@
-package com.example.playlistmaker.ui.player.fargment
+package com.example.playlistmaker.ui.player.fragment
 
 import android.annotation.SuppressLint
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,26 +9,25 @@ import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.App.ConnectionBroadcastReciever
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -39,7 +39,8 @@ class PlayerFragment : Fragment() {
     private var url = ""
     private lateinit var bottomNavigator: BottomNavigationView
     private lateinit var playlistAdapter: PlaylistBottomSheetAdapter
-
+    private var isFirstPlay = true
+    private val connectionBroadcastReciever = ConnectionBroadcastReciever()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,20 +63,22 @@ class PlayerFragment : Fragment() {
             closer()
         }
 
-
+        ContextCompat.registerReceiver(
+            requireContext(),
+            connectionBroadcastReciever,
+            IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
         return binding.root
     }
 
     override fun onStop() {
         bottomNavigator.visibility = VISIBLE
         super.onStop()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         //принятие и отрисовка данных трека
         val track = arguments?.getParcelable<Track>("track")
         binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
@@ -105,9 +108,6 @@ class PlayerFragment : Fragment() {
 
         //переключение кнопок плэй/пауза
         binding.playButton.isEnabled = false
-        binding.playButton.setOnClickListener {
-            if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
-        }
 
         updateButton()
 
@@ -207,27 +207,26 @@ class PlayerFragment : Fragment() {
         playerViewModel.stateLiveData.observe(requireActivity()) {
             when (playerViewModel.stateLiveData.value) {
                 PlayerState.STATE_DEFAULT -> {
-                    binding.playButton.setImageResource(R.drawable.play)
                     binding.playButton.alpha = 0.5f
                 }
 
                 PlayerState.STATE_PREPARED -> {
-                    preparePlayer()
-                    binding.playButton.setImageResource(R.drawable.play)
-                    binding.playButton.alpha = 1f
+                    if (isFirstPlay) {
+                        preparePlayer()
+                        binding.playButton.onTouchListener = { togglePlayer() }
+                        isFirstPlay = false
+                        binding.playButton.alpha = 1f
+                    } else {
+                        binding.playButton.onStopped()
+                        Log.d("КастомВью", "STATE_PREPARED")
+                    }
                 }
 
                 PlayerState.STATE_PAUSED -> {
-                    binding.playButton.setImageResource(R.drawable.play)
                     binding.playButton.alpha = 1f
                 }
 
-                PlayerState.STATE_PLAYING -> {
-                    binding.playButton.setImageResource(R.drawable.pause)
-                }
-
-                else -> {
-                }
+                else -> {}
             }
         }
     }
@@ -268,6 +267,14 @@ class PlayerFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun togglePlayer() {
+        if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) {
+            playerViewModel.pause()
+        } else {
+            playerViewModel.play()
         }
     }
 

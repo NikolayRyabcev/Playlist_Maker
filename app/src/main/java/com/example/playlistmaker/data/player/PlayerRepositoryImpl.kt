@@ -2,22 +2,13 @@ package com.example.playlistmaker.data.player
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import com.example.playlistmaker.domain.player.PlayerRepository
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerStateListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl : PlayerRepository {
@@ -63,7 +54,6 @@ class PlayerRepositoryImpl : PlayerRepository {
         playerState = PlayerState.STATE_DEFAULT
         listener.onStateChanged(playerState)
         playerJob?.cancel()
-        Log.d("playerStateRep", playerState.toString())
     }
 
     @SuppressLint("SimpleDateFormat")

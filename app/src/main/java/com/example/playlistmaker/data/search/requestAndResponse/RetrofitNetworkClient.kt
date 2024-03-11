@@ -13,11 +13,14 @@ class RetrofitNetworkClient(
     private val context: Context
 ) :
     NetworkClient {
+    private val internetConnectionIndicator = InternetConnectionIndicator(context)
+    @RequiresApi(Build.VERSION_CODES.M)
+    private val isEnabled = internetConnectionIndicator.isConnected()
 
     @RequiresApi(Build.VERSION_CODES.M)
     override suspend fun doRequest(dto: Any): Response {
         try {
-            if (!isConnected()) {
+            if (!isEnabled) {
                 return Response().apply { resultCode = -1 }
             }
             return withContext(Dispatchers.IO) {
@@ -36,7 +39,7 @@ class RetrofitNetworkClient(
             return Response().apply { resultCode = 500 }
         }
     }
-
+/*
     @RequiresApi(Build.VERSION_CODES.M)
     private fun isConnected(): Boolean {
         val connectivityManager = context.getSystemService(
@@ -52,5 +55,5 @@ class RetrofitNetworkClient(
             }
         }
         return false
-    }
+    }*/
 }

@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.player.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -50,7 +49,7 @@ class PlayerViewModel(
         playerInteractor.destroy()
     }
 
-    fun getTimeFromInteractor(): LiveData<String> {
+    private fun getTimeFromInteractor(): LiveData<String> {
         timeJob = viewModelScope.launch {
             while (true) {
                 delay(PLAYER_BUTTON_PRESSING_DELAY)
@@ -64,7 +63,6 @@ class PlayerViewModel(
 
     fun putTime(): LiveData<String> {
         getTimeFromInteractor()
-        // timer.value?.let { Log.d("время в модели", it) }
         return timer
     }
 
@@ -113,14 +111,12 @@ class PlayerViewModel(
         if (playlist.trackArray.contains(track.trackId)) {
             playlistAdding.postValue(true)
 
-            Log.d("Запись в плейлист", "ВМ уже есть ")
         } else {
             playlistAdding.postValue(false)
-            playlist.trackArray = (playlist.trackArray + track.trackId)!!
+            playlist.trackArray = (playlist.trackArray + track.trackId)
             playlist.arrayNumber = (playlist.arrayNumber?.plus(1))!!
             playlistInteractor.update(track, playlist)
 
-            Log.d("Запись в плейлист", "ВМ Добавлено ")
         }
     }
 
