@@ -1,8 +1,11 @@
 package com.example.playlistmaker.ui.player.fragment
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +25,7 @@ import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerState
+import com.example.playlistmaker.services.MusicService
 import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -41,6 +45,7 @@ class PlayerFragment : Fragment() {
     private lateinit var playlistAdapter: PlaylistBottomSheetAdapter
     private var isFirstPlay = true
     private val connectionBroadcastReciever = ConnectionBroadcastReciever()
+    private var musicService: MusicService? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,6 +74,8 @@ class PlayerFragment : Fragment() {
             IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"),
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
+
+        bindMusicService()
         return binding.root
     }
 
@@ -191,6 +198,7 @@ class PlayerFragment : Fragment() {
     }
 
     override fun onDestroy() {
+        unBindMusicService()
         super.onDestroy()
         playerViewModel.destroy()
     }
@@ -276,6 +284,25 @@ class PlayerFragment : Fragment() {
         } else {
             playerViewModel.play()
         }
+    }
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicService.MusicServiceBinder
+            musicService = binder.getMusicService()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            musicService = null
+        }
+    }
+
+    private fun bindMusicService() {
+
+    }
+
+    private fun unBindMusicService() {
+
     }
 
     companion object {
