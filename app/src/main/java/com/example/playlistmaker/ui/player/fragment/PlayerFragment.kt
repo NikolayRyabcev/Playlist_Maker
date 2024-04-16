@@ -2,6 +2,8 @@ package com.example.playlistmaker.ui.player.fragment
 
 import android.annotation.SuppressLint
 import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.Bundle
@@ -234,7 +236,10 @@ class PlayerFragment : Fragment() {
                     binding.playButton.alpha = 1f
                 }
 
-                else -> {}
+                PlayerState.STATE_PLAYING -> {}
+
+                null -> {}
+
             }
         }
     }
@@ -298,11 +303,14 @@ class PlayerFragment : Fragment() {
     }
 
     private fun bindMusicService() {
-
+        val intent = Intent(requireContext(), MusicService::class.java).apply {
+            putExtra("song_url", url)
+        }
+        requireActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     private fun unBindMusicService() {
-
+        requireActivity().unbindService(serviceConnection)
     }
 
     companion object {
