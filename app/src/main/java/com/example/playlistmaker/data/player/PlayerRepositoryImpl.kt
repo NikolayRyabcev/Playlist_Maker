@@ -13,25 +13,25 @@ import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
-    private var playerState = PlayerState.STATE_DEFAULT
+    private var playerState = PlayerState.Default
 
     private lateinit var listener: PlayerStateListener
     private var playerJob: Job? = null
 
     override fun preparePlayer(url: String, listener: PlayerStateListener) {
         this.listener = listener
-        if (playerState != PlayerState.STATE_DEFAULT) return
+        if (playerState != PlayerState.Default) return
         listener.onStateChanged(playerState)
         mediaPlayer.reset()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playerState = PlayerState.STATE_PREPARED
+            playerState = PlayerState.Prepared
             listener.onStateChanged(playerState)
             playerJob?.start()
         }
         mediaPlayer.setOnCompletionListener {
-            playerState = PlayerState.STATE_PREPARED
+            playerState = PlayerState.Prepared
             listener.onStateChanged(playerState)
         }
     }
@@ -39,19 +39,19 @@ class PlayerRepositoryImpl : PlayerRepository {
 
     override fun play() {
         mediaPlayer.start()
-        playerState = PlayerState.STATE_PLAYING
+        playerState = PlayerState.Playing
         listener.onStateChanged(playerState)
     }
 
     override fun pause() {
         mediaPlayer.pause()
-        playerState = PlayerState.STATE_PAUSED
+        playerState = PlayerState.Paused
         listener.onStateChanged(playerState)
     }
 
     override fun destroy() {
         mediaPlayer.release()
-        playerState = PlayerState.STATE_DEFAULT
+        playerState = PlayerState.Default
         listener.onStateChanged(playerState)
         playerJob?.cancel()
     }
@@ -60,7 +60,7 @@ class PlayerRepositoryImpl : PlayerRepository {
     override fun timing(): Flow<String> = flow {
         val sdf = SimpleDateFormat("mm:ss")
         while (true) {
-            if ((playerState == PlayerState.STATE_PLAYING) or (playerState == PlayerState.STATE_PAUSED)) {
+            if ((playerState == PlayerState.Playing) or (playerState == PlayerState.Paused)) {
                 emit(sdf.format(mediaPlayer.currentPosition))
             } else {
                 emit("00:00")

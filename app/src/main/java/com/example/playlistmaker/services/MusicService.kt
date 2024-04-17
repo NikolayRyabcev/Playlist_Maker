@@ -96,6 +96,6 @@ class MusicService : Service() {
     // Binder
 
     inner class MusicServiceBinder : Binder() {
-        fun getService(): MusicService = this@MusicService
+        fun getMusicService(): MusicService = this@MusicService
     }
 }

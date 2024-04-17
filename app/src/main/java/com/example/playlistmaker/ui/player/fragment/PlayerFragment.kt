@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player.fragment
 
+import MusicService
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
@@ -27,7 +28,6 @@ import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.services.MusicService
 import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -216,11 +216,11 @@ class PlayerFragment : Fragment() {
 
         playerViewModel.stateLiveData.observe(requireActivity()) {
             when (playerViewModel.stateLiveData.value) {
-                PlayerState.STATE_DEFAULT -> {
+                is PlayerState.Default -> {
                     binding.playButton.alpha = 0.5f
                 }
 
-                PlayerState.STATE_PREPARED -> {
+                is PlayerState.Prepared -> {
                     if (isFirstPlay) {
                         preparePlayer()
                         binding.playButton.onTouchListener = { togglePlayer() }
@@ -232,14 +232,11 @@ class PlayerFragment : Fragment() {
                     }
                 }
 
-                PlayerState.STATE_PAUSED -> {
+                is PlayerState.Paused -> {
                     binding.playButton.alpha = 1f
                 }
-
-                PlayerState.STATE_PLAYING -> {}
-
+                is PlayerState.Playing -> {}
                 null -> {}
-
             }
         }
     }
@@ -284,7 +281,7 @@ class PlayerFragment : Fragment() {
     }
 
     private fun togglePlayer() {
-        if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) {
+        if (playerViewModel.stateLiveData.value == PlayerState.Playing()) {
             playerViewModel.pause()
         } else {
             playerViewModel.play()
