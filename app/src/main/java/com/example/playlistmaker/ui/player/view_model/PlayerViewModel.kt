@@ -11,6 +11,7 @@ import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.player.PlayerStateListener
 import com.example.playlistmaker.domain.playlist.PlaylistInteractor
+import com.example.playlistmaker.services.AudioPlayerControl
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -27,6 +28,40 @@ class PlayerViewModel(
     private var favouritesJob: Job? = null
     val playlistList: MutableLiveData<List<Playlist>> = MutableLiveData<List<Playlist>>(emptyList())
 
+
+    private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
+    fun observePlayerState(): LiveData<PlayerState> = playerState
+
+    private var audioPlayerControl: AudioPlayerControl? = null
+
+    fun setAudioPlayerControl(audioPlayerControl: AudioPlayerControl) {
+        this.audioPlayerControl = audioPlayerControl
+
+        viewModelScope.launch {
+            audioPlayerControl.getPlayerState().collect {
+                playerState.postValue(it)
+            }
+        }
+    }
+
+    fun onPlayerButtonClicked() {
+        if (playerState.value is PlayerState.Playing) {
+            audioPlayerControl?.pausePlayer()
+        } else {
+            audioPlayerControl?.startPlayer()
+        }
+    }
+
+    fun removeAudioPlayerControl() {
+        audioPlayerControl = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        audioPlayerControl = null
+    }
+
+
     fun createPlayer(url: String) {
         playerInteractor.createPlayer(url, listener = object : PlayerStateListener {
             override fun onStateChanged(state: PlayerState) {
@@ -34,6 +69,7 @@ class PlayerViewModel(
             }
         })
     }
+
 
     fun play() {
         playerInteractor.play()
@@ -105,7 +141,7 @@ class PlayerViewModel(
         return playlistList
     }
 
-    val playlistAdding =MutableLiveData(false)
+    val playlistAdding = MutableLiveData(false)
 
     fun addTrack(track: Track, playlist: Playlist) {
         if (playlist.trackArray.contains(track.trackId)) {

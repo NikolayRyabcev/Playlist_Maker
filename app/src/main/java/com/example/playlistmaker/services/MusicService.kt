@@ -4,17 +4,19 @@ import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
 import com.example.playlistmaker.domain.player.PlayerState
+import com.example.playlistmaker.services.AudioPlayerControl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class MusicService : Service() {
+class MusicService : Service(), AudioPlayerControl {
 
     private val binder = MusicServiceBinder()
 
@@ -67,16 +69,20 @@ class MusicService : Service() {
         }
     }
 
-    fun startPlayer() {
+    override fun startPlayer() {
         mediaPlayer?.start()
         _playerState.value = PlayerState.Playing(getCurrentPlayerPosition())
         startTimer()
     }
 
-    fun pausePlayer() {
+    override fun pausePlayer() {
         mediaPlayer?.pause()
         timerJob?.cancel()
         _playerState.value = PlayerState.Paused(getCurrentPlayerPosition())
+    }
+
+    override fun getPlayerState(): StateFlow<PlayerState> {
+        return playerState
     }
 
     private fun releasePlayer() {
@@ -90,7 +96,8 @@ class MusicService : Service() {
     }
 
     private fun getCurrentPlayerPosition(): String {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer?.currentPosition) ?: "00:00"
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer?.currentPosition)
+            ?: "00:00"
     }
 
     // Binder
