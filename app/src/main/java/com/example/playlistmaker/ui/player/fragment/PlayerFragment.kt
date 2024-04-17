@@ -9,7 +9,6 @@ import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
@@ -119,10 +118,7 @@ class PlayerFragment : Fragment() {
         binding.playButton.isEnabled = false
 
         updateButton()
-
-        playerViewModel.putTime().observe(requireActivity()) { timer ->
-            binding.trackTimer.text = timer
-        }
+        updateTimer()
 
         //нажатие на кнопку нравится
         binding.favourites.setOnClickListener {
@@ -234,6 +230,7 @@ class PlayerFragment : Fragment() {
                 is PlayerState.Paused -> {
                     binding.playButton.alpha = 1f
                 }
+
                 is PlayerState.Playing -> {}
                 null -> {}
             }
@@ -280,21 +277,23 @@ class PlayerFragment : Fragment() {
     }
 
     private fun togglePlayer() {
-        if (playerViewModel.stateLiveData.value == PlayerState.Playing()) {
-            playerViewModel.pause()
+        if (state is PlayerState.Prepared || state is PlayerState.Paused) {
+            musicService?.startPlayer()
         } else {
-            playerViewModel.play()
+            musicService?.pausePlayer()
         }
     }
 
+    private var state: PlayerState = PlayerState.Default()
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicService.MusicServiceBinder
             musicService = binder.getMusicService()
             lifecycleScope.launch {
                 musicService?.playerState?.collect {
-                    playerState = it
+                    state = it
                     updateButton()
+                    updateTimer()
                 }
             }
         }
@@ -313,6 +312,13 @@ class PlayerFragment : Fragment() {
 
     private fun unBindMusicService() {
         requireActivity().unbindService(serviceConnection)
+    }
+
+    private fun updateTimer() {
+        playerViewModel.putTime().observe(requireActivity())
+        { timer ->
+            binding.trackTimer.text = timer
+        }
     }
 
     companion object {
