@@ -7,9 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favourites.FavouritesInteractor
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.domain.player.PlayerStateListener
 import com.example.playlistmaker.domain.playlist.PlaylistInteractor
 import com.example.playlistmaker.services.AudioPlayerControl
 import kotlinx.coroutines.Job
@@ -17,19 +15,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
-    private val playerInteractor: PlayerInteractor,
     private val favouritesInteractor: FavouritesInteractor,
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
-    private var timeJob: Job? = null
-    var stateLiveData = MutableLiveData<PlayerState>()
-    private var timer = MutableLiveData("00:00")
+
     private val favouritesIndicator = MutableLiveData<Boolean>()
     private var favouritesJob: Job? = null
     val playlistList: MutableLiveData<List<Playlist>> = MutableLiveData<List<Playlist>>(emptyList())
 
 
-    private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
+    val playerState = MutableLiveData<PlayerState>(PlayerState.Default)
     fun observePlayerState(): LiveData<PlayerState> = playerState
 
     private var audioPlayerControl: AudioPlayerControl? = null
@@ -62,7 +57,7 @@ class PlayerViewModel(
     }
 
 
-    fun createPlayer(url: String) {
+    /*fun createPlayer(url: String) {
         playerInteractor.createPlayer(url, listener = object : PlayerStateListener {
             override fun onStateChanged(state: PlayerState) {
                 stateLiveData.postValue(state)
@@ -95,12 +90,12 @@ class PlayerViewModel(
             }
         }
         return timer
-    }
+    }*/
 
-    fun putTime(): LiveData<String> {
+ /*   fun putTime(): LiveData<String> {
         getTimeFromInteractor()
         return timer
-    }
+    }*/
 
     fun onFavoriteClicked(track: Track) {
         if (track.isFavorite) {

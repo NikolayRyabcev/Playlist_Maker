@@ -20,8 +20,8 @@ class MusicService : Service(), AudioPlayerControl {
 
     private val binder = MusicServiceBinder()
 
-    private val _playerState = MutableStateFlow<PlayerState>(PlayerState.Default())
-    val playerState = _playerState.asStateFlow()
+    private val _playerState = MutableStateFlow<PlayerState>(PlayerState.Default)
+    val playerServiceState = _playerState.asStateFlow()
 
     private var songUrl = ""
 
@@ -62,10 +62,10 @@ class MusicService : Service(), AudioPlayerControl {
         mediaPlayer?.setDataSource(songUrl)
         mediaPlayer?.prepareAsync()
         mediaPlayer?.setOnPreparedListener {
-            _playerState.value = PlayerState.Prepared()
+            _playerState.value = PlayerState.Prepared
         }
         mediaPlayer?.setOnCompletionListener {
-            _playerState.value = PlayerState.Prepared()
+            _playerState.value = PlayerState.Prepared
         }
     }
 
@@ -82,20 +82,20 @@ class MusicService : Service(), AudioPlayerControl {
     }
 
     override fun getPlayerState(): StateFlow<PlayerState> {
-        return playerState
+        return playerServiceState
     }
 
     private fun releasePlayer() {
         timerJob?.cancel()
         mediaPlayer?.stop()
-        _playerState.value = PlayerState.Default()
+        _playerState.value = PlayerState.Default
         mediaPlayer?.setOnPreparedListener(null)
         mediaPlayer?.setOnCompletionListener(null)
         mediaPlayer?.release()
         mediaPlayer = null
     }
 
-    private fun getCurrentPlayerPosition(): String {
+    fun getCurrentPlayerPosition(): String {
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer?.currentPosition)
             ?: "00:00"
     }

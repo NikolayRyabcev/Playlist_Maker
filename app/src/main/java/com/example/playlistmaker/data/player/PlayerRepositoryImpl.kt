@@ -13,25 +13,25 @@ import java.text.SimpleDateFormat
 
 class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
-    private var playerState :PlayerState = PlayerState.Default()
+    private var playerState :PlayerState = PlayerState.Default
 
     private lateinit var listener: PlayerStateListener
     private var playerJob: Job? = null
 
     override fun preparePlayer(url: String, listener: PlayerStateListener) {
         this.listener = listener
-        if (playerState != PlayerState.Default()) return
+        if (playerState != PlayerState.Default) return
         listener.onStateChanged(playerState)
         mediaPlayer.reset()
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playerState = PlayerState.Prepared()
+            playerState = PlayerState.Prepared
             listener.onStateChanged(playerState)
             playerJob?.start()
         }
         mediaPlayer.setOnCompletionListener {
-            playerState = PlayerState.Prepared()
+            playerState = PlayerState.Prepared
             listener.onStateChanged(playerState)
         }
     }
@@ -51,7 +51,7 @@ class PlayerRepositoryImpl : PlayerRepository {
 
     override fun destroy() {
         mediaPlayer.release()
-        playerState = PlayerState.Default()
+        playerState = PlayerState.Default
         listener.onStateChanged(playerState)
         playerJob?.cancel()
     }

@@ -1,8 +1,8 @@
 package com.example.playlistmaker.domain.player
 
 sealed class PlayerState {
-    class Default : PlayerState()
-    class Prepared : PlayerState()
+    object Default : PlayerState()
+    object Prepared : PlayerState()
     class Playing (val position:String) : PlayerState()
     class Paused (val position:String): PlayerState()
 }

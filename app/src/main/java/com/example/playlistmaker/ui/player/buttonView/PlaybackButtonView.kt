@@ -101,6 +101,5 @@ class PlaybackButtonView @JvmOverloads constructor(
         imageToShow = imagePlay
         isPlaying = false
         invalidate()
-        Log.d("КастомВью", "onStopped")
     }
 }
