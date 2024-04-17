@@ -29,6 +29,7 @@ class PlaybackButtonView @JvmOverloads constructor(
     private var isPlaying = false
     var onTouchListener: (() -> Unit)? = null
 
+
     init {
         context.theme.obtainStyledAttributes(
             attrs,

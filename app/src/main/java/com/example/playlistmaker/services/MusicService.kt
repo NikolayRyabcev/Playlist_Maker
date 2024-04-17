@@ -45,9 +45,10 @@ class MusicService : Service(), AudioPlayerControl {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
+        Log.d("плеер", "bind")
         songUrl = intent?.getStringExtra("song_url") ?: ""
         initMediaPlayer()
-        Log.d("плеер", "bind")
+
         return binder
     }
 

@@ -55,6 +55,8 @@ class PlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = PlayerActivityBinding.inflate(layoutInflater)
+
+        bindMusicService(requireContext())
         //Нижний навигатор
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = View.GONE
@@ -78,13 +80,16 @@ class PlayerFragment : Fragment() {
         )
         //переключение кнопок плэй/пауза
         binding.playButton.isEnabled = false
-        binding.playButton.setOnClickListener { playerViewModel.onPlayerButtonClicked() }
+        binding.playButton.setOnClickListener { playerViewModel.onPlayerButtonClicked()
+            Log.d("плеер", "клик")
+        }
         //привязка сервиса муз плеера
+
         playerViewModel.observePlayerState().observe(viewLifecycleOwner) {
             updateButton()
             binding.trackTimer.text = musicService?.getCurrentPlayerPosition() ?: "00:00"
         }
-        bindMusicService(requireContext())
+
         return binding.root
     }
 
@@ -279,7 +284,7 @@ class PlayerFragment : Fragment() {
     }
 
     private fun bindMusicService(context: Context) {
-        Log.d("плеер", "bindService")
+        Log.d("плеер", ",bindservice")
         val intent = Intent(context, MusicService::class.java).apply {
             putExtra("song_url", url)
         }
