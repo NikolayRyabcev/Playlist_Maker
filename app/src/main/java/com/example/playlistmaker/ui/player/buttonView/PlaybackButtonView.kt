@@ -65,6 +65,7 @@ class PlaybackButtonView @JvmOverloads constructor(
     }
 
     override fun performClick(): Boolean {
+
         return super.performClick()
     }
 

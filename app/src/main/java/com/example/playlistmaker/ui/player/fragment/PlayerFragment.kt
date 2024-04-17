@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
@@ -77,12 +78,13 @@ class PlayerFragment : Fragment() {
         )
         //переключение кнопок плэй/пауза
         binding.playButton.isEnabled = false
-
+        binding.playButton.setOnClickListener { playerViewModel.onPlayerButtonClicked() }
         //привязка сервиса муз плеера
         playerViewModel.observePlayerState().observe(viewLifecycleOwner) {
             updateButton()
+            binding.trackTimer.text = musicService?.getCurrentPlayerPosition() ?: "00:00"
         }
-        bindMusicService()
+        bindMusicService(requireContext())
         return binding.root
     }
 
@@ -205,8 +207,8 @@ class PlayerFragment : Fragment() {
 
                 is PlayerState.Prepared -> {
                     if (isFirstPlay) {
-                        binding.playButton.onTouchListener =
-                            { playerViewModel.onPlayerButtonClicked() }
+                        /*                        binding.playButton.onTouchListener =
+                                                    { playerViewModel.onPlayerButtonClicked() }*/
                         isFirstPlay = false
                         binding.playButton.alpha = 1f
                     } else {
@@ -216,11 +218,9 @@ class PlayerFragment : Fragment() {
 
                 is PlayerState.Paused -> {
                     binding.playButton.alpha = 1f
-                    binding.trackTimer.text = musicService?.getCurrentPlayerPosition() ?: "00:00"
                 }
 
                 is PlayerState.Playing -> {
-                    binding.trackTimer.text = musicService?.getCurrentPlayerPosition() ?: "00:00"
                 }
 
                 null -> {}
@@ -267,8 +267,6 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    private var state: PlayerState = PlayerState.Default
-
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicService.MusicServiceBinder
@@ -280,11 +278,12 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    private fun bindMusicService() {
-        val intent = Intent(requireContext(), MusicService::class.java).apply {
+    private fun bindMusicService(context: Context) {
+        Log.d("плеер", "bindService")
+        val intent = Intent(context, MusicService::class.java).apply {
             putExtra("song_url", url)
         }
-        requireActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     private fun unBindMusicService() {

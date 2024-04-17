@@ -3,6 +3,7 @@ import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
+import android.util.Log
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.services.AudioPlayerControl
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +22,7 @@ class MusicService : Service(), AudioPlayerControl {
     private val binder = MusicServiceBinder()
 
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.Default)
-    val playerServiceState = _playerState.asStateFlow()
+    private val playerServiceState = _playerState.asStateFlow()
 
     private var songUrl = ""
 
@@ -46,6 +47,7 @@ class MusicService : Service(), AudioPlayerControl {
     override fun onBind(intent: Intent?): IBinder? {
         songUrl = intent?.getStringExtra("song_url") ?: ""
         initMediaPlayer()
+        Log.d("плеер", "bind")
         return binder
     }
 
@@ -66,6 +68,7 @@ class MusicService : Service(), AudioPlayerControl {
         }
         mediaPlayer?.setOnCompletionListener {
             _playerState.value = PlayerState.Prepared
+            Log.d("плеер", "prepared")
         }
     }
 
