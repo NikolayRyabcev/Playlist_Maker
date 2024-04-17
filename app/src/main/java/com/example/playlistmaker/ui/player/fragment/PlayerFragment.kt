@@ -228,7 +228,6 @@ class PlayerFragment : Fragment() {
                         binding.playButton.alpha = 1f
                     } else {
                         binding.playButton.onStopped()
-                        Log.d("КастомВью", "STATE_PREPARED")
                     }
                 }
 
@@ -292,6 +291,12 @@ class PlayerFragment : Fragment() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicService.MusicServiceBinder
             musicService = binder.getMusicService()
+            lifecycleScope.launch {
+                musicService?.playerState?.collect {
+                    playerState = it
+                    updateButton()
+                }
+            }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
