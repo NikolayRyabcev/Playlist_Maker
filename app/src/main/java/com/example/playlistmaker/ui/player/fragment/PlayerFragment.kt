@@ -56,7 +56,7 @@ class PlayerFragment : Fragment() {
     ): View {
         binding = PlayerActivityBinding.inflate(layoutInflater)
 
-        bindMusicService(requireContext())
+
         //Нижний навигатор
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = View.GONE
@@ -79,9 +79,7 @@ class PlayerFragment : Fragment() {
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
         //переключение кнопок плэй/пауза
-        binding.playButton.setOnClickListener { playerViewModel.onPlayerButtonClicked()
-            Log.d("плеер", "клик")
-        }
+        binding.playButton.clickListener=playerViewModel
         //binding.playButton.isEnabled = false
 
         //привязка сервиса муз плеера
@@ -119,7 +117,7 @@ class PlayerFragment : Fragment() {
                 .into(binding.trackCover)
         }
         url = track?.previewUrl ?: return
-
+        bindMusicService(requireContext())
         updateButton()
 
         //нажатие на кнопку нравится

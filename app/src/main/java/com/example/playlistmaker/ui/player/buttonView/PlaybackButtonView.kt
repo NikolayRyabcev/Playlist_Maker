@@ -28,7 +28,13 @@ class PlaybackButtonView @JvmOverloads constructor(
     private var imageRect = RectF(0f, 0f, 0f, 0f)
     private var isPlaying = false
     var onTouchListener: (() -> Unit)? = null
+    var clickListener: CustomViewClickListener? = null
 
+    init {
+        setOnClickListener {
+            clickListener?.onViewClicked()
+        }
+    }
 
     init {
         context.theme.obtainStyledAttributes(

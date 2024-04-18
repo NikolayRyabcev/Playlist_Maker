@@ -10,6 +10,7 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerState
 import com.example.playlistmaker.domain.playlist.PlaylistInteractor
 import com.example.playlistmaker.services.AudioPlayerControl
+import com.example.playlistmaker.ui.player.buttonView.CustomViewClickListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val favouritesInteractor: FavouritesInteractor,
     private val playlistInteractor: PlaylistInteractor
-) : ViewModel() {
+) : ViewModel(), CustomViewClickListener {
 
     private val favouritesIndicator = MutableLiveData<Boolean>()
     private var favouritesJob: Job? = null
@@ -112,5 +113,9 @@ class PlayerViewModel(
 
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L
+    }
+
+    override fun onViewClicked() {
+        onPlayerButtonClicked()
     }
 }

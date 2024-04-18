@@ -50,6 +50,7 @@ class MusicService : Service(), AudioPlayerControl {
         Log.d("плеер", "bindReady")
         songUrl = intent?.getStringExtra("song_url") ?: ""
         initMediaPlayer()
+        Log.d("плеер", songUrl)
 
         return binder
     }
@@ -65,16 +66,16 @@ class MusicService : Service(), AudioPlayerControl {
     private fun initMediaPlayer() {
         Log.d("плеер", "init")
         if (songUrl.isEmpty()) return
-
         mediaPlayer?.setDataSource(songUrl)
-        mediaPlayer?.prepareAsync()
         mediaPlayer?.setOnPreparedListener {
-            _playerState.value = PlayerState.Prepared
-        }
-        mediaPlayer?.setOnCompletionListener {
             _playerState.value = PlayerState.Prepared
             Log.d("плеер", "prepared")
         }
+        mediaPlayer?.setOnCompletionListener {
+            _playerState.value = PlayerState.Prepared
+
+        }
+        mediaPlayer?.prepareAsync()
     }
 
     override fun startPlayer() {
