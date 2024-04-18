@@ -1,8 +1,8 @@
 package com.example.playlistmaker.domain.player
 
-enum class PlayerState {
-    STATE_DEFAULT,
-    STATE_PREPARED,
-    STATE_PLAYING,
-    STATE_PAUSED
+sealed class PlayerState {
+    object Default : PlayerState()
+    object Prepared : PlayerState()
+    class Playing (val position:String) : PlayerState()
+    class Paused (val position:String): PlayerState()
 }
