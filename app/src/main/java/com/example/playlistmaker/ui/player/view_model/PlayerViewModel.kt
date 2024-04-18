@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,17 +36,23 @@ class PlayerViewModel(
 
         viewModelScope.launch {
             audioPlayerControl.getPlayerState().collect {
+                if (it is PlayerState.Playing||it is PlayerState.Paused)
                 playerState.postValue(it)
+
             }
         }
     }
 
-    fun onPlayerButtonClicked() {
+    private fun onPlayerButtonClicked() {
         if (playerState.value is PlayerState.Playing) {
             audioPlayerControl?.pausePlayer()
         } else {
             audioPlayerControl?.startPlayer()
         }
+    }
+
+    override fun onViewClicked() {
+        onPlayerButtonClicked()
     }
 
     fun removeAudioPlayerControl() {
@@ -115,7 +122,4 @@ class PlayerViewModel(
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L
     }
 
-    override fun onViewClicked() {
-        onPlayerButtonClicked()
-    }
 }
