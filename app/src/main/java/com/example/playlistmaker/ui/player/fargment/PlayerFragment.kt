@@ -1,39 +1,33 @@
-package com.example.playlistmaker.ui.player.fragment
+package com.example.playlistmaker.ui.player.fargment
 
-import MusicService
 import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.App.ConnectionBroadcastReciever
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.player.PlayerState
+import com.example.playlistmaker.ui.mediaLibrary.fragments.playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.player.adapter.PlaylistBottomSheetAdapter
 import com.example.playlistmaker.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -45,9 +39,7 @@ class PlayerFragment : Fragment() {
     private var url = ""
     private lateinit var bottomNavigator: BottomNavigationView
     private lateinit var playlistAdapter: PlaylistBottomSheetAdapter
-    private var isFirstPlay = true
-    private val connectionBroadcastReciever = ConnectionBroadcastReciever()
-    private var musicService: MusicService? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,8 +47,6 @@ class PlayerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = PlayerActivityBinding.inflate(layoutInflater)
-
-        bindMusicService(requireContext())
         //Нижний навигатор
         bottomNavigator = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavigator.visibility = View.GONE
@@ -72,29 +62,20 @@ class PlayerFragment : Fragment() {
             closer()
         }
 
-        ContextCompat.registerReceiver(
-            requireContext(),
-            connectionBroadcastReciever,
-            IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"),
-            ContextCompat.RECEIVER_NOT_EXPORTED
-        )
-        //переключение кнопок плэй/пауза
-        binding.playButton.isEnabled = false
-        binding.playButton.setOnClickListener { playerViewModel.onPlayerButtonClicked()
-            Log.d("плеер", "клик")
-        }
-        //привязка сервиса муз плеера
-
-        playerViewModel.observePlayerState().observe(viewLifecycleOwner) {
-            updateButton()
-            binding.trackTimer.text = musicService?.getCurrentPlayerPosition() ?: "00:00"
-        }
 
         return binding.root
     }
 
+    override fun onStop() {
+        bottomNavigator.visibility = VISIBLE
+        super.onStop()
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         //принятие и отрисовка данных трека
         val track = arguments?.getParcelable<Track>("track")
         binding.playerTrackName.text = track?.trackName ?: "Unknown Track"
@@ -119,7 +100,20 @@ class PlayerFragment : Fragment() {
         }
         url = track?.previewUrl ?: return
 
+        //создание плеера
+        playerViewModel.createPlayer(url)
+
+        //переключение кнопок плэй/пауза
+        binding.playButton.isEnabled = false
+        binding.playButton.setOnClickListener {
+            if (playerViewModel.stateLiveData.value == PlayerState.STATE_PLAYING) playerViewModel.pause() else playerViewModel.play()
+        }
+
         updateButton()
+
+        playerViewModel.putTime().observe(requireActivity()) { timer ->
+            binding.trackTimer.text = timer
+        }
 
         //нажатие на кнопку нравится
         binding.favourites.setOnClickListener {
@@ -191,44 +185,49 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    override fun onStop() {
-        bottomNavigator.visibility = VISIBLE
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
+        playerViewModel.pause()
     }
 
     override fun onDestroy() {
-        unBindMusicService()
         super.onDestroy()
-        playerViewModel.removeAudioPlayerControl()
+        playerViewModel.destroy()
+    }
+
+    private fun preparePlayer() {
+        binding.playButton.isEnabled = true
+        binding.playButton.visibility = VISIBLE
+        binding.pauseButton.visibility = View.GONE
     }
 
     @SuppressLint("ResourceType")
     fun playerStateDrawer() {
-        playerViewModel.playerState.observe(requireActivity()) {
-            when (playerViewModel.playerState.value) {
-                is PlayerState.Default -> {
+
+        playerViewModel.stateLiveData.observe(requireActivity()) {
+            when (playerViewModel.stateLiveData.value) {
+                PlayerState.STATE_DEFAULT -> {
+                    binding.playButton.setImageResource(R.drawable.play)
                     binding.playButton.alpha = 0.5f
                 }
 
-                is PlayerState.Prepared -> {
-                    if (isFirstPlay) {
-                        /*                        binding.playButton.onTouchListener =
-                                                    { playerViewModel.onPlayerButtonClicked() }*/
-                        isFirstPlay = false
-                        binding.playButton.alpha = 1f
-                    } else {
-                        binding.playButton.onStopped()
-                    }
-                }
-
-                is PlayerState.Paused -> {
+                PlayerState.STATE_PREPARED -> {
+                    preparePlayer()
+                    binding.playButton.setImageResource(R.drawable.play)
                     binding.playButton.alpha = 1f
                 }
 
-                is PlayerState.Playing -> {
+                PlayerState.STATE_PAUSED -> {
+                    binding.playButton.setImageResource(R.drawable.play)
+                    binding.playButton.alpha = 1f
                 }
 
-                null -> {}
+                PlayerState.STATE_PLAYING -> {
+                    binding.playButton.setImageResource(R.drawable.pause)
+                }
+
+                else -> {
+                }
             }
         }
     }
@@ -270,29 +269,6 @@ class PlayerFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as MusicService.MusicServiceBinder
-            playerViewModel.setAudioPlayerControl(binder.getMusicService())
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            playerViewModel.removeAudioPlayerControl()
-        }
-    }
-
-    private fun bindMusicService(context: Context) {
-        Log.d("плеер", ",bindservice")
-        val intent = Intent(context, MusicService::class.java).apply {
-            putExtra("song_url", url)
-        }
-        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-    }
-
-    private fun unBindMusicService() {
-        requireActivity().unbindService(serviceConnection)
     }
 
     companion object {

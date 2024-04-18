@@ -33,7 +33,4 @@
     <dimen name="trackTextSize">16sp</dimen>
     <dimen name="dotSize">3dp</dimen>
     <dimen name="trackCornerRadius">2dp</dimen>
-    
-    <!-- CustomView -->
-    <dimen name="playbackButtonSize">100dp</dimen>
 </resources>
