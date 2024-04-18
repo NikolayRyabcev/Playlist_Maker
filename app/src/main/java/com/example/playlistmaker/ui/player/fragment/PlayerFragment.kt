@@ -79,10 +79,11 @@ class PlayerFragment : Fragment() {
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
         //переключение кнопок плэй/пауза
-        binding.playButton.isEnabled = false
         binding.playButton.setOnClickListener { playerViewModel.onPlayerButtonClicked()
             Log.d("плеер", "клик")
         }
+        //binding.playButton.isEnabled = false
+
         //привязка сервиса муз плеера
 
         playerViewModel.observePlayerState().observe(viewLifecycleOwner) {
@@ -133,7 +134,6 @@ class PlayerFragment : Fragment() {
                     R.drawable.favourites
                 )
             }
-
 
         //BottomSheet
         val bottomSheetContainer = binding.standardBottomSheet
@@ -197,7 +197,7 @@ class PlayerFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        unBindMusicService()
+        //unBindMusicService()
         super.onDestroy()
         playerViewModel.removeAudioPlayerControl()
     }
@@ -214,6 +214,7 @@ class PlayerFragment : Fragment() {
                     if (isFirstPlay) {
                         /*                        binding.playButton.onTouchListener =
                                                     { playerViewModel.onPlayerButtonClicked() }*/
+                        binding.playButton.isEnabled=true
                         isFirstPlay = false
                         binding.playButton.alpha = 1f
                     } else {

@@ -42,6 +42,7 @@ class MusicService : Service(), AudioPlayerControl {
 
     override fun onCreate() {
         super.onCreate()
+        Log.d("плеер", "create")
         mediaPlayer = MediaPlayer()
     }
 
@@ -54,6 +55,7 @@ class MusicService : Service(), AudioPlayerControl {
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
+        Log.d("плеер", "unbind")
         releasePlayer()
         return super.onUnbind(intent)
     }
@@ -61,6 +63,7 @@ class MusicService : Service(), AudioPlayerControl {
     // Методы управления Media Player
 
     private fun initMediaPlayer() {
+        Log.d("плеер", "init")
         if (songUrl.isEmpty()) return
 
         mediaPlayer?.setDataSource(songUrl)
@@ -75,6 +78,7 @@ class MusicService : Service(), AudioPlayerControl {
     }
 
     override fun startPlayer() {
+        Log.d("плеер", "start")
         mediaPlayer?.start()
         _playerState.value = PlayerState.Playing(getCurrentPlayerPosition())
         startTimer()
