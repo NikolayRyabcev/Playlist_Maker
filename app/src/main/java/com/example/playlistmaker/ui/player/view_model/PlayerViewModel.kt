@@ -56,6 +56,47 @@ class PlayerViewModel(
         audioPlayerControl = null
     }
 
+
+    /*fun createPlayer(url: String) {
+        playerInteractor.createPlayer(url, listener = object : PlayerStateListener {
+            override fun onStateChanged(state: PlayerState) {
+                stateLiveData.postValue(state)
+            }
+        })
+    }
+
+
+    fun play() {
+        playerInteractor.play()
+        timeJob!!.start()
+    }
+
+    fun pause() {
+        playerInteractor.pause()
+    }
+
+    fun destroy() {
+        timeJob?.cancel()
+        playerInteractor.destroy()
+    }
+
+    private fun getTimeFromInteractor(): LiveData<String> {
+        timeJob = viewModelScope.launch {
+            while (true) {
+                delay(PLAYER_BUTTON_PRESSING_DELAY)
+                playerInteractor.getTime().collect() {
+                    timer.postValue(it)
+                }
+            }
+        }
+        return timer
+    }*/
+
+ /*   fun putTime(): LiveData<String> {
+        getTimeFromInteractor()
+        return timer
+    }*/
+
     fun onFavoriteClicked(track: Track) {
         if (track.isFavorite) {
             track.trackId?.let { favouritesInteractor.favouritesDelete(track) }
