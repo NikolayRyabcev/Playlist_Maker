@@ -1,6 +1,6 @@
 package com.example.playlistmaker.ui.player.fragment
 
-import MusicService
+import com.example.playlistmaker.services.MusicService
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context

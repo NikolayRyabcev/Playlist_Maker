@@ -1,3 +1,5 @@
+package com.example.playlistmaker.services
+
 import android.app.Service
 import android.content.Intent
 import android.media.MediaPlayer
@@ -5,7 +7,6 @@ import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.services.AudioPlayerControl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -45,7 +46,7 @@ class MusicService : Service(), AudioPlayerControl {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        Log.d("плеер", "bind")
+        Log.d("плеер", "bindReady")
         songUrl = intent?.getStringExtra("song_url") ?: ""
         initMediaPlayer()
 
