@@ -34,9 +34,6 @@ class PlaybackButtonView @JvmOverloads constructor(
         setOnClickListener {
             clickListener?.onViewClicked()
         }
-    }
-
-    init {
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.PlaybackButtonView,
@@ -85,6 +82,7 @@ class PlaybackButtonView @JvmOverloads constructor(
 
                 MotionEvent.ACTION_UP -> {
                     playerSwitch()
+                    clickListener?.onViewClicked()
                     invalidate()
                     return true
                 }
