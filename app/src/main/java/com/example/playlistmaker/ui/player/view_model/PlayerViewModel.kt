@@ -36,9 +36,8 @@ class PlayerViewModel(
 
         viewModelScope.launch {
             audioPlayerControl.getPlayerState().collect {
-                if (it is PlayerState.Playing||it is PlayerState.Paused)
                 playerState.postValue(it)
-
+                    Log.d("плеер", it.toString())
             }
         }
     }
@@ -108,13 +107,11 @@ class PlayerViewModel(
     fun addTrack(track: Track, playlist: Playlist) {
         if (playlist.trackArray.contains(track.trackId)) {
             playlistAdding.postValue(true)
-
         } else {
             playlistAdding.postValue(false)
             playlist.trackArray = (playlist.trackArray + track.trackId)
             playlist.arrayNumber = (playlist.arrayNumber?.plus(1))!!
             playlistInteractor.update(track, playlist)
-
         }
     }
 

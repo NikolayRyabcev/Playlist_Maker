@@ -57,8 +57,6 @@ class MusicService : Service(), AudioPlayerControl {
         return super.onUnbind(intent)
     }
 
-    // Методы управления Media Player
-
     private fun initMediaPlayer() {
         if (songUrl.isEmpty()) return
         mediaPlayer?.setDataSource(songUrl)
@@ -102,8 +100,6 @@ class MusicService : Service(), AudioPlayerControl {
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer?.currentPosition)
             ?: "00:00"
     }
-
-    // Binder
 
     inner class MusicServiceBinder : Binder() {
         fun getMusicService(): MusicService = this@MusicService

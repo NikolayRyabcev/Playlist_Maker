@@ -195,7 +195,7 @@ class PlayerFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        //unBindMusicService()
+        unBindMusicService()
         super.onDestroy()
         playerViewModel.removeAudioPlayerControl()
     }
