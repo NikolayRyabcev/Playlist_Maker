@@ -84,10 +84,7 @@ class PlayerFragment : Fragment() {
 
         //привязка сервиса муз плеера
 
-        playerViewModel.observePlayerState().observe(viewLifecycleOwner) {
-            updateButton()
-            binding.trackTimer.text = musicService?.getCurrentPlayerPosition() ?: "00:00"
-        }
+
 
         return binding.root
     }
@@ -202,8 +199,10 @@ class PlayerFragment : Fragment() {
 
     @SuppressLint("ResourceType")
     fun playerStateDrawer() {
+        Log.d("PlayerFragment", "playerStateDrawer")
+
         playerViewModel.playerState.observe(requireActivity()) {
-            when (playerViewModel.playerState.value) {
+            when (val state = playerViewModel.playerState.value) {
                 is PlayerState.Default -> {
                     binding.playButton.alpha = 0.5f
                 }
@@ -222,9 +221,11 @@ class PlayerFragment : Fragment() {
 
                 is PlayerState.Paused -> {
                     binding.playButton.alpha = 1f
+                    binding.trackTimer.text = state.position
                 }
 
                 is PlayerState.Playing -> {
+                    binding.trackTimer.text = state.position
                 }
 
                 null -> {}

@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player.view_model
 
+import android.nfc.Tag
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,6 +15,7 @@ import com.example.playlistmaker.services.AudioPlayerControl
 import com.example.playlistmaker.ui.player.buttonView.CustomViewClickListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
@@ -35,9 +37,10 @@ class PlayerViewModel(
         this.audioPlayerControl = audioPlayerControl
 
         viewModelScope.launch {
-            audioPlayerControl.getPlayerState().collect {
-                playerState.postValue(it)
-                    Log.d("плеер", it.toString())
+            audioPlayerControl
+                .getPlayerState()
+                .collect {
+                playerState.value = it
             }
         }
     }
@@ -117,6 +120,7 @@ class PlayerViewModel(
 
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L
+        const val TAG = "PlayerViewModel"
     }
 
 }
