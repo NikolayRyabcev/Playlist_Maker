@@ -1,11 +1,18 @@
 package com.example.playlistmaker.services
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationCompat
+import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.player.PlayerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +50,33 @@ class MusicService : Service(), AudioPlayerControl {
     override fun onCreate() {
         super.onCreate()
         mediaPlayer = MediaPlayer()
+        createNotificationChannel()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return
+        }
+
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            "Music service",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        channel.description = "Service for playing music"
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun createServiceNotification(): Notification {
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setContentTitle("Playlist maker")
+            .setContentText(songUrl)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .build()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -103,5 +137,10 @@ class MusicService : Service(), AudioPlayerControl {
 
     inner class MusicServiceBinder : Binder() {
         fun getMusicService(): MusicService = this@MusicService
+    }
+
+    private companion object {
+        const val LOG_TAG = "MusicService"
+        const val NOTIFICATION_CHANNEL_ID = "music_service_channel"
     }
 }

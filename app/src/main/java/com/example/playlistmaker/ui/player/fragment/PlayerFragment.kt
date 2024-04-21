@@ -82,10 +82,6 @@ class PlayerFragment : Fragment() {
         binding.playButton.clickListener=playerViewModel
         //binding.playButton.isEnabled = false
 
-        //привязка сервиса муз плеера
-
-
-
         return binding.root
     }
 
@@ -114,6 +110,11 @@ class PlayerFragment : Fragment() {
                 .into(binding.trackCover)
         }
         url = track?.previewUrl ?: return
+        //привязка сервиса муз плеера
+        val intent = Intent(requireContext(), MusicService::class.java).apply {
+            putExtra("song_url", url)
+        }
+        ContextCompat.startForegroundService(requireContext(), intent)
         bindMusicService(requireContext())
         updateButton()
 
