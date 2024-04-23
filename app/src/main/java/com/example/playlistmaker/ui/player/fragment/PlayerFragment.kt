@@ -79,7 +79,7 @@ class PlayerFragment : Fragment() {
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
         //переключение кнопок плэй/пауза
-        binding.playButton.clickListener=playerViewModel
+        binding.playButton.clickListener = playerViewModel
         //binding.playButton.isEnabled = false
 
         return binding.root
@@ -113,6 +113,8 @@ class PlayerFragment : Fragment() {
         //привязка сервиса муз плеера
         val intent = Intent(requireContext(), MusicService::class.java).apply {
             putExtra("song_url", url)
+            putExtra("songArtist", binding.playerArtistName.text.toString())
+            putExtra("songName", binding.playerTrackName.text.toString())
         }
         ContextCompat.startForegroundService(requireContext(), intent)
         bindMusicService(requireContext())
@@ -200,8 +202,6 @@ class PlayerFragment : Fragment() {
 
     @SuppressLint("ResourceType")
     fun playerStateDrawer() {
-        Log.d("PlayerFragment", "playerStateDrawer")
-
         playerViewModel.playerState.observe(requireActivity()) {
             when (val state = playerViewModel.playerState.value) {
                 is PlayerState.Default -> {
@@ -212,7 +212,7 @@ class PlayerFragment : Fragment() {
                     if (isFirstPlay) {
                         /*                        binding.playButton.onTouchListener =
                                                     { playerViewModel.onPlayerButtonClicked() }*/
-                        binding.playButton.isEnabled=true
+                        binding.playButton.isEnabled = true
                         isFirstPlay = false
                         binding.playButton.alpha = 1f
                     } else {
@@ -285,9 +285,10 @@ class PlayerFragment : Fragment() {
     }
 
     private fun bindMusicService(context: Context) {
-        Log.d("плеер", ",bindservice")
         val intent = Intent(context, MusicService::class.java).apply {
             putExtra("song_url", url)
+            putExtra("songArtist", binding.playerArtistName.text.toString())
+            putExtra("songName", binding.playerTrackName.text.toString())
         }
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }

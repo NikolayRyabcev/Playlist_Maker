@@ -35,6 +35,7 @@ class MusicService : Service(), AudioPlayerControl {
     private val playerServiceState = _playerState.asStateFlow()
 
     private var songUrl = ""
+    private var trackInfo = ""
 
     private var mediaPlayer: MediaPlayer? = null
 
@@ -54,7 +55,7 @@ class MusicService : Service(), AudioPlayerControl {
         mediaPlayer = MediaPlayer()
         createNotificationChannel()
         ServiceCompat.startForeground(
-           this,
+            this,
             SERVICE_NOTIFICATION_ID,
             createServiceNotification(),
             getForegroundServiceTypeConstant()
@@ -88,8 +89,8 @@ class MusicService : Service(), AudioPlayerControl {
 
     private fun createServiceNotification(): Notification {
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle("Playlist maker")
-            .setContentText(songUrl)
+            .setContentTitle(trackInfo)
+            .setContentText(trackInfo)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
@@ -98,6 +99,10 @@ class MusicService : Service(), AudioPlayerControl {
 
     override fun onBind(intent: Intent?): IBinder? {
         songUrl = intent?.getStringExtra("song_url") ?: ""
+        val artist = intent?.getStringExtra("songArtist") ?: ""
+        val track = intent?.getStringExtra("songName") ?: ""
+        trackInfo = "$artist - $track"
+        Log.d("плеер", trackInfo)
         initMediaPlayer()
 
         return binder
