@@ -41,6 +41,7 @@ class PlayerViewModel(
                 .getPlayerState()
                 .collect {
                 playerState.value = it
+                    if (it is PlayerState.Prepared) audioPlayerControl.stopNotification()
             }
         }
     }

@@ -197,6 +197,7 @@ class PlayerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         playerViewModel.hideNotification()
+        Log.d("плеер", "onResume")
     }
 
     override fun onStop() {

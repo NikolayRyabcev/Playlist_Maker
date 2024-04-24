@@ -85,7 +85,7 @@ class MusicService : Service(), AudioPlayerControl {
     }
 
     override fun stopNotification() {
-        stopService(Intent(this, MusicService::class.java))
+        stopForeground(true)
     }
 
     private fun createNotificationChannel() {
