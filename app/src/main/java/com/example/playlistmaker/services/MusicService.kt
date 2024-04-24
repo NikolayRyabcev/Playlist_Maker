@@ -53,13 +53,7 @@ class MusicService : Service(), AudioPlayerControl {
     override fun onCreate() {
         super.onCreate()
         mediaPlayer = MediaPlayer()
-        createNotificationChannel()
-        ServiceCompat.startForeground(
-            this,
-            SERVICE_NOTIFICATION_ID,
-            createServiceNotification(),
-            getForegroundServiceTypeConstant()
-        )
+
     }
 
     private fun getForegroundServiceTypeConstant(): Int {
@@ -71,7 +65,9 @@ class MusicService : Service(), AudioPlayerControl {
     }
 
     private fun createNotificationChannel() {
+        Log.d("плеер", "createNotificationChannel")
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            Log.d("плеер", "createNotificationChannelIfBranch")
             return
         }
 
@@ -88,6 +84,7 @@ class MusicService : Service(), AudioPlayerControl {
     }
 
     private fun createServiceNotification(): Notification {
+        Log.d("плеер в createService", trackInfo)
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(trackInfo)
             .setContentText(trackInfo)
@@ -102,9 +99,15 @@ class MusicService : Service(), AudioPlayerControl {
         val artist = intent?.getStringExtra("songArtist") ?: ""
         val track = intent?.getStringExtra("songName") ?: ""
         trackInfo = "$artist - $track"
-        Log.d("плеер", trackInfo)
+        Log.d("плеер в onBind", trackInfo)
         initMediaPlayer()
-
+        createNotificationChannel()
+        ServiceCompat.startForeground(
+            this,
+            SERVICE_NOTIFICATION_ID,
+            createServiceNotification(),
+            getForegroundServiceTypeConstant()
+        )
         return binder
     }
 
