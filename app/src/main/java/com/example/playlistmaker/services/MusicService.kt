@@ -53,7 +53,6 @@ class MusicService : Service(), AudioPlayerControl {
     override fun onCreate() {
         super.onCreate()
         mediaPlayer = MediaPlayer()
-
     }
 
     private fun getForegroundServiceTypeConstant(): Int {
@@ -62,6 +61,31 @@ class MusicService : Service(), AudioPlayerControl {
         } else {
             0
         }
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        songUrl = intent?.getStringExtra("song_url") ?: ""
+        val artist = intent?.getStringExtra("songArtist") ?: ""
+        val track = intent?.getStringExtra("songName") ?: ""
+        trackInfo = "$artist - $track"
+        Log.d("плеер в onBind", trackInfo)
+        initMediaPlayer()
+        return binder
+    }
+
+    //уведомления
+    override fun provideNotificator() {
+        createNotificationChannel()
+        ServiceCompat.startForeground(
+            this,
+            SERVICE_NOTIFICATION_ID,
+            createServiceNotification(),
+            getForegroundServiceTypeConstant()
+        )
+    }
+
+    override fun stopNotification() {
+        stopService(Intent(this, MusicService::class.java))
     }
 
     private fun createNotificationChannel() {
@@ -84,31 +108,13 @@ class MusicService : Service(), AudioPlayerControl {
     }
 
     private fun createServiceNotification(): Notification {
-        Log.d("плеер в createService", trackInfo)
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle(trackInfo)
+            .setContentTitle("Playlist Maker")
             .setContentText(trackInfo)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .build()
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        songUrl = intent?.getStringExtra("song_url") ?: ""
-        val artist = intent?.getStringExtra("songArtist") ?: ""
-        val track = intent?.getStringExtra("songName") ?: ""
-        trackInfo = "$artist - $track"
-        Log.d("плеер в onBind", trackInfo)
-        initMediaPlayer()
-        createNotificationChannel()
-        ServiceCompat.startForeground(
-            this,
-            SERVICE_NOTIFICATION_ID,
-            createServiceNotification(),
-            getForegroundServiceTypeConstant()
-        )
-        return binder
     }
 
     override fun onUnbind(intent: Intent?): Boolean {

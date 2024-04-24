@@ -118,6 +118,13 @@ class PlayerViewModel(
         }
     }
 
+    fun showNotification (){
+        audioPlayerControl?.provideNotificator()
+    }
+
+    fun hideNotification (){
+        audioPlayerControl?.stopNotification()
+    }
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L
         const val TAG = "PlayerViewModel"

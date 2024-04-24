@@ -189,6 +189,16 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        playerViewModel.showNotification()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        playerViewModel.hideNotification()
+    }
+
     override fun onStop() {
         bottomNavigator.visibility = VISIBLE
         super.onStop()
