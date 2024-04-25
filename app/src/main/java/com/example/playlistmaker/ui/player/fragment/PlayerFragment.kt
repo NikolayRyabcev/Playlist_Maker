@@ -217,9 +217,11 @@ class PlayerFragment : Fragment() {
             when (val state = playerViewModel.playerState.value) {
                 is PlayerState.Default -> {
                     binding.playButton.alpha = 0.5f
+                    Log.d("плеер", "default")
                 }
 
                 is PlayerState.Prepared -> {
+                    Log.d("плеер", "Prepared")
                     if (isFirstPlay) {
                         /*                        binding.playButton.onTouchListener =
                                                     { playerViewModel.onPlayerButtonClicked() }*/
@@ -228,15 +230,18 @@ class PlayerFragment : Fragment() {
                         binding.playButton.alpha = 1f
                     } else {
                         binding.playButton.onStopped()
+                        binding.trackTimer.text="00:00"
                     }
                 }
 
                 is PlayerState.Paused -> {
+                    Log.d("плеер", "Paused")
                     binding.playButton.alpha = 1f
                     binding.trackTimer.text = state.position
                 }
 
                 is PlayerState.Playing -> {
+                    Log.d("плеер", "Playing")
                     binding.trackTimer.text = state.position
                 }
 

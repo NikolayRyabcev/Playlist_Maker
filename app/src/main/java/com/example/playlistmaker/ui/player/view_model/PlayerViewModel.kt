@@ -40,9 +40,10 @@ class PlayerViewModel(
             audioPlayerControl
                 .getPlayerState()
                 .collect {
-                playerState.value = it
+                    playerState.value = it
                     if (it is PlayerState.Prepared) audioPlayerControl.stopNotification()
-            }
+
+                }
         }
     }
 
@@ -119,13 +120,14 @@ class PlayerViewModel(
         }
     }
 
-    fun showNotification (){
+    fun showNotification() {
         audioPlayerControl?.provideNotificator()
     }
 
-    fun hideNotification (){
+    fun hideNotification() {
         audioPlayerControl?.stopNotification()
     }
+
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L
         const val TAG = "PlayerViewModel"

@@ -44,8 +44,10 @@ class MusicService : Service(), AudioPlayerControl {
     private fun startTimer() {
         timerJob = CoroutineScope(Dispatchers.Default).launch {
             while (mediaPlayer?.isPlaying == true) {
-                delay(200L)
+                //if (getCurrentPlayerPosition()== "00:29") return@launch
                 _playerState.value = PlayerState.Playing(getCurrentPlayerPosition())
+                delay(200L)
+                Log.d("плеер ", "startTimer")
             }
         }
     }
@@ -68,7 +70,6 @@ class MusicService : Service(), AudioPlayerControl {
         val artist = intent?.getStringExtra("songArtist") ?: ""
         val track = intent?.getStringExtra("songName") ?: ""
         trackInfo = "$artist - $track"
-        Log.d("плеер в onBind", trackInfo)
         initMediaPlayer()
         return binder
     }
@@ -130,7 +131,6 @@ class MusicService : Service(), AudioPlayerControl {
         }
         mediaPlayer?.setOnCompletionListener {
             _playerState.value = PlayerState.Prepared
-
         }
         mediaPlayer?.prepareAsync()
     }
