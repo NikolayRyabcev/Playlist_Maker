@@ -28,8 +28,12 @@ class PlaybackButtonView @JvmOverloads constructor(
     private var imageRect = RectF(0f, 0f, 0f, 0f)
     private var isPlaying = false
     var onTouchListener: (() -> Unit)? = null
+    var clickListener: CustomViewClickListener? = null
 
     init {
+        setOnClickListener {
+            clickListener?.onViewClicked()
+        }
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.PlaybackButtonView,
@@ -65,6 +69,7 @@ class PlaybackButtonView @JvmOverloads constructor(
     }
 
     override fun performClick(): Boolean {
+
         return super.performClick()
     }
 
@@ -77,6 +82,7 @@ class PlaybackButtonView @JvmOverloads constructor(
 
                 MotionEvent.ACTION_UP -> {
                     playerSwitch()
+                    clickListener?.onViewClicked()
                     invalidate()
                     return true
                 }
@@ -101,6 +107,5 @@ class PlaybackButtonView @JvmOverloads constructor(
         imageToShow = imagePlay
         isPlaying = false
         invalidate()
-        Log.d("КастомВью", "onStopped")
     }
 }

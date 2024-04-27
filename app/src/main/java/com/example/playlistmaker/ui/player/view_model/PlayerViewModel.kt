@@ -1,5 +1,7 @@
 package com.example.playlistmaker.ui.player.view_model
 
+import android.nfc.Tag
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,63 +9,63 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.favourites.FavouritesInteractor
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerState
-import com.example.playlistmaker.domain.player.PlayerStateListener
 import com.example.playlistmaker.domain.playlist.PlaylistInteractor
+import com.example.playlistmaker.services.AudioPlayerControl
+import com.example.playlistmaker.ui.player.buttonView.CustomViewClickListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
-    private val playerInteractor: PlayerInteractor,
     private val favouritesInteractor: FavouritesInteractor,
     private val playlistInteractor: PlaylistInteractor
-) : ViewModel() {
-    private var timeJob: Job? = null
-    var stateLiveData = MutableLiveData<PlayerState>()
-    private var timer = MutableLiveData("00:00")
+) : ViewModel(), CustomViewClickListener {
+
     private val favouritesIndicator = MutableLiveData<Boolean>()
     private var favouritesJob: Job? = null
     val playlistList: MutableLiveData<List<Playlist>> = MutableLiveData<List<Playlist>>(emptyList())
 
-    fun createPlayer(url: String) {
-        playerInteractor.createPlayer(url, listener = object : PlayerStateListener {
-            override fun onStateChanged(state: PlayerState) {
-                stateLiveData.postValue(state)
-            }
-        })
-    }
 
-    fun play() {
-        playerInteractor.play()
-        timeJob!!.start()
-    }
+    val playerState = MutableLiveData<PlayerState>(PlayerState.Default)
+    fun observePlayerState(): LiveData<PlayerState> = playerState
 
-    fun pause() {
-        playerInteractor.pause()
-    }
+    private var audioPlayerControl: AudioPlayerControl? = null
 
-    fun destroy() {
-        timeJob?.cancel()
-        playerInteractor.destroy()
-    }
+    fun setAudioPlayerControl(audioPlayerControl: AudioPlayerControl) {
+        this.audioPlayerControl = audioPlayerControl
 
-    private fun getTimeFromInteractor(): LiveData<String> {
-        timeJob = viewModelScope.launch {
-            while (true) {
-                delay(PLAYER_BUTTON_PRESSING_DELAY)
-                playerInteractor.getTime().collect() {
-                    timer.postValue(it)
+        viewModelScope.launch {
+            audioPlayerControl
+                .getPlayerState()
+                .collect {
+                    playerState.value = it
+                    if (it is PlayerState.Prepared) audioPlayerControl.stopNotification()
+
                 }
-            }
         }
-        return timer
     }
 
-    fun putTime(): LiveData<String> {
-        getTimeFromInteractor()
-        return timer
+    private fun onPlayerButtonClicked() {
+        if (playerState.value is PlayerState.Playing) {
+            audioPlayerControl?.pausePlayer()
+        } else {
+            audioPlayerControl?.startPlayer()
+        }
+    }
+
+    override fun onViewClicked() {
+        onPlayerButtonClicked()
+    }
+
+    fun removeAudioPlayerControl() {
+        audioPlayerControl = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        audioPlayerControl = null
     }
 
     fun onFavoriteClicked(track: Track) {
@@ -105,22 +107,30 @@ class PlayerViewModel(
         return playlistList
     }
 
-    val playlistAdding =MutableLiveData(false)
+    val playlistAdding = MutableLiveData(false)
 
     fun addTrack(track: Track, playlist: Playlist) {
         if (playlist.trackArray.contains(track.trackId)) {
             playlistAdding.postValue(true)
-
         } else {
             playlistAdding.postValue(false)
             playlist.trackArray = (playlist.trackArray + track.trackId)
             playlist.arrayNumber = (playlist.arrayNumber?.plus(1))!!
             playlistInteractor.update(track, playlist)
-
         }
+    }
+
+    fun showNotification() {
+        audioPlayerControl?.provideNotificator()
+    }
+
+    fun hideNotification() {
+        audioPlayerControl?.stopNotification()
     }
 
     companion object {
         const val PLAYER_BUTTON_PRESSING_DELAY = 300L
+        const val TAG = "PlayerViewModel"
     }
+
 }
